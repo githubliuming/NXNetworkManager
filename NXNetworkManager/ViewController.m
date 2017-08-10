@@ -1,0 +1,87 @@
+//
+//  ViewController.m
+//  NXNetworkManager
+//
+//  Created by yoyo on 2017/8/10.
+//  Copyright © 2017年 yoyo. All rights reserved.
+//
+
+#import "ViewController.h"
+
+#import "NXNetWorkManagerHeader.h"
+
+@interface ViewController ()
+@property (weak, nonatomic) IBOutlet UIProgressView *progressUI;
+
+@property(nonatomic,strong)NXDownLoad * download;
+@end
+
+@implementation ViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view, typically from a nib.
+    
+    self.download = [[NXDownLoad alloc] init];
+    self.progressUI.progress = 0.0f;
+    
+    NXParamContainer * param = [[NXParamContainer alloc] init];
+    double time = [[NSDate date] timeIntervalSince1970];
+    [param addDouble:time forKey:@"time"];
+    
+    NXRequset * request = [[NXRequset alloc] initWithUrl:@"http://data.philm.cc/sticker/2017/v18/check_version.json"];
+    request.params = param;
+    
+    [[NXNetWorkSession shareInstanced] Get:request success:^(NSURLSessionDataTask *task, id responseObject, NXRequset *requset) {
+        
+        NSLog(@"responseObject = %@",responseObject);
+        
+    } failure:^(NSURLSessionDataTask *task, NSError *error, NXRequset *requset) {
+        
+    }];
+    
+}
+
+- (IBAction)startDownLoader:(id)sender {
+    
+    NXRequset * request = [[NXRequset alloc] initWithUrl:@"http://dldir1.qq.com/qqfile/QQforMac/QQ_V5.4.0.dmg"];
+    NSString *path = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"QQ_V5.4.0.dmg"];
+    request.fileUrl = path;
+    
+    
+    __weak typeof(self) weakSelf = self;
+    [self.download downLoad:request progress:^(double progress) {
+       
+        weakSelf.progressUI.progress = progress;
+    } completionHandler:^(NSURLResponse *responese, id responseObject, NSError *error, NXRequset *requset) {
+        
+        if (!error) {
+         
+             NSLog(@"下载完成");
+            
+        } else {
+        
+            NSLog(@"error == %@",[error userInfo]);
+        }
+    }];
+}
+
+
+- (IBAction)pauseDownLoad:(id)sender {
+    
+    [self.download suspend];
+}
+
+- (IBAction)continueDownLoad:(id)sender
+{
+    
+    [self.download resume];
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+
+@end
