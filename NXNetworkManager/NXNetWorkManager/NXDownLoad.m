@@ -43,7 +43,7 @@
     return _manager;
 }
 
-- (NXDownLoad * )downLoad:(NXRequset *) requset
+- (void)downLoad:(NXRequset *) requset
                  progress:(progressBlock) progress
         completionHandler:(completionHandlerBlock) completionBlock{
 
@@ -54,7 +54,8 @@
     // 设置HTTP请求头中的Range
     self.currentLength = [self fileLengthForPath:self.fileUrl];
     NSString *range = [NSString stringWithFormat:@"bytes=%zd-", self.currentLength];
-    [downRequest setValue:range forHTTPHeaderField:@"Range"];
+    [downRequest setValue:range forHTTPHeaderField:@"content-range"];
+    [downRequest setValue:@"application/octet-stream" forHTTPHeaderField:@"content-type"];
     
     __weak typeof(self) weakSelf = self;
     AFURLSessionManager * manager = [self AFSessionManager];
@@ -124,7 +125,6 @@
     }];
 
     [self.downloadTask resume];
-    return self;
 }
 
 /**
@@ -165,7 +165,10 @@
         
         self.currentLength = currentLength;
     }
-    [self.downloadTask resume];
+    if (self.downloadTask.state == NSURLSessionTaskStateSuspended)
+    {
+        [self.downloadTask resume];
+    }
 }
 
 @end

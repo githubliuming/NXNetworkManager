@@ -19,7 +19,7 @@ typedef void(^completionHandlerBlock)(NSURLResponse *responese,id responseObject
 @interface NXDownLoad : NSObject
 
 
-- (NXDownLoad * )downLoad:(NXRequset *) requset
+- (void)downLoad:(NXRequset *) requset
                  progress:(progressBlock) progress
         completionHandler:(completionHandlerBlock) completionBlock;
 

@@ -13,7 +13,9 @@
 @interface ViewController ()
 @property (weak, nonatomic) IBOutlet UIProgressView *progressUI;
 
-@property(nonatomic,strong)NXDownLoad * download;
+@property(nonatomic,strong)NXDownLoadManager * download;
+
+@property(nonatomic,strong) NSString * taskId;
 @end
 
 @implementation ViewController
@@ -22,7 +24,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
-    self.download = [[NXDownLoad alloc] init];
+    self.download = [NXDownLoadManager shareInstanced];
     self.progressUI.progress = 0.0f;
     
     NXParamContainer * param = [[NXParamContainer alloc] init];
@@ -50,7 +52,7 @@
     
     
     __weak typeof(self) weakSelf = self;
-    [self.download downLoad:request progress:^(double progress) {
+  self.taskId = [self.download downLoad:request progress:^(double progress) {
        
         weakSelf.progressUI.progress = progress;
     } completionHandler:^(NSURLResponse *responese, id responseObject, NSError *error, NXRequset *requset) {
@@ -69,13 +71,13 @@
 
 - (IBAction)pauseDownLoad:(id)sender {
     
-    [self.download suspend];
+    [self.download suspendWithTaskid:self.taskId];
 }
 
 - (IBAction)continueDownLoad:(id)sender
 {
     
-    [self.download resume];
+    [self.download resumeWithTaskId:self.taskId];
 }
 
 - (void)didReceiveMemoryWarning {
