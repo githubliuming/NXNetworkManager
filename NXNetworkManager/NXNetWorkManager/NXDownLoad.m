@@ -39,6 +39,7 @@
         NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
         // 1. 创建会话管理者
         _manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:configuration];
+        _manager.responseSerializer = [[AFHTTPResponseSerializer alloc] init];
     }
     return _manager;
 }
@@ -53,8 +54,8 @@
     NSMutableURLRequest *downRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:requset.url]];
     // 设置HTTP请求头中的Range
     self.currentLength = [self fileLengthForPath:self.fileUrl];
-    NSString *range = [NSString stringWithFormat:@"bytes=%zd-", self.currentLength];
-    [downRequest setValue:range forHTTPHeaderField:@"content-range"];
+    NSString *range = [NSString stringWithFormat:@"bytes=%ld-", (long)self.currentLength];
+    [downRequest setValue:range forHTTPHeaderField:@"Range"];
     [downRequest setValue:@"application/octet-stream" forHTTPHeaderField:@"content-type"];
     
     __weak typeof(self) weakSelf = self;
@@ -64,9 +65,9 @@
        dispatch_async(dispatch_get_main_queue(), ^{
            
            if (progress) {
-               
-               NSLog(@"progress --> %f",downloadProgress.fractionCompleted);
-               progress(downloadProgress.fractionCompleted);
+            
+               double downProgress_ = (weakSelf.currentLength + downloadProgress.completedUnitCount * 1.0f)/weakSelf.fileLength;
+               progress(downProgress_);
            }
        });
         
@@ -117,10 +118,6 @@
         
         // 向沙盒写入数据
         [weakSelf.fileHandle writeData:data];
-        
-        
-        double currentLength = data.length + weakSelf.currentLength;
-        weakSelf.currentLength  = currentLength;
         
     }];
 

@@ -12,8 +12,6 @@
 
 @implementation NXNetWorkSession
 
-
-
 + (instancetype) shareInstanced{
     
     static NXNetWorkSession * nx_session = nil;
