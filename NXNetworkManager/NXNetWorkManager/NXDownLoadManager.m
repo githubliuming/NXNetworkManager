@@ -65,8 +65,8 @@
 }
 
 - (NSString *)downLoad:(NXRequset *) requset
-              progress:(progressBlock) progress
-     completionHandler:(completionHandlerBlock) completionBlock{
+              progress:(NXProgressBlock) progress
+     completionHandler:(NXCompletionHandlerBlock) completionBlock{
 
     NSString * url = requset.url;
     NSData *data = [url dataUsingEncoding:NSUTF8StringEncoding];
@@ -107,11 +107,15 @@
 - (void)cancelTaskWithTaskId:(NSString *)taskId{
 
     NSAssert(taskId !=nil, @"taskid is nil");
-    NXDownLoad * download = self.downMapDic[taskId];
-    if (download)
-    {
-        [download cancel];
-        [self.downMapDic removeObjectForKey:taskId];
+    
+    @synchronized (self.downMapDic) {
+        
+        NXDownLoad * download = self.downMapDic[taskId];
+        if (download)
+        {
+            [download cancel];
+            [self.downMapDic removeObjectForKey:taskId];
+        }
     }
 }
 - (void)resumeAllTask{
@@ -126,11 +130,13 @@
 - (void)resumeWithTaskId:(NSString *)taskId{
 
     NSAssert(taskId !=nil, @"taskid is nil");
-    
-    NXDownLoad * download = self.downMapDic[taskId];
-    if (download)
-    {
-        [download resume];
+    @synchronized (self.downMapDic) {
+        
+        NXDownLoad * download = self.downMapDic[taskId];
+        if (download)
+        {
+            [download resume];
+        }
     }
 }
 
@@ -146,10 +152,15 @@
 - (void)suspendWithTaskid:(NSString *)taskId{
 
     NSAssert(taskId !=nil, @"taskid is nil");
-    NXDownLoad * download = self.downMapDic[taskId];
-    if (download) {
+    
+    @synchronized (self.downMapDic) {
+     
+        NXDownLoad * download = self.downMapDic[taskId];
+        if (download) {
+            
+            [download suspend];
+        }
         
-        [download suspend];
     }
 }
 @end

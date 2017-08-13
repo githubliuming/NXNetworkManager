@@ -45,8 +45,8 @@
 }
 
 - (void)downLoad:(NXRequset *) requset
-                 progress:(progressBlock) progress
-        completionHandler:(completionHandlerBlock) completionBlock{
+                 progress:(NXProgressBlock) progress
+        completionHandler:(NXCompletionHandlerBlock) completionBlock{
 
     self.request = requset;
     

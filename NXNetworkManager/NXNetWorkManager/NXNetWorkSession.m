@@ -58,15 +58,16 @@
             
             success(task,responseObject,request);
         }
-         [manager.session invalidateAndCancel];
+        [manager.session invalidateAndCancel];
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         
         if (failureBlock) {
             
             failureBlock(task,error,request);
         }
-         [manager.session invalidateAndCancel];
+        [manager.session invalidateAndCancel];
     }];
+    
 }
 
 - (void)post:(NXRequset *)request success:(NXSuccesBlock) success failure:(NXFailureBlock)failureBlock {
@@ -81,12 +82,63 @@
         [manager.session invalidateAndCancel];
         
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-       
+        
         if (failureBlock) {
             
             failureBlock(task,error,request);
         }
         [manager.session invalidateAndCancel];
+    }];
+    
+}
+
+- (void) post:(NXRequset *)requset
+formDataBlock:(NXFormDataBlock)formDatas
+     progress:(NXProgressBlock)progress
+      success:(NXSuccesBlock)succces
+      failure:(NXFailureBlock) failure{
+
+        AFHTTPSessionManager * manager = [self AFSessionManager:requset.headers];
+    
+        [manager POST:requset.url parameters:requset.params constructingBodyWithBlock:formDatas progress:^(NSProgress * _Nonnull uploadProgress) {
+            
+            if (progress) {
+                
+                progress(uploadProgress.fractionCompleted);
+            }
+            
+        } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            
+            if (succces) {
+                
+                succces(task,responseObject,requset);
+            }
+            
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            
+            if (failure) {
+                failure(task,error,requset);
+            }
+        }];
+    
+}
+
+- (void) uplaod:(NXRequset *)requset  progress:(NXProgressBlock) progress complentBlock:(NXCompletionHandlerBlock)completionHandler{
+
+    AFHTTPSessionManager * manager = [self AFSessionManager:nil];
+    NSURLRequest * urlRequest = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:requset.url]];
+    
+    [manager uploadTaskWithRequest:urlRequest fromFile:[NSURL fileURLWithPath:requset.fileUrl] progress:^(NSProgress * _Nonnull uploadProgress) {
+        
+        if (progress) {
+            progress(uploadProgress.fractionCompleted);
+        }
+        
+    } completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
+        if (completionHandler) {
+            
+            completionHandler(response,responseObject,error,requset);
+        }
     }];
 }
 @end

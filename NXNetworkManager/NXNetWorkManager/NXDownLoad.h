@@ -7,21 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
-@class NXRequset;
+#import "NXNetworkBlock.h"
 
-typedef void(^progressBlock)(double progress);
-
-typedef void(^completionHandlerBlock)(NSURLResponse *responese,id responseObject,NSError * error, NXRequset * requset);
-
-/**
- 真正执行下载的类
- */
 @interface NXDownLoad : NSObject
 
 
 - (void)downLoad:(NXRequset *) requset
-                 progress:(progressBlock) progress
-        completionHandler:(completionHandlerBlock) completionBlock;
+                 progress:(NXProgressBlock) progress
+        completionHandler:(NXCompletionHandlerBlock) completionBlock;
 
 - (void)resume;
 

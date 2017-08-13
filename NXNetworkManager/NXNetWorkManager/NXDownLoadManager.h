@@ -22,8 +22,8 @@
 @property(nonatomic,assign) NSInteger maxDownloadCount;
 
 - (NSString *)downLoad:(NXRequset *) requset
-              progress:(progressBlock) progress
-     completionHandler:(completionHandlerBlock) completionBlock;
+              progress:(NXProgressBlock) progress
+     completionHandler:(NXCompletionHandlerBlock) completionBlock;
 
 - (void)cancelAllTask;
 - (void)cancelTaskWithTaskId:(NSString *)taskId;
@@ -33,4 +33,5 @@
 
 - (void)suspendAllTask;
 - (void)suspendWithTaskid:(NSString *)taskId;
+
 @end

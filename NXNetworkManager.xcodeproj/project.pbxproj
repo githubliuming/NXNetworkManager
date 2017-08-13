@@ -38,6 +38,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		477EE66A1F401407006BB910 /* NXNetworkBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NXNetworkBlock.h; sourceTree = "<group>"; };
 		BEF28C201F3BFF7F004DEEE4 /* NXNetworkManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NXNetworkManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BEF28C241F3BFF7F004DEEE4 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		BEF28C261F3BFF7F004DEEE4 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -170,6 +171,7 @@
 				BEF28C891F3C541D004DEEE4 /* NXDownLoad.h */,
 				BEF28C8A1F3C541D004DEEE4 /* NXDownLoad.m */,
 				BEF28C491F3C1673004DEEE4 /* NXNetWorkProtol.h */,
+				477EE66A1F401407006BB910 /* NXNetworkBlock.h */,
 				BEF28C4D1F3C25D9004DEEE4 /* NXNetWorkManagerHeader.h */,
 			);
 			path = NXNetWorkManager;
@@ -485,6 +487,7 @@
 				BEF28C391F3BFF7F004DEEE4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

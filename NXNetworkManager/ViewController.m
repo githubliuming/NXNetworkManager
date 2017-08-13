@@ -66,6 +66,8 @@
             NSLog(@"error == %@",[error userInfo]);
         }
     }];
+    
+    NSLog(@"taskId === %@",self.taskId);
 }
 
 
