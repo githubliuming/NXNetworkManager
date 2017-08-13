@@ -26,13 +26,13 @@
 
 @end
 
-@protocol NXParamContainerProtol <NXContainerProtol>
+@protocol NXParamContainerProtol <NSObject>
 
 - (NSDictionary *) params;
 
 @end
 
-@protocol NXHttpHeaderContainerProtol <NXContainerProtol>
+@protocol NXHttpHeaderContainerProtol <NSObject>
 
 - (NSDictionary *) headerInfoConfigDic;
 
