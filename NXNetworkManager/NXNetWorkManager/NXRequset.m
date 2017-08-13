@@ -8,6 +8,8 @@
 
 #import "NXRequset.h"
 #import "NXHeaderAndParamsConfig.h"
+#import "NXParamContainer.h"
+#import "NXRequestHeader.h"
 @implementation NXRequset
 
 - (instancetype) initWithUrl:(NSString * )url{
@@ -26,30 +28,52 @@
 }
 
 - (id<NXHttpHeaderContainerProtol>) headers{
-
+    
     if (!self.ingoreDefaultHttpHeaders) {
-        
+        //不忽略 合并请求头
+        NXRequestHeader * header = [[NXRequestHeader alloc] init];
+        NSDictionary * httpHeadDic = [_headers headerInfoConfigDic];
         NSDictionary * defaultDic  = [NXHeaderAndParamsConfig shareInstanceted].headerInfoConfigDic;
+        
         [defaultDic enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
-            
-            [_headers addString:obj forKey:key];
+           
+            [header addString:obj forKey:key];
         }];
+        
+        [httpHeadDic enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+           
+            [header addString:obj forKey:key];
+        }];
+        
+        return header;
+    } else {
+    
+       return  _headers;
     }
 
-    return _headers;
 }
 
 - (id<NXParamContainerProtol>)params{
 
     if (!self.ingoreDefaultHttpParams) {
-        
+        //不忽略 合并请求参数
+        NXParamContainer * paramContainer = [[NXParamContainer alloc] init];
+        NSDictionary * httpParams = [_params params];
         NSDictionary * defaultDic = [[NXHeaderAndParamsConfig shareInstanceted] params];
         [defaultDic enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
            
-            [_params addString:obj forKey:key];
+            [paramContainer addString:obj forKey:key];
         }];
-    }
+        
+        [httpParams enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+           
+            [paramContainer addString:obj forKey:key];
+        }];
+        
+        return paramContainer;
+    } else {
     
-    return _params;
+        return _params;
+    }
 }
 @end
