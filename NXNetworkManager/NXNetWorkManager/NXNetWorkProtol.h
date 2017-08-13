@@ -18,17 +18,21 @@
 
 @protocol NXContainerProtol <NSObject>
 
+- (void) addInteger:(NSInteger) i forKey:(NSString *)key;
+- (void) addDouble:(double)     d forKey:(NSString *)key;
+- (void) addString:(NSString *) s forKey:(NSString *)key;
+
 - (NSDictionary *) containerConfigDic;
 
 @end
 
-@protocol NXParamContainerProtol <NSObject>
+@protocol NXParamContainerProtol <NXContainerProtol>
 
 - (NSDictionary *) params;
 
 @end
 
-@protocol NXHttpHeaderContainerProtol <NSObject>
+@protocol NXHttpHeaderContainerProtol <NXContainerProtol>
 
 - (NSDictionary *) headerInfoConfigDic;
 

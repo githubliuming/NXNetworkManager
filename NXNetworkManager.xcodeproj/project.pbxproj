@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		477EE66E1F4029F7006BB910 /* NXHeaderAndParamsConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 477EE66D1F4029F7006BB910 /* NXHeaderAndParamsConfig.m */; };
 		BEF28C251F3BFF7F004DEEE4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = BEF28C241F3BFF7F004DEEE4 /* main.m */; };
 		BEF28C281F3BFF7F004DEEE4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = BEF28C271F3BFF7F004DEEE4 /* AppDelegate.m */; };
 		BEF28C2B1F3BFF7F004DEEE4 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BEF28C2A1F3BFF7F004DEEE4 /* ViewController.m */; };
@@ -39,6 +40,8 @@
 
 /* Begin PBXFileReference section */
 		477EE66A1F401407006BB910 /* NXNetworkBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NXNetworkBlock.h; sourceTree = "<group>"; };
+		477EE66C1F4029F7006BB910 /* NXHeaderAndParamsConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NXHeaderAndParamsConfig.h; sourceTree = "<group>"; };
+		477EE66D1F4029F7006BB910 /* NXHeaderAndParamsConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NXHeaderAndParamsConfig.m; sourceTree = "<group>"; };
 		BEF28C201F3BFF7F004DEEE4 /* NXNetworkManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NXNetworkManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BEF28C241F3BFF7F004DEEE4 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		BEF28C261F3BFF7F004DEEE4 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -170,6 +173,8 @@
 				BEF28C871F3C537D004DEEE4 /* NXDownLoadManager.m */,
 				BEF28C891F3C541D004DEEE4 /* NXDownLoad.h */,
 				BEF28C8A1F3C541D004DEEE4 /* NXDownLoad.m */,
+				477EE66C1F4029F7006BB910 /* NXHeaderAndParamsConfig.h */,
+				477EE66D1F4029F7006BB910 /* NXHeaderAndParamsConfig.m */,
 				BEF28C491F3C1673004DEEE4 /* NXNetWorkProtol.h */,
 				477EE66A1F401407006BB910 /* NXNetworkBlock.h */,
 				BEF28C4D1F3C25D9004DEEE4 /* NXNetWorkManagerHeader.h */,
@@ -310,6 +315,7 @@
 				BEF28C791F3C2A64004DEEE4 /* AFImageDownloader.m in Sources */,
 				BEF28C7E1F3C2A64004DEEE4 /* UIProgressView+AFNetworking.m in Sources */,
 				BEF28C421F3C11B0004DEEE4 /* NXRequset.m in Sources */,
+				477EE66E1F4029F7006BB910 /* NXHeaderAndParamsConfig.m in Sources */,
 				BEF28C7A1F3C2A64004DEEE4 /* AFNetworkActivityIndicatorManager.m in Sources */,
 				BEF28C881F3C537D004DEEE4 /* NXDownLoadManager.m in Sources */,
 				BEF28C451F3C11F3004DEEE4 /* NXRequestHeader.m in Sources */,

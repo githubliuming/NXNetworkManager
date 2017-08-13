@@ -10,8 +10,5 @@
 #import "NXNetWorkProtol.h"
 @interface NXContainer : NSObject<NXContainerProtol>
 
-- (void) addInteger:(NSInteger) i forKey:(NSString *)key;
-- (void) addDouble:(double)     d forKey:(NSString *)key;
-- (void) addString:(NSString *) s forKey:(NSString *)key;
 
 @end

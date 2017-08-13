@@ -15,9 +15,20 @@
 
 - (instancetype) initWithUrl:(NSString * )url;
 
+/**
+ 请求url
+ */
 @property(nonatomic,strong)NSString * url;
 
+/**
+ 本次请求是否忽略默认配置的httpHeader  默认为NO 不忽略
+ */
+@property(nonatomic,assign) BOOL ingoreDefaultHttpHeaders;
 
+/**
+ 本次请求是否忽略默认配置的请求参数 默认为NO 不忽略
+ */
+@property(nonatomic,assign) BOOL ingoreDefaultHttpParams;
 /**
  上传 或者 下载文件存放的路径
  */
