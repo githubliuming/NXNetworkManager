@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		477EE66E1F4029F7006BB910 /* NXHeaderAndParamsConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 477EE66D1F4029F7006BB910 /* NXHeaderAndParamsConfig.m */; };
+		BE9ACF711F42DFA800720279 /* NXCacheManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BE9ACF701F42DFA800720279 /* NXCacheManager.m */; };
 		BEF28C251F3BFF7F004DEEE4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = BEF28C241F3BFF7F004DEEE4 /* main.m */; };
 		BEF28C281F3BFF7F004DEEE4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = BEF28C271F3BFF7F004DEEE4 /* AppDelegate.m */; };
 		BEF28C2B1F3BFF7F004DEEE4 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BEF28C2A1F3BFF7F004DEEE4 /* ViewController.m */; };
@@ -42,6 +43,8 @@
 		477EE66A1F401407006BB910 /* NXNetworkBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NXNetworkBlock.h; sourceTree = "<group>"; };
 		477EE66C1F4029F7006BB910 /* NXHeaderAndParamsConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NXHeaderAndParamsConfig.h; sourceTree = "<group>"; };
 		477EE66D1F4029F7006BB910 /* NXHeaderAndParamsConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NXHeaderAndParamsConfig.m; sourceTree = "<group>"; };
+		BE9ACF6F1F42DFA800720279 /* NXCacheManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NXCacheManager.h; sourceTree = "<group>"; };
+		BE9ACF701F42DFA800720279 /* NXCacheManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NXCacheManager.m; sourceTree = "<group>"; };
 		BEF28C201F3BFF7F004DEEE4 /* NXNetworkManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NXNetworkManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BEF28C241F3BFF7F004DEEE4 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		BEF28C261F3BFF7F004DEEE4 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -114,6 +117,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		BE9ACF6E1F42DF9100720279 /* NXCacheManager */ = {
+			isa = PBXGroup;
+			children = (
+				BE9ACF6F1F42DFA800720279 /* NXCacheManager.h */,
+				BE9ACF701F42DFA800720279 /* NXCacheManager.m */,
+			);
+			path = NXCacheManager;
+			sourceTree = "<group>";
+		};
 		BEF28C171F3BFF7F004DEEE4 = {
 			isa = PBXGroup;
 			children = (
@@ -159,6 +171,7 @@
 		BEF28C3A1F3BFFA9004DEEE4 /* NXNetWorkManager */ = {
 			isa = PBXGroup;
 			children = (
+				BE9ACF6E1F42DF9100720279 /* NXCacheManager */,
 				BEF28C401F3C11B0004DEEE4 /* NXRequset.h */,
 				BEF28C411F3C11B0004DEEE4 /* NXRequset.m */,
 				BEF28C431F3C11F3004DEEE4 /* NXRequestHeader.h */,
@@ -314,6 +327,7 @@
 				BEF28C7C1F3C2A64004DEEE4 /* UIButton+AFNetworking.m in Sources */,
 				BEF28C791F3C2A64004DEEE4 /* AFImageDownloader.m in Sources */,
 				BEF28C7E1F3C2A64004DEEE4 /* UIProgressView+AFNetworking.m in Sources */,
+				BE9ACF711F42DFA800720279 /* NXCacheManager.m in Sources */,
 				BEF28C421F3C11B0004DEEE4 /* NXRequset.m in Sources */,
 				477EE66E1F4029F7006BB910 /* NXHeaderAndParamsConfig.m in Sources */,
 				BEF28C7A1F3C2A64004DEEE4 /* AFNetworkActivityIndicatorManager.m in Sources */,

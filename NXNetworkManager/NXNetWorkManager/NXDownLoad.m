@@ -150,7 +150,7 @@
 
 - (void)suspend{
 
-    if (self.downloadTask)
+    if (self.downloadTask.state == NSURLSessionTaskStateRunning)
     {
         [self.downloadTask suspend];
     }

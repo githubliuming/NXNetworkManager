@@ -34,17 +34,43 @@
     return self;
 }
 
+- (AFHTTPSessionManager *) shareIncetedAFSessionManger{
+
+    static  AFHTTPSessionManager * af_manager = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        af_manager = [AFHTTPSessionManager manager];
+        af_manager.securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeNone];
+        
+        af_manager.responseSerializer = [AFJSONResponseSerializer serializer];
+        
+        [af_manager.requestSerializer willChangeValueForKey:@"timeoutInterval"];
+        af_manager.requestSerializer.timeoutInterval  = self.requestTimeOut;
+        [af_manager.requestSerializer didChangeValueForKey:@"timeoutInterval"];
+        
+        af_manager.responseSerializer.acceptableContentTypes = [NSSet setWithArray:@[@"application/json",
+                                                                                  @"text/html",
+                                                                                  @"text/json",
+                                                                                  @"text/plain",
+                                                                                  @"text/javascript",
+                                                                                  @"text/xml",
+                                                                                  @"image/*",
+                                                                                  @"application/octet-stream",
+                                                                                  @"application/zip"]];
+    });
+    
+    return  af_manager;
+}
+
 - (AFHTTPSessionManager *) AFSessionManager:(id<NXHttpHeaderContainerProtol>)header
 {
-    AFHTTPSessionManager * manager =  [AFHTTPSessionManager manager];
-    manager.responseSerializer = [AFJSONResponseSerializer serializer];
-    manager.requestSerializer.timeoutInterval  = self.requestTimeOut;
+    AFHTTPSessionManager * manager =  [self shareIncetedAFSessionManger];
     if (header) {
         
         NSDictionary * headDic = header.headerInfoConfigDic;
         [headDic enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
             
-            [manager.requestSerializer setValue:obj forHTTPHeaderField:obj];
+            [manager.requestSerializer setValue:obj forHTTPHeaderField:key];
         }];
     }
     return manager;
@@ -113,12 +139,14 @@ formDataBlock:(NXFormDataBlock)formDatas
                 
                 succces(task,responseObject,requset);
             }
+            [manager.session invalidateAndCancel];
             
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
             
             if (failure) {
                 failure(task,error,requset);
             }
+            [manager.session invalidateAndCancel];
         }];
     
 }
@@ -133,12 +161,14 @@ formDataBlock:(NXFormDataBlock)formDatas
         if (progress) {
             progress(uploadProgress.fractionCompleted);
         }
+        [manager.session invalidateAndCancel];
         
     } completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
         if (completionHandler) {
             
             completionHandler(response,responseObject,error,requset);
         }
+        [manager.session invalidateAndCancel];
     }];
 }
 @end
