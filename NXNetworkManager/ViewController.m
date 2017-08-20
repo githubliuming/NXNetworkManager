@@ -32,7 +32,9 @@
     [param addDouble:time forKey:@"time"];
     
     NXRequset * request = [[NXRequset alloc] initWithUrl:@"http://data.philm.cc/sticker/2017/v18/check_version.json"];
-    request.params = param;
+    [request addParams:^(id<NXParamContainerProtol> params) {
+       
+    }];
     
     [[NXNetWorkSession shareInstanced] Get:request success:^(NSURLSessionDataTask *task, id responseObject, NXRequset *requset) {
         

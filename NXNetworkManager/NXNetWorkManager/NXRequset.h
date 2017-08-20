@@ -51,9 +51,20 @@
  @param params paramBlock
  @param headers headerBlock
  */
-- (void) addParams:(NXParamsBlock) params andHeaders:(NXHeadersBlock)headers;
+- (void)addParams:(NXParamsBlock) params andHeaders:(NXHeadersBlock)headers;
 
-- (void) addParams:(NXParamsBlock) params;
+/**
+ 
+ 往requst中添加请求参数信息
+ @param params 参数容器回调
+ */
+- (void)addParams:(NXParamsBlock) params;
+
+/**
+ 往requst中添加请求头参数信息
+
+ @param header 参数容器回调
+ */
 - (void)addHeaders:(NXHeadersBlock) header;
 
 
