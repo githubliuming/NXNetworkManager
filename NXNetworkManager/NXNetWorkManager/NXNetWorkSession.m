@@ -53,7 +53,7 @@
 - (void) Get:(NXRequset *)request success:(NXSuccesBlock) success failure:(NXFailureBlock)failureBlock {
 
     AFHTTPSessionManager *manager = [self AFSessionManager:request.headers];
-    [manager GET:request.url parameters:request.params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    [manager GET:request.url parameters:request.params.params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         if (success) {
             
             success(task,responseObject,request);
@@ -73,7 +73,7 @@
 - (void)post:(NXRequset *)request success:(NXSuccesBlock) success failure:(NXFailureBlock)failureBlock {
     
     AFHTTPSessionManager *manager = [self AFSessionManager:request.headers];
-    [manager POST:@"" parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    [manager POST:request.url parameters:request.params.params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         
         if (success) {
             
@@ -100,7 +100,7 @@ formDataBlock:(NXFormDataBlock)formDatas
 
         AFHTTPSessionManager * manager = [self AFSessionManager:requset.headers];
     
-        [manager POST:requset.url parameters:requset.params constructingBodyWithBlock:formDatas progress:^(NSProgress * _Nonnull uploadProgress) {
+        [manager POST:requset.url parameters:requset.params.params constructingBodyWithBlock:formDatas progress:^(NSProgress * _Nonnull uploadProgress) {
             
             if (progress) {
                 

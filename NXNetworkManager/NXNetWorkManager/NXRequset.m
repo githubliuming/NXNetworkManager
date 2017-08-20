@@ -76,4 +76,27 @@
         return _params;
     }
 }
+- (void) addParams:(NXParamsBlock) params andHeaders:(NXHeadersBlock)headers{
+
+    if (params) {
+        
+        self.params = [[NXParamContainer alloc] init];
+        params(self.params);
+    }
+    
+    if (headers) {
+        
+        self.headers = [[NXRequestHeader alloc] init];
+        headers(self.headers);
+    }
+    
+}
+- (void) addParams:(NXParamsBlock) params{
+
+    [self addParams:params andHeaders:nil];
+}
+- (void)addHeaders:(NXHeadersBlock) header{
+
+    [self addParams:nil andHeaders:header];
+}
 @end

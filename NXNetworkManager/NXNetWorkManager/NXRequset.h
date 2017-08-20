@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "NXNetWorkProtol.h"
+#import "NXNetworkBlock.h"
 /**
  Http requset
  */
@@ -42,6 +43,20 @@
  http 请求头信息
  */
 @property(nonatomic,strong)id<NXHttpHeaderContainerProtol> headers;
+
+
+
+/**
+ 往requst中添加请求参数信息 和请求头信息
+ @param params paramBlock
+ @param headers headerBlock
+ */
+- (void) addParams:(NXParamsBlock) params andHeaders:(NXHeadersBlock)headers;
+
+- (void) addParams:(NXParamsBlock) params;
+- (void)addHeaders:(NXHeadersBlock) header;
+
+
 
 
 @end
