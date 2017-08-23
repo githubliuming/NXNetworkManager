@@ -9,14 +9,15 @@
 #import <Foundation/Foundation.h>
 #import "NXNetWorkProtol.h"
 
-@interface NXHeaderAndParamsConfig : NSObject<NXParamContainerProtol,NXHttpHeaderContainerProtol>
-
+@interface NXHeaderAndParamsConfig : NSObject
 
 + (instancetype) shareInstanceted;
 
-- (void) addValue:(NSString *) value forHttpParam:(NSString *) key;
+- (void)addParams:(NXAddHeaderOrParamsBlock) paramContainer;
 
-- (void) addHeader:(NSString *) value forHttpHeader:(NSString *) key;
+- (void)addHeader:(NXAddHeaderOrParamsBlock)headerContainer;
 
 
+-(NSDictionary *) params;
+- (NSDictionary *)headerInfoConfigDic;
 @end

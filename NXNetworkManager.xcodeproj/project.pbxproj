@@ -16,8 +16,6 @@
 		BEF28C301F3BFF7F004DEEE4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BEF28C2F1F3BFF7F004DEEE4 /* Assets.xcassets */; };
 		BEF28C331F3BFF7F004DEEE4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BEF28C311F3BFF7F004DEEE4 /* LaunchScreen.storyboard */; };
 		BEF28C421F3C11B0004DEEE4 /* NXRequset.m in Sources */ = {isa = PBXBuildFile; fileRef = BEF28C411F3C11B0004DEEE4 /* NXRequset.m */; };
-		BEF28C451F3C11F3004DEEE4 /* NXRequestHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = BEF28C441F3C11F3004DEEE4 /* NXRequestHeader.m */; };
-		BEF28C481F3C1348004DEEE4 /* NXParamContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = BEF28C471F3C1348004DEEE4 /* NXParamContainer.m */; };
 		BEF28C4C1F3C1ED8004DEEE4 /* NXContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = BEF28C4B1F3C1ED8004DEEE4 /* NXContainer.m */; };
 		BEF28C5D1F3C2A55004DEEE4 /* AFHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BEF28C511F3C2A55004DEEE4 /* AFHTTPSessionManager.m */; };
 		BEF28C5E1F3C2A55004DEEE4 /* AFNetworkReachabilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BEF28C541F3C2A55004DEEE4 /* AFNetworkReachabilityManager.m */; };
@@ -57,10 +55,6 @@
 		BEF28C341F3BFF7F004DEEE4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BEF28C401F3C11B0004DEEE4 /* NXRequset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NXRequset.h; sourceTree = "<group>"; };
 		BEF28C411F3C11B0004DEEE4 /* NXRequset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NXRequset.m; sourceTree = "<group>"; };
-		BEF28C431F3C11F3004DEEE4 /* NXRequestHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NXRequestHeader.h; sourceTree = "<group>"; };
-		BEF28C441F3C11F3004DEEE4 /* NXRequestHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NXRequestHeader.m; sourceTree = "<group>"; };
-		BEF28C461F3C1348004DEEE4 /* NXParamContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NXParamContainer.h; sourceTree = "<group>"; };
-		BEF28C471F3C1348004DEEE4 /* NXParamContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NXParamContainer.m; sourceTree = "<group>"; };
 		BEF28C491F3C1673004DEEE4 /* NXNetWorkProtol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NXNetWorkProtol.h; sourceTree = "<group>"; };
 		BEF28C4A1F3C1ED8004DEEE4 /* NXContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NXContainer.h; sourceTree = "<group>"; };
 		BEF28C4B1F3C1ED8004DEEE4 /* NXContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NXContainer.m; sourceTree = "<group>"; };
@@ -174,10 +168,6 @@
 				BE9ACF6E1F42DF9100720279 /* NXCacheManager */,
 				BEF28C401F3C11B0004DEEE4 /* NXRequset.h */,
 				BEF28C411F3C11B0004DEEE4 /* NXRequset.m */,
-				BEF28C431F3C11F3004DEEE4 /* NXRequestHeader.h */,
-				BEF28C441F3C11F3004DEEE4 /* NXRequestHeader.m */,
-				BEF28C461F3C1348004DEEE4 /* NXParamContainer.h */,
-				BEF28C471F3C1348004DEEE4 /* NXParamContainer.m */,
 				BEF28C4A1F3C1ED8004DEEE4 /* NXContainer.h */,
 				BEF28C4B1F3C1ED8004DEEE4 /* NXContainer.m */,
 				BEF28C811F3C2AEF004DEEE4 /* NXNetWorkSession.h */,
@@ -332,9 +322,7 @@
 				477EE66E1F4029F7006BB910 /* NXHeaderAndParamsConfig.m in Sources */,
 				BEF28C7A1F3C2A64004DEEE4 /* AFNetworkActivityIndicatorManager.m in Sources */,
 				BEF28C881F3C537D004DEEE4 /* NXDownLoadManager.m in Sources */,
-				BEF28C451F3C11F3004DEEE4 /* NXRequestHeader.m in Sources */,
 				BEF28C7F1F3C2A64004DEEE4 /* UIRefreshControl+AFNetworking.m in Sources */,
-				BEF28C481F3C1348004DEEE4 /* NXParamContainer.m in Sources */,
 				BEF28C781F3C2A64004DEEE4 /* AFAutoPurgingImageCache.m in Sources */,
 				BEF28C7D1F3C2A64004DEEE4 /* UIImageView+AFNetworking.m in Sources */,
 				BEF28C281F3BFF7F004DEEE4 /* AppDelegate.m in Sources */,

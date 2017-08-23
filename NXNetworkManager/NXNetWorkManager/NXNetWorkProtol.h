@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import "NXNetworkBlock.h"
 
 /**
  NXNetWorkManager 内部协议
@@ -18,11 +18,11 @@
 
 @protocol NXContainerProtol <NSObject>
 
-- (void) addInteger:(NSInteger) i forKey:(NSString *)key;
-- (void) addDouble:(double)     d forKey:(NSString *)key;
-- (void) addString:(NSString *) s forKey:(NSString *)key;
-
 - (NSDictionary *) containerConfigDic;
+
+- (NXContainerAddIntegerBlock)addInteger;
+- (NXContainerAddDoubleBlock)addDouble;
+- (NXContainerAddStringgerBlock)addString;
 
 @end
 

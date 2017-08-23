@@ -36,12 +36,23 @@
 /**
  http 请求参数信息
  */
-@property(nonatomic,strong)id<NXParamContainerProtol> params;
+@property(nonatomic,strong)id<NXContainerProtol> params;
 
 /**
  http 请求头信息
  */
-@property(nonatomic,strong)id<NXHttpHeaderContainerProtol> headers;
+@property(nonatomic,strong)id<NXContainerProtol> headers;
+
+
+/**
+ 缓存策略 默认 NSURLRequestUseProtocolCachePolicy；
+ */
+@property(nonatomic,assign) NSURLRequestCachePolicy  cachePolicy;
+
+
+- (void)addParams:(NXAddHeaderOrParamsBlock)params headers:(NXAddHeaderOrParamsBlock)headers;
+- (void)addParams:(NXAddHeaderOrParamsBlock)params;
+- (void)addHeaders:(NXAddHeaderOrParamsBlock)headers;
 
 
 @end

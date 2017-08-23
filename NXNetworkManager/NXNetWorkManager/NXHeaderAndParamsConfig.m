@@ -7,8 +7,7 @@
 //
 
 #import "NXHeaderAndParamsConfig.h"
-#import "NXRequestHeader.h"
-#import "NXParamContainer.h"
+#import "NXContainer.h"
 @interface NXHeaderAndParamsConfig ()
 @property(strong,nonatomic)  NXContainer * httpHeaders;
 @property(strong,nonatomic) NXContainer * httpParams;
@@ -45,15 +44,22 @@
     
     return _httpParams;
 }
-- (void) addValue:(NSString *) value forHttpParam:(NSString *) key{
 
-    [self.httpParams addString:value forKey:key];
+- (void)addParams:(NXAddHeaderOrParamsBlock) paramContainer{
+
+    if (paramContainer) {
+        
+        paramContainer(self.httpParams);
+    }
 }
-- (void) addHeader:(NSString *) value forHttpHeader:(NSString *) key{
 
-    [self.httpHeaders addString:value forKey:key];
+- (void)addHeader:(NXAddHeaderOrParamsBlock)headerContainer{
+
+    if (headerContainer) {
+        
+        headerContainer(self.httpHeaders);
+    }
 }
-
 
 -(NSDictionary *) params{
 

@@ -27,12 +27,15 @@
     self.download = [NXDownLoadManager shareInstanced];
     self.progressUI.progress = 0.0f;
     
-    NXParamContainer * param = [[NXParamContainer alloc] init];
     double time = [[NSDate date] timeIntervalSince1970];
-    [param addDouble:time forKey:@"time"];
     
     NXRequset * request = [[NXRequset alloc] initWithUrl:@"http://data.philm.cc/sticker/2017/v18/check_version.json"];
-    request.params = param;
+    
+    [request addParams:^(id<NXContainerProtol> container) {
+        
+        container.addDouble(time,@"time");
+        
+    }];
     
     [[NXNetWorkSession shareInstanced] Get:request success:^(NSURLSessionDataTask *task, id responseObject, NXRequset *requset) {
         
@@ -40,6 +43,7 @@
         
     } failure:^(NSURLSessionDataTask *task, NSError *error, NXRequset *requset) {
         
+        NSLog(@"error = %@",[error userInfo]);
     }];
     
 }

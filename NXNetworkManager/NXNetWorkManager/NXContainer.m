@@ -24,29 +24,41 @@
     }
     return _containerDic;
 }
-- (void)addInteger:(NSInteger) i forKey:(NSString *)key{
-    
-    NSString * value = [NSString stringWithFormat:@"%ld",(long)i];
-    [self addString:value forKey:key];
-}
-- (void)addDouble:(double)     d forKey:(NSString *)key{
-    
-    NSString * value = [NSString stringWithFormat:@"%f",d];
-    [self addString:value forKey:key];
-}
-- (void)addString:(NSString *) s forKey:(NSString *)key{
-    
-    NSAssert(key, @" param key can not nil");
-    if (s.length <= 0) {
-        s = @"";
-    }
-    [self.containerDic setObject:s forKey:key];
-}
-
 #pragma mark - NXContainerProtol
 
 - (NSDictionary *)containerConfigDic{
     
     return [[NSDictionary alloc] initWithDictionary:self.containerDic];
+}
+
+- (NXContainerAddIntegerBlock)addInteger{
+
+    return ^(NSInteger value,NSString * key){
+    
+        NSString * value_ = [NSString stringWithFormat:@"%ld",(long)value];
+        
+        return self.addString(value_,key);
+    };
+}
+- (NXContainerAddDoubleBlock)addDouble{
+
+    return ^(double value,NSString * key){
+        
+        NSString * value_ = [NSString stringWithFormat:@"%f",value];
+        return self.addString(value_,key);
+    };
+}
+- (NXContainerAddStringgerBlock)addString{
+
+    return ^(NSString * value,NSString * key){
+    
+        NSAssert(key, @" param key can not nil");
+        
+        if (value.length <= 0) {
+            value = @"";
+        }
+        [self.containerDic setObject:value forKey:key];
+        return self;
+    };
 }
 @end

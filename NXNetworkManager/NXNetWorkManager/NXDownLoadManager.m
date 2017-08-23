@@ -97,12 +97,22 @@
 }
 - (void)cancelAllTask{
 
-    NSArray * allTaskIds = [self.downMapDic allKeys];
-    for (NSString * taskId in allTaskIds) {
+    @synchronized (self.downMapDic) {
+       
+        NSArray * allTaskIds = [self.downMapDic allKeys];
+        for (NSString * taskId in allTaskIds) {
+            
+            NXDownLoad * download = self.downMapDic[taskId];
+            if (download)
+            {
+                [download cancel];
+                [self.downMapDic removeObjectForKey:taskId];
+            }
+        }
+        [self.downloadQueue cancelAllOperations];
         
-        [self cancelTaskWithTaskId:taskId];
     }
-    [self.downloadQueue cancelAllOperations];
+
 }
 - (void)cancelTaskWithTaskId:(NSString *)taskId{
 
@@ -120,10 +130,18 @@
 }
 - (void)resumeAllTask{
 
-    NSArray * allTaskIds = [self.downMapDic allKeys];
-    for (NSString * taskId in allTaskIds) {
+    @synchronized (self.downMapDic) {
+     
+        NSArray * allTaskIds = [self.downMapDic allKeys];
+        for (NSString * taskId in allTaskIds) {
+            
+            NXDownLoad * download = self.downMapDic[taskId];
+            if (download)
+            {
+                [download resume];
+            }
+        }
         
-        [self resumeWithTaskId:taskId];
     }
 }
 
@@ -142,10 +160,18 @@
 
 - (void)suspendAllTask{
 
-    NSArray * allTaskIds = [self.downMapDic allKeys];
-    for (NSString * taskId in allTaskIds) {
+    @synchronized (self.downMapDic) {
+     
+        NSArray * allTaskIds = [self.downMapDic allKeys];
+        for (NSString * taskId in allTaskIds) {
+            
+            NXDownLoad * download = self.downMapDic[taskId];
+            if (download) {
+                
+                [download suspend];
+            }
+        }
         
-        [self suspendWithTaskid:taskId];
     }
 }
 
@@ -154,7 +180,7 @@
     NSAssert(taskId !=nil, @"taskid is nil");
     
     @synchronized (self.downMapDic) {
-     
+        
         NXDownLoad * download = self.downMapDic[taskId];
         if (download) {
             

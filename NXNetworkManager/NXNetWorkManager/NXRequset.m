@@ -8,8 +8,7 @@
 
 #import "NXRequset.h"
 #import "NXHeaderAndParamsConfig.h"
-#import "NXParamContainer.h"
-#import "NXRequestHeader.h"
+#import "NXContainer.h"
 @implementation NXRequset
 
 - (instancetype) initWithUrl:(NSString * )url{
@@ -18,6 +17,8 @@
     if (self) {
         
         self.url = url;
+        
+        self.cachePolicy = NSURLRequestUseProtocolCachePolicy;
     }
     return self;
     
@@ -27,22 +28,22 @@
     return [self initWithUrl:@""];
 }
 
-- (id<NXHttpHeaderContainerProtol>) headers{
+- (id<NXContainerProtol>) headers{
     
     if (!self.ingoreDefaultHttpHeaders) {
         //不忽略 合并请求头
-        NXRequestHeader * header = [[NXRequestHeader alloc] init];
-        NSDictionary * httpHeadDic = [_headers headerInfoConfigDic];
+        NXContainer * header = [[NXContainer alloc] init];
+        NSDictionary * httpHeadDic = [_headers containerConfigDic];
         NSDictionary * defaultDic  = [NXHeaderAndParamsConfig shareInstanceted].headerInfoConfigDic;
         
         [defaultDic enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
            
-            [header addString:obj forKey:key];
+            header.addString(obj,key);
         }];
         
         [httpHeadDic enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
            
-            [header addString:obj forKey:key];
+            header.addString(obj,key);
         }];
         
         return header;
@@ -53,21 +54,21 @@
 
 }
 
-- (id<NXParamContainerProtol>)params{
+- (id<NXContainerProtol>)params{
 
     if (!self.ingoreDefaultHttpParams) {
         //不忽略 合并请求参数
-        NXParamContainer * paramContainer = [[NXParamContainer alloc] init];
-        NSDictionary * httpParams = [_params params];
+        NXContainer * paramContainer = [[NXContainer alloc] init];
+        NSDictionary * httpParams = [_params containerConfigDic];
         NSDictionary * defaultDic = [[NXHeaderAndParamsConfig shareInstanceted] params];
         [defaultDic enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
            
-            [paramContainer addString:obj forKey:key];
+            paramContainer.addString(obj,key);
         }];
         
         [httpParams enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
            
-            [paramContainer addString:obj forKey:key];
+            paramContainer.addString(obj,key);
         }];
         
         return paramContainer;
@@ -76,4 +77,38 @@
         return _params;
     }
 }
+
+- (void)addParams:(NXAddHeaderOrParamsBlock)params headers:(NXAddHeaderOrParamsBlock)headers{
+
+    if (params) {
+        
+        if (_headers == nil) {
+            
+            _headers = [[NXContainer alloc] init];
+        }
+        params(_headers);
+    }
+    if (headers) {
+        
+        if (_headers ==nil) {
+            
+            _headers = [[NXContainer alloc] init];
+        }
+        
+        headers(_headers);
+    }
+    
+}
+- (void)addParams:(NXAddHeaderOrParamsBlock)params{
+    
+    [self addParams:params headers:nil];
+
+}
+- (void)addHeaders:(NXAddHeaderOrParamsBlock)headers{
+
+    [self addParams:nil headers:headers];
+}
+
+
+
 @end

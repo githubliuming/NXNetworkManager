@@ -10,8 +10,6 @@
 #define NXNetWorkManagerHeader_h
 
 #import "NXRequset.h"
-#import "NXRequestHeader.h"
-#import "NXParamContainer.h"
 #import "NXNetWorkSession.h"
 
 #import "NXDownLoadManager.h"

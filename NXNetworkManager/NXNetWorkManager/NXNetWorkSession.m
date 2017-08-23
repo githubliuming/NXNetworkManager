@@ -44,9 +44,7 @@
         
         af_manager.responseSerializer = [AFJSONResponseSerializer serializer];
         
-        [af_manager.requestSerializer willChangeValueForKey:@"timeoutInterval"];
         af_manager.requestSerializer.timeoutInterval  = self.requestTimeOut;
-        [af_manager.requestSerializer didChangeValueForKey:@"timeoutInterval"];
         
         af_manager.responseSerializer.acceptableContentTypes = [NSSet setWithArray:@[@"application/json",
                                                                                   @"text/html",
@@ -57,17 +55,18 @@
                                                                                   @"image/*",
                                                                                   @"application/octet-stream",
                                                                                   @"application/zip"]];
+        
     });
     
     return  af_manager;
 }
 
-- (AFHTTPSessionManager *) AFSessionManager:(id<NXHttpHeaderContainerProtol>)header
+- (AFHTTPSessionManager *) AFSessionManager:(id<NXContainerProtol>)header
 {
     AFHTTPSessionManager * manager =  [self shareIncetedAFSessionManger];
     if (header) {
         
-        NSDictionary * headDic = header.headerInfoConfigDic;
+        NSDictionary * headDic = header.containerConfigDic;
         [headDic enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
             
             [manager.requestSerializer setValue:obj forHTTPHeaderField:key];
@@ -79,7 +78,9 @@
 - (void) Get:(NXRequset *)request success:(NXSuccesBlock) success failure:(NXFailureBlock)failureBlock {
 
     AFHTTPSessionManager *manager = [self AFSessionManager:request.headers];
-    [manager GET:request.url parameters:request.params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    manager.requestSerializer.cachePolicy = request.cachePolicy;
+    
+    [manager GET:request.url parameters:request.params.containerConfigDic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         if (success) {
             
             success(task,responseObject,request);
@@ -99,7 +100,7 @@
 - (void)post:(NXRequset *)request success:(NXSuccesBlock) success failure:(NXFailureBlock)failureBlock {
     
     AFHTTPSessionManager *manager = [self AFSessionManager:request.headers];
-    [manager POST:@"" parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    [manager POST:request.url parameters:request.params.containerConfigDic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         
         if (success) {
             
@@ -126,7 +127,7 @@ formDataBlock:(NXFormDataBlock)formDatas
 
         AFHTTPSessionManager * manager = [self AFSessionManager:requset.headers];
     
-        [manager POST:requset.url parameters:requset.params constructingBodyWithBlock:formDatas progress:^(NSProgress * _Nonnull uploadProgress) {
+        [manager POST:requset.url parameters:requset.params.containerConfigDic constructingBodyWithBlock:formDatas progress:^(NSProgress * _Nonnull uploadProgress) {
             
             if (progress) {
                 
