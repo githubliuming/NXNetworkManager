@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "NXNetWorkProtol.h"
+#import "NXNetworkBlock.h"
 /**
  Http requset
  */

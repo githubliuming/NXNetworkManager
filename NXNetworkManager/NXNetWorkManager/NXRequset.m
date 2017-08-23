@@ -78,6 +78,7 @@
     }
 }
 
+
 - (void)addParams:(NXAddHeaderOrParamsBlock)params headers:(NXAddHeaderOrParamsBlock)headers{
 
     if (params) {
@@ -108,7 +109,5 @@
 
     [self addParams:nil headers:headers];
 }
-
-
 
 @end

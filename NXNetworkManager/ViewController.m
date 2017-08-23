@@ -30,11 +30,16 @@
     double time = [[NSDate date] timeIntervalSince1970];
     
     NXRequset * request = [[NXRequset alloc] initWithUrl:@"http://data.philm.cc/sticker/2017/v18/check_version.json"];
+<<<<<<< HEAD
     
     [request addParams:^(id<NXContainerProtol> container) {
         
         container.addDouble(time,@"time");
         
+=======
+    [request addParams:^(id<NXParamContainerProtol> params) {
+       
+>>>>>>> f843e34dd221fddfe4e5c9e7b9d6cc87836dfce0
     }];
     
     [[NXNetWorkSession shareInstanced] Get:request success:^(NSURLSessionDataTask *task, id responseObject, NXRequset *requset) {
