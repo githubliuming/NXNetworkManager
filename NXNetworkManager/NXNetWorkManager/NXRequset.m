@@ -83,11 +83,11 @@
 
     if (params) {
         
-        if (_headers == nil) {
+        if (_params == nil) {
             
-            _headers = [[NXContainer alloc] init];
+            _params = [[NXContainer alloc] init];
         }
-        params(_headers);
+        params(_params);
     }
     if (headers) {
         
