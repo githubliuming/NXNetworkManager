@@ -12,10 +12,6 @@
 /**
  NXNetWorkManager 内部协议
  */
-@protocol NXNetWorkProtol <NSObject>
-
-@end
-
 @protocol NXContainerProtol <NSObject>
 
 - (NSDictionary *) containerConfigDic;
@@ -23,18 +19,6 @@
 - (NXContainerAddIntegerBlock)addInteger;
 - (NXContainerAddDoubleBlock)addDouble;
 - (NXContainerAddStringgerBlock)addString;
-
-@end
-
-@protocol NXParamContainerProtol <NSObject>
-
-- (NSDictionary *) params;
-
-@end
-
-@protocol NXHttpHeaderContainerProtol <NSObject>
-
-- (NSDictionary *) headerInfoConfigDic;
 
 @end
 
