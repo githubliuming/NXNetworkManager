@@ -78,13 +78,9 @@
 - (void) Get:(NXRequset *)request success:(NXSuccesBlock) success failure:(NXFailureBlock)failureBlock {
 
     AFHTTPSessionManager *manager = [self AFSessionManager:request.headers];
-<<<<<<< HEAD
     manager.requestSerializer.cachePolicy = request.cachePolicy;
     
     [manager GET:request.url parameters:request.params.containerConfigDic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-=======
-    [manager GET:request.url parameters:request.params.params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
->>>>>>> f843e34dd221fddfe4e5c9e7b9d6cc87836dfce0
         if (success) {
             
             success(task,responseObject,request);
@@ -104,11 +100,7 @@
 - (void)post:(NXRequset *)request success:(NXSuccesBlock) success failure:(NXFailureBlock)failureBlock {
     
     AFHTTPSessionManager *manager = [self AFSessionManager:request.headers];
-<<<<<<< HEAD
     [manager POST:request.url parameters:request.params.containerConfigDic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-=======
-    [manager POST:request.url parameters:request.params.params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
->>>>>>> f843e34dd221fddfe4e5c9e7b9d6cc87836dfce0
         
         if (success) {
             
@@ -134,12 +126,7 @@ formDataBlock:(NXFormDataBlock)formDatas
       failure:(NXFailureBlock) failure{
 
         AFHTTPSessionManager * manager = [self AFSessionManager:requset.headers];
-    
-<<<<<<< HEAD
         [manager POST:requset.url parameters:requset.params.containerConfigDic constructingBodyWithBlock:formDatas progress:^(NSProgress * _Nonnull uploadProgress) {
-=======
-        [manager POST:requset.url parameters:requset.params.params constructingBodyWithBlock:formDatas progress:^(NSProgress * _Nonnull uploadProgress) {
->>>>>>> f843e34dd221fddfe4e5c9e7b9d6cc87836dfce0
             
             if (progress) {
                 
