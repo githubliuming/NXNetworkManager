@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		477EE66E1F4029F7006BB910 /* NXHeaderAndParamsConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 477EE66D1F4029F7006BB910 /* NXHeaderAndParamsConfig.m */; };
 		BE9ACF711F42DFA800720279 /* NXCacheManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BE9ACF701F42DFA800720279 /* NXCacheManager.m */; };
+		BEAC0E001F5D5C46008F7693 /* https.cer in Resources */ = {isa = PBXBuildFile; fileRef = BEAC0DFF1F5D5C46008F7693 /* https.cer */; };
+		BEAC0E031F5D5F03008F7693 /* NXHttpsCerConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = BEAC0E021F5D5F03008F7693 /* NXHttpsCerConfig.m */; };
 		BEF28C251F3BFF7F004DEEE4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = BEF28C241F3BFF7F004DEEE4 /* main.m */; };
 		BEF28C281F3BFF7F004DEEE4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = BEF28C271F3BFF7F004DEEE4 /* AppDelegate.m */; };
 		BEF28C2B1F3BFF7F004DEEE4 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BEF28C2A1F3BFF7F004DEEE4 /* ViewController.m */; };
@@ -43,6 +45,9 @@
 		477EE66D1F4029F7006BB910 /* NXHeaderAndParamsConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NXHeaderAndParamsConfig.m; sourceTree = "<group>"; };
 		BE9ACF6F1F42DFA800720279 /* NXCacheManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NXCacheManager.h; sourceTree = "<group>"; };
 		BE9ACF701F42DFA800720279 /* NXCacheManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NXCacheManager.m; sourceTree = "<group>"; };
+		BEAC0DFF1F5D5C46008F7693 /* https.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = https.cer; sourceTree = "<group>"; };
+		BEAC0E011F5D5F03008F7693 /* NXHttpsCerConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NXHttpsCerConfig.h; sourceTree = "<group>"; };
+		BEAC0E021F5D5F03008F7693 /* NXHttpsCerConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NXHttpsCerConfig.m; sourceTree = "<group>"; };
 		BEF28C201F3BFF7F004DEEE4 /* NXNetworkManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NXNetworkManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BEF28C241F3BFF7F004DEEE4 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		BEF28C261F3BFF7F004DEEE4 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -156,6 +161,7 @@
 		BEF28C231F3BFF7F004DEEE4 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				BEAC0DFF1F5D5C46008F7693 /* https.cer */,
 				BEF28C4E1F3C2A43004DEEE4 /* AFNetWork */,
 				BEF28C241F3BFF7F004DEEE4 /* main.m */,
 			);
@@ -168,6 +174,8 @@
 				BE9ACF6E1F42DF9100720279 /* NXCacheManager */,
 				BEF28C401F3C11B0004DEEE4 /* NXRequset.h */,
 				BEF28C411F3C11B0004DEEE4 /* NXRequset.m */,
+				BEAC0E011F5D5F03008F7693 /* NXHttpsCerConfig.h */,
+				BEAC0E021F5D5F03008F7693 /* NXHttpsCerConfig.m */,
 				BEF28C4A1F3C1ED8004DEEE4 /* NXContainer.h */,
 				BEF28C4B1F3C1ED8004DEEE4 /* NXContainer.m */,
 				BEF28C811F3C2AEF004DEEE4 /* NXNetWorkSession.h */,
@@ -299,6 +307,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BEAC0E001F5D5C46008F7693 /* https.cer in Resources */,
 				BEF28C331F3BFF7F004DEEE4 /* LaunchScreen.storyboard in Resources */,
 				BEF28C301F3BFF7F004DEEE4 /* Assets.xcassets in Resources */,
 				BEF28C2E1F3BFF7F004DEEE4 /* Main.storyboard in Resources */,
@@ -318,6 +327,7 @@
 				BEF28C791F3C2A64004DEEE4 /* AFImageDownloader.m in Sources */,
 				BEF28C7E1F3C2A64004DEEE4 /* UIProgressView+AFNetworking.m in Sources */,
 				BE9ACF711F42DFA800720279 /* NXCacheManager.m in Sources */,
+				BEAC0E031F5D5F03008F7693 /* NXHttpsCerConfig.m in Sources */,
 				BEF28C421F3C11B0004DEEE4 /* NXRequset.m in Sources */,
 				477EE66E1F4029F7006BB910 /* NXHeaderAndParamsConfig.m in Sources */,
 				BEF28C7A1F3C2A64004DEEE4 /* AFNetworkActivityIndicatorManager.m in Sources */,

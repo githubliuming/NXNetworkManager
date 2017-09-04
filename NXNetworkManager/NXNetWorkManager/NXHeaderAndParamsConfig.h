@@ -13,6 +13,8 @@
 
 + (instancetype) shareInstanceted;
 
+@property(nonatomic,copy)NSString * httpCerName;
+
 - (void)addParams:(NXAddHeaderOrParamsBlock) paramContainer;
 
 - (void)addHeader:(NXAddHeaderOrParamsBlock)headerContainer;

@@ -148,7 +148,6 @@ formDataBlock:(NXFormDataBlock)formDatas
             }
             [manager.session invalidateAndCancel];
         }];
-    
 }
 
 - (void) uplaod:(NXRequset *)requset  progress:(NXProgressBlock) progress complentBlock:(NXCompletionHandlerBlock)completionHandler{

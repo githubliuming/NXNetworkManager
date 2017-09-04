@@ -66,6 +66,7 @@
            
            if (progress) {
             
+               //weakSelf.currentLength +
                double downProgress_ = (weakSelf.currentLength + downloadProgress.completedUnitCount * 1.0f)/weakSelf.fileLength;
                progress(downProgress_);
            }
@@ -157,11 +158,6 @@
 }
 - (void)resume{
 
-    NSInteger currentLength = [self fileLengthForPath:self.fileUrl];
-    if (currentLength >0 ) {
-        
-        self.currentLength = currentLength;
-    }
     if (self.downloadTask.state == NSURLSessionTaskStateSuspended)
     {
         [self.downloadTask resume];

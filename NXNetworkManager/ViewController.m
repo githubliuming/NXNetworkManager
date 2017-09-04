@@ -59,6 +59,7 @@
   self.taskId = [self.download downLoad:request progress:^(double progress) {
        
         weakSelf.progressUI.progress = progress;
+      NSLog(@"progress ---> %f",progress);
     } completionHandler:^(NSURLResponse *responese, id responseObject, NSError *error, NXRequset *requset) {
         
         if (!error) {
