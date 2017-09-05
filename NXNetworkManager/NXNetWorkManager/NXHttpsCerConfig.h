@@ -8,10 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
+@class AFSecurityPolicy;
 @interface NXHttpsCerConfig : NSObject
 
-- (instancetype) shareInstanced;
++ (instancetype) shareInstanced;
 
 @property(nonatomic,copy)NSString * cerPath;
-- (id)cerData;
+
+@property(nonatomic,strong,readonly)AFSecurityPolicy * securityPolicy;
 @end

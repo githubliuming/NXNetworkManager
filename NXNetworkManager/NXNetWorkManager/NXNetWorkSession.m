@@ -9,7 +9,7 @@
 #import "NXNetWorkSession.h"
 #import "AFNetworking.h"
 #import "NXRequset.h"
-
+#import "NXHttpsCerConfig.h"
 @implementation NXNetWorkSession
 
 + (instancetype) shareInstanced{
@@ -40,6 +40,7 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         af_manager = [AFHTTPSessionManager manager];
+        af_manager.operationQueue.maxConcurrentOperationCount = 10;
         af_manager.securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeNone];
         
         af_manager.responseSerializer = [AFJSONResponseSerializer serializer];
@@ -56,6 +57,12 @@
                                                                                   @"application/octet-stream",
                                                                                   @"application/zip"]];
         
+        NXHttpsCerConfig * cerConfig = [NXHttpsCerConfig shareInstanced];
+        AFSecurityPolicy * securityPolocy = cerConfig.securityPolicy;
+        if (securityPolocy)
+        {
+            af_manager.securityPolicy = securityPolocy;
+        }
     });
     
     return  af_manager;
