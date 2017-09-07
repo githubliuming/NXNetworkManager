@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import "NXNetworkBlock.h"
 @interface NXConfig : NSObject
+
+- (instancetype)shareInstanced;
 /**
  请求的baseUrl
  */

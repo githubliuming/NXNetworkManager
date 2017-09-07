@@ -15,6 +15,17 @@
 
 @implementation NXConfig
 
+- (instancetype)shareInstanced
+{
+    static NXConfig *nx_config = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        nx_config = [[NXConfig alloc] init];
+    });
+    
+    return nx_config;
+}
+
 - (instancetype) init{
 
     self = [super init];
