@@ -8,9 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		477EE66E1F4029F7006BB910 /* NXHeaderAndParamsConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 477EE66D1F4029F7006BB910 /* NXHeaderAndParamsConfig.m */; };
+		BE8169831F614D2A008C71B8 /* NXConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = BE8169821F614D2A008C71B8 /* NXConfig.m */; };
 		BE9ACF711F42DFA800720279 /* NXCacheManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BE9ACF701F42DFA800720279 /* NXCacheManager.m */; };
 		BEAC0E001F5D5C46008F7693 /* https.cer in Resources */ = {isa = PBXBuildFile; fileRef = BEAC0DFF1F5D5C46008F7693 /* https.cer */; };
 		BEAC0E031F5D5F03008F7693 /* NXHttpsCerConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = BEAC0E021F5D5F03008F7693 /* NXHttpsCerConfig.m */; };
+		BEB02C091F612E2E00BE4051 /* PLRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = BEB02C081F612E2E00BE4051 /* PLRequest.m */; };
 		BEF28C251F3BFF7F004DEEE4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = BEF28C241F3BFF7F004DEEE4 /* main.m */; };
 		BEF28C281F3BFF7F004DEEE4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = BEF28C271F3BFF7F004DEEE4 /* AppDelegate.m */; };
 		BEF28C2B1F3BFF7F004DEEE4 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BEF28C2A1F3BFF7F004DEEE4 /* ViewController.m */; };
@@ -43,11 +45,15 @@
 		477EE66A1F401407006BB910 /* NXNetworkBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NXNetworkBlock.h; sourceTree = "<group>"; };
 		477EE66C1F4029F7006BB910 /* NXHeaderAndParamsConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NXHeaderAndParamsConfig.h; sourceTree = "<group>"; };
 		477EE66D1F4029F7006BB910 /* NXHeaderAndParamsConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NXHeaderAndParamsConfig.m; sourceTree = "<group>"; };
+		BE8169811F614D2A008C71B8 /* NXConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NXConfig.h; sourceTree = "<group>"; };
+		BE8169821F614D2A008C71B8 /* NXConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NXConfig.m; sourceTree = "<group>"; };
 		BE9ACF6F1F42DFA800720279 /* NXCacheManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NXCacheManager.h; sourceTree = "<group>"; };
 		BE9ACF701F42DFA800720279 /* NXCacheManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NXCacheManager.m; sourceTree = "<group>"; };
 		BEAC0DFF1F5D5C46008F7693 /* https.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = https.cer; sourceTree = "<group>"; };
 		BEAC0E011F5D5F03008F7693 /* NXHttpsCerConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NXHttpsCerConfig.h; sourceTree = "<group>"; };
 		BEAC0E021F5D5F03008F7693 /* NXHttpsCerConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NXHttpsCerConfig.m; sourceTree = "<group>"; };
+		BEB02C071F612E2E00BE4051 /* PLRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLRequest.h; sourceTree = "<group>"; };
+		BEB02C081F612E2E00BE4051 /* PLRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLRequest.m; sourceTree = "<group>"; };
 		BEF28C201F3BFF7F004DEEE4 /* NXNetworkManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NXNetworkManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BEF28C241F3BFF7F004DEEE4 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		BEF28C261F3BFF7F004DEEE4 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -149,6 +155,8 @@
 				BEF28C271F3BFF7F004DEEE4 /* AppDelegate.m */,
 				BEF28C291F3BFF7F004DEEE4 /* ViewController.h */,
 				BEF28C2A1F3BFF7F004DEEE4 /* ViewController.m */,
+				BEB02C071F612E2E00BE4051 /* PLRequest.h */,
+				BEB02C081F612E2E00BE4051 /* PLRequest.m */,
 				BEF28C2C1F3BFF7F004DEEE4 /* Main.storyboard */,
 				BEF28C2F1F3BFF7F004DEEE4 /* Assets.xcassets */,
 				BEF28C311F3BFF7F004DEEE4 /* LaunchScreen.storyboard */,
@@ -174,6 +182,8 @@
 				BE9ACF6E1F42DF9100720279 /* NXCacheManager */,
 				BEF28C401F3C11B0004DEEE4 /* NXRequset.h */,
 				BEF28C411F3C11B0004DEEE4 /* NXRequset.m */,
+				BE8169811F614D2A008C71B8 /* NXConfig.h */,
+				BE8169821F614D2A008C71B8 /* NXConfig.m */,
 				BEAC0E011F5D5F03008F7693 /* NXHttpsCerConfig.h */,
 				BEAC0E021F5D5F03008F7693 /* NXHttpsCerConfig.m */,
 				BEF28C4A1F3C1ED8004DEEE4 /* NXContainer.h */,
@@ -327,6 +337,7 @@
 				BEF28C791F3C2A64004DEEE4 /* AFImageDownloader.m in Sources */,
 				BEF28C7E1F3C2A64004DEEE4 /* UIProgressView+AFNetworking.m in Sources */,
 				BE9ACF711F42DFA800720279 /* NXCacheManager.m in Sources */,
+				BEB02C091F612E2E00BE4051 /* PLRequest.m in Sources */,
 				BEAC0E031F5D5F03008F7693 /* NXHttpsCerConfig.m in Sources */,
 				BEF28C421F3C11B0004DEEE4 /* NXRequset.m in Sources */,
 				477EE66E1F4029F7006BB910 /* NXHeaderAndParamsConfig.m in Sources */,
@@ -337,6 +348,7 @@
 				BEF28C7D1F3C2A64004DEEE4 /* UIImageView+AFNetworking.m in Sources */,
 				BEF28C281F3BFF7F004DEEE4 /* AppDelegate.m in Sources */,
 				BEF28C5F1F3C2A55004DEEE4 /* AFSecurityPolicy.m in Sources */,
+				BE8169831F614D2A008C71B8 /* NXConfig.m in Sources */,
 				BEF28C601F3C2A55004DEEE4 /* AFURLRequestSerialization.m in Sources */,
 				BEF28C8B1F3C541D004DEEE4 /* NXDownLoad.m in Sources */,
 				BEF28C831F3C2AEF004DEEE4 /* NXNetWorkSession.m in Sources */,

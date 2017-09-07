@@ -19,7 +19,6 @@
 
 - (void)addHeader:(NXAddHeaderOrParamsBlock)headerContainer;
 
-
 -(NSDictionary *) params;
 - (NSDictionary *)headerInfoConfigDic;
 @end

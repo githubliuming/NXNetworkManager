@@ -9,17 +9,32 @@
 #import <Foundation/Foundation.h>
 #import "NXNetWorkProtol.h"
 #import "NXNetworkBlock.h"
+
+@class NXConfig;
 /**
  Http requset
  */
 @interface NXRequset : NSObject
 
 - (instancetype) initWithUrl:(NSString * )url;
-
 /**
- 请求url
+ 请求url，当url有值且全局配置的BaseUrl也有值 并且ingoreBaseUrl为NO的情况下 以全局配置的url为准
  */
 @property(nonatomic,strong)NSString * url;
+/**
+ 接口路径
+ */
+@property(nonatomic,strong)NSString * apiPath;
+
+/**
+ 接口完整路径
+ */
+@property(nonatomic,strong)NSString * fullPath;
+
+/**
+ 是否忽略全局配置中的 baseUrl。默认NO 不忽略
+ */
+@property(nonatomic,assign)BOOL ingoreBaseUrl;
 
 /**
  本次请求是否忽略默认配置的httpHeader  默认为NO 不忽略
@@ -46,10 +61,15 @@
 
 
 /**
+ requset请求的全局配置信息。 携带公共请求头、请求参数、baseUrl
+ */
+@property(nonatomic,strong) NXConfig *config;
+
+
+/**
  缓存策略 默认 NSURLRequestUseProtocolCachePolicy；
  */
 @property(nonatomic,assign) NSURLRequestCachePolicy  cachePolicy;
-
 
 - (void)addParams:(NXAddHeaderOrParamsBlock)params headers:(NXAddHeaderOrParamsBlock)headers;
 - (void)addParams:(NXAddHeaderOrParamsBlock)params;

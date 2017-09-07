@@ -27,52 +27,52 @@
     self.download = [NXDownLoadManager shareInstanced];
     self.progressUI.progress = 0.0f;
     
-    double time = [[NSDate date] timeIntervalSince1970];
+//    double time = [[NSDate date] timeIntervalSince1970];
     
-    NXRequset * request = [[NXRequset alloc] initWithUrl:@"http://data.philm.cc/sticker/2017/v18/check_version.json"];
+//    NXRequset * request = [[NXRequset alloc] initWithUrl:@"http://data.philm.cc/sticker/2017/v18/check_version.json"];
     
-    [request addParams:^(id<NXContainerProtol> container) {
-        
-        container.addDouble(time,@"time");
-        
-    }];
-    
-    [[NXNetWorkSession shareInstanced] Get:request success:^(NSURLSessionDataTask *task, id responseObject, NXRequset *requset) {
-        
-        NSLog(@"responseObject = %@",responseObject);
-        
-    } failure:^(NSURLSessionDataTask *task, NSError *error, NXRequset *requset) {
-        
-        NSLog(@"error = %@",[error userInfo]);
-    }];
+//    [request addParams:^(id<NXContainerProtol> container) {
+//        
+//        container.addDouble(time,@"time").addString(@"kkk",@"jjj");
+//        
+//    }];
+//    
+//    [[NXNetWorkSession shareInstanced] Get:request success:^(NSURLSessionDataTask *task, id responseObject, NXRequset *requset) {
+//        
+//        NSLog(@"responseObject = %@",responseObject);
+//        
+//    } failure:^(NSURLSessionDataTask *task, NSError *error, NXRequset *requset) {
+//        
+//        NSLog(@"error = %@",[error userInfo]);
+//    }];
     
 }
 
 - (IBAction)startDownLoader:(id)sender {
     
-    NXRequset * request = [[NXRequset alloc] initWithUrl:@"http://dldir1.qq.com/qqfile/QQforMac/QQ_V5.4.0.dmg"];
-    NSString *path = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"QQ_V5.4.0.dmg"];
-    request.fileUrl = path;
-    
-    
-    __weak typeof(self) weakSelf = self;
-  self.taskId = [self.download downLoad:request progress:^(double progress) {
-       
-        weakSelf.progressUI.progress = progress;
-      NSLog(@"progress ---> %f",progress);
-    } completionHandler:^(NSURLResponse *responese, id responseObject, NSError *error, NXRequset *requset) {
-        
-        if (!error) {
-         
-             NSLog(@"下载完成");
-            
-        } else {
-        
-            NSLog(@"error == %@",[error userInfo]);
-        }
-    }];
-    
-    NSLog(@"taskId === %@",self.taskId);
+//    NXRequset * request = [[NXRequset alloc] initWithUrl:@"http://dldir1.qq.com/qqfile/QQforMac/QQ_V5.4.0.dmg"];
+//    NSString *path = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"QQ_V5.4.0.dmg"];
+//    request.fileUrl = path;
+//    
+//    
+//    __weak typeof(self) weakSelf = self;
+//  self.taskId = [self.download downLoad:request progress:^(double progress) {
+//       
+//        weakSelf.progressUI.progress = progress;
+//      NSLog(@"progress ---> %f",progress);
+//    } completionHandler:^(NSURLResponse *responese, id responseObject, NSError *error, NXRequset *requset) {
+//        
+//        if (!error) {
+//         
+//             NSLog(@"下载完成");
+//            
+//        } else {
+//        
+//            NSLog(@"error == %@",[error userInfo]);
+//        }
+//    }];
+//    
+//    NSLog(@"taskId === %@",self.taskId);
 }
 
 

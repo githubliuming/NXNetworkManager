@@ -28,6 +28,16 @@
     return [self initWithUrl:@""];
 }
 
+-(NSString *)fullPath{
+
+    NSString * baseUrl = @"";
+    if (self.ingoreBaseUrl) {
+        
+        baseUrl = self.url;
+    }
+    _fullPath = [NSString stringWithFormat:@"%@%@",baseUrl,self.apiPath];
+    return _fullPath;
+}
 - (id<NXContainerProtol>) headers{
     
     if (!self.ingoreDefaultHttpHeaders) {
