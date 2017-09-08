@@ -7,8 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "NXNetWorkProtol.h"
-#import "NXNetworkBlock.h"
+#import "NXConstant.h"
 
 @class NXConfig;
 /**
@@ -17,6 +16,7 @@
 @interface NXRequset : NSObject
 
 - (instancetype) initWithUrl:(NSString * )url;
+- (instancetype) initWithAPIPath:(NSString *)apiPath;
 /**
  请求url，当url有值且全局配置的BaseUrl也有值 并且ingoreBaseUrl为NO的情况下 以全局配置的url为准
  */
@@ -63,13 +63,30 @@
 /**
  requset请求的全局配置信息。 携带公共请求头、请求参数、baseUrl
  */
-@property(nonatomic,strong) NXConfig *config;
+@property(nonatomic,strong)NXConfig  *config;
 
 
 /**
  缓存策略 默认 NSURLRequestUseProtocolCachePolicy；
  */
 @property(nonatomic,assign) NSURLRequestCachePolicy  cachePolicy;
+
+/**
+ 请求ID
+ */
+@property(nonatomic,strong)NSString * identifier;
+
+
+/**
+ 请求的类型，默认 NXRequestTypeNormal(包含 get、post...)
+ */
+@property(nonatomic,assign)NXRequestType * requstType;
+
+
+/**
+ 取消当前请求
+ */
+- (void)cancelRequset;
 
 - (void)addParams:(NXAddHeaderOrParamsBlock)params headers:(NXAddHeaderOrParamsBlock)headers;
 - (void)addParams:(NXAddHeaderOrParamsBlock)params;

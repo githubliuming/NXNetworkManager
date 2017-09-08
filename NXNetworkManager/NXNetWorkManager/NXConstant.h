@@ -1,18 +1,19 @@
 //
-//  NXNetworkBlock.h
+//  NXConstant.h
 //  NXNetworkManager
 //
-//  Created by 明刘 on 2017/8/13.
+//  Created by yoyo on 2017/9/8.
 //  Copyright © 2017年 yoyo. All rights reserved.
 //
 
-#ifndef NXNetworkBlock_h
-#define NXNetworkBlock_h
+#ifndef NXConstant_h
+#define NXConstant_h
 
 @class NXRequset;
 @protocol AFMultipartFormData;
 @protocol NXContainerProtol;
 
+#pragma mark - block声明模块
 typedef void(^NXCompletionHandlerBlock)(NSURLResponse *responese,id responseObject,NSError * error, NXRequset * requset);
 
 typedef void(^NXSuccesBlock)(NSURLSessionDataTask * task,id responseObject, NXRequset * requset);
@@ -28,4 +29,37 @@ typedef  id<NXContainerProtol>(^NXContainerAddDoubleBlock)(double value,NSString
 typedef  id<NXContainerProtol>(^NXContainerAddStringgerBlock)(NSString * value,NSString * key);
 
 typedef void (^NXAddHeaderOrParamsBlock)(id<NXContainerProtol> container);
-#endif /* NXNetworkBlock_h */
+
+
+#pragma mark - 协议声明模块
+/**
+ NXNetWorkManager 内部协议
+ */
+@protocol NXContainerProtol <NSObject>
+
+- (NSDictionary *) containerConfigDic;
+
+- (NXContainerAddIntegerBlock)addInteger;
+- (NXContainerAddDoubleBlock)addDouble;
+- (NXContainerAddStringgerBlock)addString;
+
+@end
+
+#pragma mark 枚举声明模块
+typedef NS_ENUM(NSInteger,NXRequestType) {
+
+    NXRequestTypeNormal,   /// get post put delete...
+    NXRequestTypeUpload,   /// 上传文件
+    kXMRequestDownload,    /// 下载文件
+};
+
+typedef NS_ENUM(NSInteger,NXHTTPMethodType) {
+
+    NXHTTPMethodTypeOfGET,  //get请求
+    NXHTTPMethodTypeOfPOST, //post请求
+    NXHTTPMethodTypeOfHEAD, //head
+    NXHTTPMethodTypeOfDELETE,//delete
+    NXHTTPMethodTypeOfPUT,   //put
+    NXHTTPMethodTypeOfPATCH, //批量 (暂时不处理)
+};
+#endif /* NXConstant_h */

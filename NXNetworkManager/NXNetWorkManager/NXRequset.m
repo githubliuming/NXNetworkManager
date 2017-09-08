@@ -7,8 +7,8 @@
 //
 
 #import "NXRequset.h"
-#import "NXHeaderAndParamsConfig.h"
 #import "NXContainer.h"
+#import "NXConfig.h"
 @implementation NXRequset
 
 - (instancetype) initWithUrl:(NSString * )url{
@@ -22,6 +22,17 @@
     }
     return self;
     
+}
+
+- (instancetype) initWithAPIPath:(NSString *)apiPath{
+
+    self = [self initWithUrl:nil];
+    if (self) {
+        
+        self.apiPath = apiPath;
+    }
+    
+    return self;
 }
 - (instancetype)init
 {
@@ -44,7 +55,7 @@
         //不忽略 合并请求头
         NXContainer * header = [[NXContainer alloc] init];
         NSDictionary * httpHeadDic = [_headers containerConfigDic];
-        NSDictionary * defaultDic  = [NXHeaderAndParamsConfig shareInstanceted].headerInfoConfigDic;
+        NSDictionary * defaultDic  = [self.config globalHeaders];
         
         [defaultDic enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
            
@@ -70,7 +81,7 @@
         //不忽略 合并请求参数
         NXContainer * paramContainer = [[NXContainer alloc] init];
         NSDictionary * httpParams = [_params containerConfigDic];
-        NSDictionary * defaultDic = [[NXHeaderAndParamsConfig shareInstanceted] params];
+        NSDictionary * defaultDic = [self.config globalParams];
         [defaultDic enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
            
             paramContainer.addString(obj,key);
@@ -118,6 +129,14 @@
 - (void)addHeaders:(NXAddHeaderOrParamsBlock)headers{
 
     [self addParams:nil headers:headers];
+}
+
+/**
+ 取消当前请求
+ */
+- (void)cancelRequset{
+
+    
 }
 
 @end

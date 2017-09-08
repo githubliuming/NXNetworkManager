@@ -16,6 +16,4 @@
 #import "NXDownLoadManager.h"
 #import "NXDownLoad.h"
 
-#import "NXHeaderAndParamsConfig.h"
-
 #endif /* NXNetWorkManagerHeader_h */

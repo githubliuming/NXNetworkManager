@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "NXNetWorkProtol.h"
+#import "NXConstant.h"
 @interface NXContainer : NSObject<NXContainerProtol>
 
 

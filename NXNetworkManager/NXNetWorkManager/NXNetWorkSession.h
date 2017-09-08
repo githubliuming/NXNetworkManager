@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "NXNetworkBlock.h"
+#import "NXConstant.h"
 
 
 @interface NXNetWorkSession : NSObject

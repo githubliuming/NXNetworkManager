@@ -9,7 +9,6 @@
 #import "NXNetWorkSession.h"
 #import "AFNetworking.h"
 #import "NXRequset.h"
-#import "NXHttpsCerConfig.h"
 @implementation NXNetWorkSession
 
 + (instancetype) shareInstanced{
@@ -56,13 +55,6 @@
                                                                                   @"image/*",
                                                                                   @"application/octet-stream",
                                                                                   @"application/zip"]];
-        
-        NXHttpsCerConfig * cerConfig = [NXHttpsCerConfig shareInstanced];
-        AFSecurityPolicy * securityPolocy = cerConfig.securityPolicy;
-        if (securityPolocy)
-        {
-            af_manager.securityPolicy = securityPolocy;
-        }
     });
     
     return  af_manager;

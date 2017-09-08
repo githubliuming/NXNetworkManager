@@ -7,8 +7,8 @@
 //
 
 #import "NXDownLoadManager.h"
-
-@interface NXDownLoadManager ()
+#import <UIKit/UIKit.h>
+@interface NXDownLoadManager ()<UIAlertViewDelegate>
 
 @property(nonatomic,strong)NSOperationQueue * downloadQueue;
 @property(nonatomic,strong)NSMutableDictionary <NSString * ,NXDownLoad *>* downMapDic;
