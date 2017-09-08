@@ -134,9 +134,40 @@
 /**
  取消当前请求
  */
-- (void)cancelRequset{
+- (void)cancelRequset
+{
 
     
+}
+- (void)start
+{
+
+    [self startWith:self.succesHandlerBlock failure:self.failureHandlerBlock];
+}
+- (void)startWith:(NXSuccesBlock) succes failure:(NXFailureBlock)failure{
+
+    [self startWith:self.progressHandlerBlock success:succes failure:failure];
+    
+}
+- (void)startWith:(NXProgressBlock)progress
+          success:(NXSuccesBlock) succes
+          failure:(NXFailureBlock)failure{
+
+    
+    
+    [self setProgressHandlerBlock:progress];
+    [self setSuccesHandlerBlock:succes];
+    [self setFailureHandlerBlock:failure];
+    
+    //调用下层发起请求
+}
+
+
+- (void)clearHandlerBlock{
+
+    self.progressHandlerBlock = NULL;
+    self.failureHandlerBlock = NULL;
+    self.succesHandlerBlock = NULL;
 }
 
 @end

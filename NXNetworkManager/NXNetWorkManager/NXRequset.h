@@ -80,16 +80,82 @@
 /**
  请求的类型，默认 NXRequestTypeNormal(包含 get、post...)
  */
-@property(nonatomic,assign)NXRequestType * requstType;
+@property(nonatomic,assign)NXRequestType  requstType;
 
+
+/**
+ 请求方法 GET POST
+ */
+@property(nonatomic,assign) NXHTTPMethodType methodType;
+
+/**
+ 请求失败回调方法
+ */
+@property(nonatomic,copy) NXFailureBlock  failureHandlerBlock;
+
+/**
+  请求成功回调
+ */
+@property(nonatomic,copy) NXSuccesBlock   succesHandlerBlock;
+
+/**
+ 进度回调
+ */
+@property(nonatomic,copy) NXProgressBlock progressHandlerBlock;
+
+
+/**
+ 开始发起请求
+
+ @param progress 进度block
+ @param succes 成功回调block
+ @param failure 失败回调
+ */
+- (void)startWith:(NXProgressBlock)progress success:(NXSuccesBlock) succes failure:(NXFailureBlock)failure;
+
+
+/**
+ 开始发起请求
+
+ @param succes 成功回调
+ @param failure 失败回调
+ */
+- (void)startWith:(NXSuccesBlock) succes failure:(NXFailureBlock)failure;
+/**
+ 开始发起请求
+ */
+- (void)start;
 
 /**
  取消当前请求
  */
 - (void)cancelRequset;
 
+/**
+ 清空 回调block避免循环引用
+ */
+- (void)clearHandlerBlock;
+
+/**
+ 添加 请求参数和请求头
+
+ @param params 添加请求参数block
+ @param headers 添加请求头的block
+ */
 - (void)addParams:(NXAddHeaderOrParamsBlock)params headers:(NXAddHeaderOrParamsBlock)headers;
+
+/**
+ 向 requset添加请求参数
+ 
+ @param params 请求参数block
+ */
 - (void)addParams:(NXAddHeaderOrParamsBlock)params;
+
+/**
+ 
+向 request添加请求头
+ @param headers 请求头block
+ */
 - (void)addHeaders:(NXAddHeaderOrParamsBlock)headers;
 
 
