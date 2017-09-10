@@ -78,7 +78,7 @@
 
     AFHTTPSessionManager *manager = [self AFSessionManager:request.headers];
     manager.requestSerializer.cachePolicy = request.cachePolicy;
-    
+
     [manager GET:request.url parameters:request.params.containerConfigDic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         if (success) {
             

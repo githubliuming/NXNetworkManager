@@ -32,6 +32,11 @@
 @property(nonatomic,strong)NSString * fullPath;
 
 /**
+ 超时时间
+ */
+@property(nonatomic,assign) NSTimeInterval  timeOutInterval;
+
+/**
  是否忽略全局配置中的 baseUrl。默认NO 不忽略
  */
 @property(nonatomic,assign)BOOL ingoreBaseUrl;
@@ -86,8 +91,17 @@
 /**
  请求方法 GET POST
  */
-@property(nonatomic,assign) NXHTTPMethodType methodType;
+@property(nonatomic,assign) NXHTTPMethodType httpMethod;
 
+/**
+ requst content-type
+ */
+@property(nonatomic,assign) NXRequstSerializerType  requstSerializer;
+
+/**
+ respose content-type
+ */
+@property(nonatomic,assign) NXResposeSerializerType resopseSerializer;
 /**
  请求失败回调方法
  */

@@ -23,6 +23,7 @@ typedef void (^NXFailureBlock)(NSURLSessionDataTask * task, NSError *error,NXReq
 typedef void (^NXFormDataBlock)(id<AFMultipartFormData>  formData);
 
 typedef void (^NXProgressBlock)(double progress);
+typedef void (^NXCompletionBlock)(NSURLSessionDataTask * task ,NXRequset * requset,NSError * error);
 
 typedef  id<NXContainerProtol>(^NXContainerAddIntegerBlock)(NSInteger value,NSString * key);
 typedef  id<NXContainerProtol>(^NXContainerAddDoubleBlock)(double value,NSString * key);
@@ -62,4 +63,35 @@ typedef NS_ENUM(NSInteger,NXHTTPMethodType) {
     NXHTTPMethodTypeOfPUT,   //put
     NXHTTPMethodTypeOfPATCH, //批量 (暂时不处理)
 };
+
+/**
+ 请求httpBody Content-Type的内容
+
+ - NXHTTPRrequstSerializerTypeRAW:  设置Content-Type为   application/x-www-form-urlencoded
+ - NXHTTPRrequstSerializerTypeJSON: 设置Content-Type为   application/json
+ - NXHTTPRrequstSerializerTypePlist:设置Content-Type为   application/json
+ */
+typedef NS_ENUM(NSInteger,NXRequstSerializerType)
+{
+    NXHTTPRrequstSerializerTypeRAW,     ///<* application/x-www-form-urlencoded
+    NXHTTPRrequstSerializerTypeJSON,   ///<* application/json
+    NXHTTPRrequstSerializerTypePlist,  ///<* application/x-plist
+};
+
+/**
+ 响应体序列化类型
+
+ - NXHTTResposeSerializerTypeRAW:
+ - NXHTTResposeSerializerTypeJSON: 序列化成json
+ - NXHTTResposeSerializerTypePlist: 序列化成plist
+ - NXHTTResposeSerializerTypeXML: 序列化xml
+ */
+typedef NS_ENUM(NSInteger,NXResposeSerializerType) {
+
+    NXHTTResposeSerializerTypeRAW, ///<*
+    NXHTTResposeSerializerTypeJSON, ///<* json
+    NXHTTResposeSerializerTypePlist, ///<* plist
+    NXHTTResposeSerializerTypeXML,///<* xml
+};
+
 #endif /* NXConstant_h */

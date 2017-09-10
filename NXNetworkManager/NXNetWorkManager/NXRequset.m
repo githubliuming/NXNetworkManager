@@ -165,9 +165,9 @@
 
 - (void)clearHandlerBlock{
 
-    self.progressHandlerBlock = NULL;
-    self.failureHandlerBlock = NULL;
-    self.succesHandlerBlock = NULL;
+    self.progressHandlerBlock = nil;
+    self.failureHandlerBlock = nil;
+    self.succesHandlerBlock = nil;
 }
 
 @end

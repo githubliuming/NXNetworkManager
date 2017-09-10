@@ -51,7 +51,6 @@
 - (NSOperationQueue *)downloadQueue{
 
     if (_downloadQueue == nil) {
-        
         _downloadQueue = [[NSOperationQueue alloc] init];
         
     }
@@ -67,7 +66,6 @@
 - (NSString *)downLoad:(NXRequset *) requset
               progress:(NXProgressBlock) progress
      completionHandler:(NXCompletionHandlerBlock) completionBlock{
-
     NSString * url = requset.url;
     NSData *data = [url dataUsingEncoding:NSUTF8StringEncoding];
     NSString * taskId  = [data base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
