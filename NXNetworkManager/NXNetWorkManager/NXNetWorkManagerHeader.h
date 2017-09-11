@@ -11,9 +11,6 @@
 
 #import "NXRequest.h"
 #import "NXConfig.h"
-#import "NXNetWorkSession.h"
-
-#import "NXDownLoadManager.h"
 #import "NXDownLoad.h"
 
 #endif /* NXNetWorkManagerHeader_h */

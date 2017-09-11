@@ -266,7 +266,7 @@ static NSString * const NXRequestBindingKey = @"NXRequestBindingKey";
         httpMethod = httpMethodArray[requst.httpMethod];
     }
     
-    NSAssert(!httpMethod, @"当前 http 请求的类型 requset.httpMethod = %ld",(long)requst.httpMethod);
+    NSAssert(httpMethod, @"当前 http 请求的类型 requset.httpMethod = %ld",(long)requst.httpMethod);
     AFHTTPSessionManager * sessionManager = [self sessionManagerWithRequset:requst];
     AFHTTPRequestSerializer * requestSerializer = [self requestSerializerWithRequest:requst];
     
@@ -276,7 +276,7 @@ static NSString * const NXRequestBindingKey = @"NXRequestBindingKey";
         if (requst.failureHandlerBlock) {
             dispatch_async(sessionManager.completionQueue, ^{
                 
-                requst.failureHandlerBlock(nil, urlRequstError, requst);
+                requst.failureHandlerBlock(urlRequstError, requst);
             });
             
         }
@@ -348,7 +348,7 @@ static NSString * const NXRequestBindingKey = @"NXRequestBindingKey";
     AFHTTPSessionManager * sessionManager = [self sessionManagerWithRequset:request];
     NXDownLoad * downLoad = [[NXDownLoad alloc] init];
     downLoad.manager = sessionManager;
-   NSURLSessionDataTask * downLoadTask = [downLoad downLoad:request progress:request.progressHandlerBlock completionHandler:^(NSURLResponse *responese, id responseObject, NSError *error, NXRequest *requset) {
+   NSURLSessionDataTask * downLoadTask = [downLoad downLoad:request progress:request.progressHandlerBlock completionHandler:^(id responseObject, NSError *error, NXRequest *requset) {
        
        if (completionHandler) {
            completionHandler(responseObject,error);
@@ -364,19 +364,19 @@ static NSString * const NXRequestBindingKey = @"NXRequestBindingKey";
                  request:(NXRequest *)request completionHandler:(NXCompleteBlcok) completeHandler{
     
     NSError * resposeSerializerError ;
-    if(request.resopseSerializer != NXHTTPRrequstSerializerTypeRAW){
+    if(request.resopseSerializer != NXHTTResposeSerializerTypeRAW){
         AFHTTPResponseSerializer * serializer = [self resposeSerializerWithRequset:request];
         responseObj = [serializer responseObjectForResponse:response data:responseObj error:&resposeSerializerError];
+    }
+    
+    if (completeHandler) {
         
-        if (completeHandler) {
+        if(resposeSerializerError){
             
-            if(resposeSerializerError){
-                
-                completeHandler(nil,resposeSerializerError);
-            } else {
-                
-                completeHandler(responseObj,nil);
-            }
+            completeHandler(nil,resposeSerializerError);
+        } else {
+            
+            completeHandler(responseObj,nil);
         }
     }
 }

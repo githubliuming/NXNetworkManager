@@ -9,7 +9,14 @@
 #import <Foundation/Foundation.h>
 #import "NXConstant.h"
 @class NXRequest;
+@class NXBridge;
 @interface NXCerter : NSObject
+
+
+@property(nonatomic,strong,readonly)NXBridge * brdge;
+
+
++(instancetype) shareInstanced;
 
 - (NSString *) sendRequset:(NXRequest *)requset;
 - (NSString *) sendRequset:(NXRequest *)requset progress:(NXProgressBlock) progressBlock;

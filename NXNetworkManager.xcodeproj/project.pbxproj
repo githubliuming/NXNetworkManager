@@ -36,8 +36,6 @@
 		BEF28C7E1F3C2A64004DEEE4 /* UIProgressView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = BEF28C731F3C2A64004DEEE4 /* UIProgressView+AFNetworking.m */; };
 		BEF28C7F1F3C2A64004DEEE4 /* UIRefreshControl+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = BEF28C751F3C2A64004DEEE4 /* UIRefreshControl+AFNetworking.m */; };
 		BEF28C801F3C2A64004DEEE4 /* UIWebView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = BEF28C771F3C2A64004DEEE4 /* UIWebView+AFNetworking.m */; };
-		BEF28C831F3C2AEF004DEEE4 /* NXNetWorkSession.m in Sources */ = {isa = PBXBuildFile; fileRef = BEF28C821F3C2AEF004DEEE4 /* NXNetWorkSession.m */; };
-		BEF28C881F3C537D004DEEE4 /* NXDownLoadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BEF28C871F3C537D004DEEE4 /* NXDownLoadManager.m */; };
 		BEF28C8B1F3C541D004DEEE4 /* NXDownLoad.m in Sources */ = {isa = PBXBuildFile; fileRef = BEF28C8A1F3C541D004DEEE4 /* NXDownLoad.m */; };
 /* End PBXBuildFile section */
 
@@ -102,10 +100,6 @@
 		BEF28C751F3C2A64004DEEE4 /* UIRefreshControl+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIRefreshControl+AFNetworking.m"; sourceTree = "<group>"; };
 		BEF28C761F3C2A64004DEEE4 /* UIWebView+AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIWebView+AFNetworking.h"; sourceTree = "<group>"; };
 		BEF28C771F3C2A64004DEEE4 /* UIWebView+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIWebView+AFNetworking.m"; sourceTree = "<group>"; };
-		BEF28C811F3C2AEF004DEEE4 /* NXNetWorkSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NXNetWorkSession.h; sourceTree = "<group>"; };
-		BEF28C821F3C2AEF004DEEE4 /* NXNetWorkSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NXNetWorkSession.m; sourceTree = "<group>"; };
-		BEF28C861F3C537D004DEEE4 /* NXDownLoadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NXDownLoadManager.h; sourceTree = "<group>"; };
-		BEF28C871F3C537D004DEEE4 /* NXDownLoadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NXDownLoadManager.m; sourceTree = "<group>"; };
 		BEF28C891F3C541D004DEEE4 /* NXDownLoad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NXDownLoad.h; sourceTree = "<group>"; };
 		BEF28C8A1F3C541D004DEEE4 /* NXDownLoad.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NXDownLoad.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -189,10 +183,6 @@
 				47A0DC411F63BE6A00E40A2E /* NXCerter.m */,
 				47FD0A4F1F652F4A009029EC /* NXBridge.h */,
 				47FD0A501F652F4A009029EC /* NXBridge.m */,
-				BEF28C811F3C2AEF004DEEE4 /* NXNetWorkSession.h */,
-				BEF28C821F3C2AEF004DEEE4 /* NXNetWorkSession.m */,
-				BEF28C861F3C537D004DEEE4 /* NXDownLoadManager.h */,
-				BEF28C871F3C537D004DEEE4 /* NXDownLoadManager.m */,
 				BEF28C891F3C541D004DEEE4 /* NXDownLoad.h */,
 				BEF28C8A1F3C541D004DEEE4 /* NXDownLoad.m */,
 				BE6306351F628AE000D1F073 /* NXConstant.h */,
@@ -339,7 +329,6 @@
 				BEB02C091F612E2E00BE4051 /* PLRequest.m in Sources */,
 				BEF28C421F3C11B0004DEEE4 /* NXRequest.m in Sources */,
 				BEF28C7A1F3C2A64004DEEE4 /* AFNetworkActivityIndicatorManager.m in Sources */,
-				BEF28C881F3C537D004DEEE4 /* NXDownLoadManager.m in Sources */,
 				BEF28C7F1F3C2A64004DEEE4 /* UIRefreshControl+AFNetworking.m in Sources */,
 				BEF28C781F3C2A64004DEEE4 /* AFAutoPurgingImageCache.m in Sources */,
 				BEF28C7D1F3C2A64004DEEE4 /* UIImageView+AFNetworking.m in Sources */,
@@ -349,7 +338,6 @@
 				BE8169831F614D2A008C71B8 /* NXConfig.m in Sources */,
 				BEF28C601F3C2A55004DEEE4 /* AFURLRequestSerialization.m in Sources */,
 				BEF28C8B1F3C541D004DEEE4 /* NXDownLoad.m in Sources */,
-				BEF28C831F3C2AEF004DEEE4 /* NXNetWorkSession.m in Sources */,
 				BEF28C4C1F3C1ED8004DEEE4 /* NXContainer.m in Sources */,
 				BEF28C801F3C2A64004DEEE4 /* UIWebView+AFNetworking.m in Sources */,
 				BEF28C7B1F3C2A64004DEEE4 /* UIActivityIndicatorView+AFNetworking.m in Sources */,

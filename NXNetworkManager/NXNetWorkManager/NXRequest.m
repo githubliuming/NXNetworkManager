@@ -9,6 +9,7 @@
 #import "NXRequest.h"
 #import "NXContainer.h"
 #import "NXConfig.h"
+#import "NXCerter.h"
 @implementation NXRequest
 
 - (instancetype) initWithUrl:(NSString * )url{
@@ -162,13 +163,10 @@
           success:(NXSuccesBlock) succes
           failure:(NXFailureBlock)failure{
 
-    
-    
     [self setProgressHandlerBlock:progress];
     [self setSuccesHandlerBlock:succes];
     [self setFailureHandlerBlock:failure];
-    
-    //调用下层发起请求
+    [[NXCerter shareInstanced] sendRequset:self];
 }
 
 

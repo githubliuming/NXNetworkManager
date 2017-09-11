@@ -8,10 +8,10 @@
 
 #import <Foundation/Foundation.h>
 #import "NXConstant.h"
-@class AFURLSessionManager;
+@class AFHTTPSessionManager;
 @interface NXDownLoad : NSObject
 
-@property (nonatomic, strong) AFURLSessionManager *manager;
+@property (nonatomic, strong) AFHTTPSessionManager *manager;
 
 - (NSURLSessionDataTask *)downLoad:(NXRequest *) requset
                  progress:(NXProgressBlock) progress

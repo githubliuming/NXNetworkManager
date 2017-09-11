@@ -8,7 +8,24 @@
 
 #import "NXCerter.h"
 #import "NXRequest.h"
+#import "NXBridge.h"
 @implementation NXCerter
+
+- (NXBridge *)brdge
+{
+    return [NXBridge shareInstaced];
+}
++(instancetype) shareInstanced{
+
+    static  NXCerter * nx_center = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        
+        nx_center = [[NXCerter alloc] init];
+    });
+    
+    return nx_center;
+}
 - (NSString *) sendRequset:(NXRequest *)requset{
     
     return [self sendRequset:requset progress:requset.progressHandlerBlock];
@@ -27,7 +44,19 @@
     requset.progressHandlerBlock = progressBlock;
     requset.succesHandlerBlock = succes;
     requset.failureHandlerBlock = failue;
-    requset.identifier = @"";
+    [self.brdge sendWithRequst:requset completionHandler:^(id responseObject, NSError *error) {
+        if (error) {
+            if (requset.failureHandlerBlock) {
+                
+                requset.failureHandlerBlock(error, requset);
+            }
+        } else {
+        
+            if (requset.succesHandlerBlock) {
+                requset.succesHandlerBlock(responseObject, requset);
+            }
+        }
+    }];
     return requset.identifier;
 }
 @end

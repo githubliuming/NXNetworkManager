@@ -27,18 +27,18 @@
 @end
 @implementation NXDownLoad
 
-/**
- * manager的懒加载
- */
-- (AFURLSessionManager *)AFSessionManager{
-    if (!_manager) {
-        NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-        // 1. 创建会话管理者
-        _manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:configuration];
-        _manager.responseSerializer = [[AFHTTPResponseSerializer alloc] init];
-    }
-    return _manager;
-}
+///**
+// * manager的懒加载
+// */
+//- (AFURLSessionManager *)AFSessionManager{
+//    if (!_manager) {
+//        NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+//        // 1. 创建会话管理者
+//        _manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:configuration];
+//        _manager.responseSerializer = [[AFHTTPResponseSerializer alloc] init];
+//    }
+//    return _manager;
+//}
 
 - (NSURLSessionDataTask *)downLoad:(NXRequest *) requset
                  progress:(NXProgressBlock) progress
@@ -55,7 +55,7 @@
     [downRequest setValue:@"application/octet-stream" forHTTPHeaderField:@"content-type"];
     
     __weak typeof(self) weakSelf = self;
-    AFURLSessionManager * manager = [self AFSessionManager];
+    AFURLSessionManager * manager = self.manager;
     
    NSURLSessionDataTask *downloadTask = [manager dataTaskWithRequest:downRequest uploadProgress:nil downloadProgress:^(NSProgress * _Nonnull downloadProgress) {
        dispatch_async(dispatch_get_main_queue(), ^{
@@ -78,7 +78,7 @@
         weakSelf.fileHandle = nil;
         if (completionBlock) {
             
-            completionBlock(response,responseObject,error,requset);
+            completionBlock(responseObject,error,requset);
         }
     }];
     

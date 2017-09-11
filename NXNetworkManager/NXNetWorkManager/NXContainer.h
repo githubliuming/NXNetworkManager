@@ -10,5 +10,4 @@
 #import "NXConstant.h"
 @interface NXContainer : NSObject<NXContainerProtol>
 
-
 @end

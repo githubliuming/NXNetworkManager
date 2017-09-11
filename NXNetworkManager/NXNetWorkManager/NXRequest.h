@@ -100,7 +100,7 @@
 @property(nonatomic,assign) NXRequstSerializerType  requstSerializer;
 
 /**
- respose content-type
+ resposObj 响应对象序列化样式 json、xml、plist、raw
  */
 @property(nonatomic,assign) NXResposeSerializerType resopseSerializer;
 /**
