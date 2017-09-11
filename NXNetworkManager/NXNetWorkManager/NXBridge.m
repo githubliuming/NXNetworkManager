@@ -9,8 +9,8 @@
 #import "NXBridge.h"
 #import "AFNetworking.h"
 #import "NXRequest.h"
-
-
+#import "NXDownLoad.h"
+#import <objc/runtime.h>
 @interface NXBridge()
 
 @property (nonatomic, strong) AFHTTPSessionManager *sessionManager;
@@ -25,17 +25,38 @@
 @property (nonatomic, strong) AFXMLParserResponseSerializer *afXMLResponseSerializer;
 @property (nonatomic, strong) AFPropertyListResponseSerializer *afPListResponseSerializer;
 
+@property(nonatomic,strong)NSLock * lock;
+
 
 @end
+
+
+#pragma mark - NXRequest Binding
+
+@implementation NSObject (BindingXMRequest)
+
+static NSString * const NXRequestBindingKey = @"NXRequestBindingKey";
+
+- (void)bindingRequest:(NXRequest *)request {
+    objc_setAssociatedObject(self, (__bridge CFStringRef)NXRequestBindingKey, request, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (NXRequest *)bindedRequest {
+    NXRequest *request = objc_getAssociatedObject(self, (__bridge CFStringRef)NXRequestBindingKey);
+    return request;
+}
+
+@end
+
 @implementation NXBridge
 
 +(instancetype) brige{
-
+    
     return [[[self class] alloc] init];
 }
 
 +(instancetype) shareInstaced{
-
+    
     static NXBridge * nx_http_bridge = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -46,17 +67,18 @@
     return nx_http_bridge;
 }
 -(instancetype) init{
-
+    
     self = [super init];
     if (self) {
         
+        self.lock = [[NSLock alloc] init];
     }
     
     return self;
 }
 
 - (void)dealloc{
-
+    
     if (_sessionManager) {
         
         [_sessionManager invalidateSessionCancelingTasks:YES];
@@ -70,23 +92,23 @@
 
 - (AFHTTPSessionManager * )sessionManagerWithRequset:(NXRequest *)request
 {
-
+    
     return self.sessionManager;
 }
 
 - (AFHTTPResponseSerializer *) resposeSerializerWithRequset:(NXRequest *)request{
-
+    
     AFHTTPResponseSerializer * responseSerializer = nil;
     switch (request.resopseSerializer) {
         case NXHTTResposeSerializerTypeRAW:{
-        
-             responseSerializer = self.afHTTPResponseSerializer;
+            
+            responseSerializer = self.afHTTPResponseSerializer;
         }break;
         case NXHTTResposeSerializerTypeXML:{
             responseSerializer = self.afXMLResponseSerializer;
         }break;
         case NXHTTResposeSerializerTypeJSON:{
-        
+            
             responseSerializer = self.afJSONResponseSerializer;
         }break;
         case NXHTTResposeSerializerTypePlist:{
@@ -102,15 +124,15 @@
     AFHTTPRequestSerializer * requsetSirializer = nil;
     switch (requset.requstSerializer) {
         case NXHTTPRrequstSerializerTypeRAW:{
-        
+            
             requsetSirializer = self.afHTTPRequestSerializer;
         }break;
         case NXHTTPRrequstSerializerTypeJSON:{
-        
+            
             requsetSirializer = self.afJSONRequestSerializer;
         }break;
         case NXHTTPRrequstSerializerTypePlist:{
-        
+            
             requsetSirializer = self.afPListRequestSerializer;
         }break;
         default:
@@ -127,7 +149,7 @@
         _sessionManager.requestSerializer = self.afHTTPRequestSerializer;
         _sessionManager.responseSerializer = self.afHTTPResponseSerializer;
         _sessionManager.operationQueue.maxConcurrentOperationCount = 5;
-//        _sessionManager.completionQueue = xm_request_completion_callback_queue();
+        //        _sessionManager.completionQueue = xm_request_completion_callback_queue();
     }
     return _sessionManager;
 }
@@ -139,7 +161,7 @@
         _securitySessionManager.responseSerializer = self.afHTTPResponseSerializer;
         _securitySessionManager.securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeCertificate];
         _securitySessionManager.operationQueue.maxConcurrentOperationCount = 5;
-//        _securitySessionManager.completionQueue = xm_request_completion_callback_queue();
+        //        _securitySessionManager.completionQueue = xm_request_completion_callback_queue();
     }
     return _securitySessionManager;
 }
@@ -197,34 +219,34 @@
 }
 
 -(void)processUrlRequest:(NSMutableURLRequest *) urlRequest withNXRequest:(NXRequest *)request{
-
+    
     NSDictionary * headerDic = [request.headers containerConfigDic];
     if (headerDic.count >0) {
         
         [headerDic enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
-           
+            
             [urlRequest setValue:obj forHTTPHeaderField:key];
         }];
     }
     urlRequest.timeoutInterval = request.timeOutInterval;
 }
 
--(void)sendWithRequst:(NXRequest *)requset completionHandler:(NXCompleteBlcok)completionHandler{
-
-    switch (requset.requstType) {
+-(void)sendWithRequst:(NXRequest *)request completionHandler:(NXCompleteBlcok)completionHandler{
+    
+    switch (request.requstType) {
         case NXRequestTypeNormal:{
-        
-            [self nx_dataTaskWithRequest:requset completionHandler:completionHandler];
+            
+            [self nx_dataTaskWithRequest:request completionHandler:completionHandler];
         }break;
         case NXRequestTypeUpload:{
-        
-            [self nx_uploadTaskWithRequset:requset completionHandler:completionHandler];
+            
+            [self nx_uploadTaskWithRequset:request completionHandler:completionHandler];
         }break;
         case kXMRequestDownload:{
-            [self nx_downloadTastWithRequset:requset completionHandler:completionHandler];
+            [self nx_downloadTastWithRequset:request completionHandler:completionHandler];
         }break;
         default:{
-        
+            
             NSAssert(NO, @"未知的请求类型");
         }
             break;
@@ -247,13 +269,13 @@
     NSAssert(!httpMethod, @"当前 http 请求的类型 requset.httpMethod = %ld",(long)requst.httpMethod);
     AFHTTPSessionManager * sessionManager = [self sessionManagerWithRequset:requst];
     AFHTTPRequestSerializer * requestSerializer = [self requestSerializerWithRequest:requst];
-    	
+    
     NSError * urlRequstError;
     NSMutableURLRequest * urlRequst = [requestSerializer requestWithMethod:httpMethod URLString:requst.url parameters:requst.params.containerConfigDic error:&urlRequstError];
     if (urlRequstError) {
         if (requst.failureHandlerBlock) {
             dispatch_async(sessionManager.completionQueue, ^{
-            
+                
                 requst.failureHandlerBlock(nil, urlRequstError, requst);
             });
             
@@ -271,26 +293,76 @@
         [strongSelf nx_parseResponse:response responseObj:responseObject error:error request:requst completionHandler:completionHandler];
     }];
     
+    [self nx_bindTask:requst dataTaskIdentifier:dataTask sessionManager:sessionManager];
     [dataTask resume];
 }
 
 -(void) nx_uploadTaskWithRequset:(NXRequest *)request completionHandler:(NXCompleteBlcok)completionHandler{
-
+    
     AFHTTPSessionManager * sessionManager = [self sessionManagerWithRequset:request];
     AFHTTPRequestSerializer * requestSerializer = [self requestSerializerWithRequest:request];
+    __block NSError *serializationError = nil;
+    NSMutableURLRequest * urlRequest = [requestSerializer multipartFormRequestWithMethod:@"POST"
+                                                                               URLString:request.url
+                                                                              parameters:request.params.containerConfigDic
+                                                               constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+                                                                   
+                                                                   serializationError = [self bindUploadData:formData request:request];
+                                                                   
+                                                               } error:&serializationError];
     
+    if (serializationError) {
+        
+        if (completionHandler) {
+            
+            dispatch_async(sessionManager.completionQueue, ^{
+                
+                completionHandler(nil,serializationError);
+            });
+        }
+        return;
+    }
+    
+    [self processUrlRequest:urlRequest withNXRequest:request];
+    
+    NSURLSessionUploadTask *uploadTask = nil;
+    __weak __typeof(self)weakSelf = self;
+    uploadTask = [sessionManager uploadTaskWithStreamedRequest:urlRequest progress:^(NSProgress * _Nonnull uploadProgress) {
+        double downProgress_ = (uploadProgress.completedUnitCount * 1.0f)/uploadProgress.totalUnitCount;
+        if (request.progressHandlerBlock) {
+            request.progressHandlerBlock(downProgress_);
+        }
+        
+    } completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
+        
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        [strongSelf nx_parseResponse:response responseObj:responseObject error:error request:request completionHandler:completionHandler];
+    }];
+    
+    [self nx_bindTask:request dataTaskIdentifier:uploadTask sessionManager:sessionManager];
+    [uploadTask resume];
 }
 
--(void)nx_downloadTastWithRequset:(NXRequest *)requset completionHandler:(NXCompleteBlcok)completionHandler{
-
+-(void)nx_downloadTastWithRequset:(NXRequest *)request completionHandler:(NXCompleteBlcok)completionHandler{
     
+    AFHTTPSessionManager * sessionManager = [self sessionManagerWithRequset:request];
+    NXDownLoad * downLoad = [[NXDownLoad alloc] init];
+    downLoad.manager = sessionManager;
+   NSURLSessionDataTask * downLoadTask = [downLoad downLoad:request progress:request.progressHandlerBlock completionHandler:^(NSURLResponse *responese, id responseObject, NSError *error, NXRequest *requset) {
+       
+       if (completionHandler) {
+           completionHandler(responseObject,error);
+       }
+    }];
     
+    [self nx_bindTask:request dataTaskIdentifier:downLoadTask sessionManager:sessionManager];
+    [downLoadTask resume];
 }
 
 
 - (void)nx_parseResponse:(NSURLResponse *)response responseObj:(id)responseObj error:(NSError *)error
                  request:(NXRequest *)request completionHandler:(NXCompleteBlcok) completeHandler{
-
+    
     NSError * resposeSerializerError ;
     if(request.resopseSerializer != NXHTTPRrequstSerializerTypeRAW){
         AFHTTPResponseSerializer * serializer = [self resposeSerializerWithRequset:request];
@@ -299,23 +371,104 @@
         if (completeHandler) {
             
             if(resposeSerializerError){
-            
+                
                 completeHandler(nil,resposeSerializerError);
             } else {
-            
+                
                 completeHandler(responseObj,nil);
             }
         }
     }
 }
-- (void)nx_bindTask:(NXRequest *)requset dataTaskIdentifier:(NSUInteger)taskIdentifier sessionManager:(AFHTTPSessionManager *) sessionManager{
-
+- (void)nx_bindTask:(NXRequest *)requset dataTaskIdentifier:(NSURLSessionDataTask *)dataTask sessionManager:(AFHTTPSessionManager *) sessionManager{
+    
     NSString *identifier = nil;
     if ([sessionManager isEqual:self.sessionManager]) {
-        identifier = [NSString stringWithFormat:@"+%lu", (unsigned long)taskIdentifier];
+        identifier = [NSString stringWithFormat:@"+%lu", (unsigned long)dataTask.taskIdentifier];
     } else if ([sessionManager isEqual:self.securitySessionManager]) {
-        identifier = [NSString stringWithFormat:@"-%lu", (unsigned long)taskIdentifier];
+        identifier = [NSString stringWithFormat:@"-%lu", (unsigned long)dataTask.taskIdentifier];
     }
     [requset setValue:identifier forKey:@"_identifier"];
+    [dataTask bindingRequest:requset];
 }
+- (NSError *)bindUploadData:(id<AFMultipartFormData>)formData request:(NXRequest *) request{
+    
+    __block NSError * fileError;
+    [request.uploadFileArray enumerateObjectsUsingBlock:^(NXUploadFormData * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        if (obj.fileData) {
+            if (obj.fileName && obj.mimeType) {
+                [formData appendPartWithFileData:obj.fileData name:obj.name fileName:obj.fileName mimeType:obj.mimeType];
+            } else {
+                [formData appendPartWithFormData:obj.fileData name:obj.name];
+            }
+        } else if (obj.fileUrl) {
+            NSError *fileError = nil;
+            if (obj.fileName && obj.mimeType) {
+                [formData appendPartWithFileURL:obj.fileUrl name:obj.name fileName:obj.fileName mimeType:obj.mimeType error:&fileError];
+            } else {
+                [formData appendPartWithFileURL:obj.fileUrl name:obj.name error:&fileError];
+            }
+            if (fileError) {
+                fileError = fileError;
+                *stop = YES;
+            }
+        }
+    }];
+    return fileError;
+}
+
+- (NXRequest *)cancleRequst:(NSString *)identifier{
+
+    [self.lock lock];
+    NSArray * tasks = nil;
+    if ([identifier hasPrefix:@"+"]) {
+         tasks = self.sessionManager.tasks;
+        
+    }else if ([identifier hasPrefix:@"-"]){
+        tasks = self.securitySessionManager.tasks;
+        
+    }
+    __block NXRequest *request = nil;
+    if (tasks.count > 0) {
+        for (NSURLSessionTask * task in tasks) {
+            if ([task.bindedRequest.identifier isEqualToString:identifier]) {
+                request = task.bindedRequest;
+                [task cancel];
+                break;
+            }
+        }
+    }
+    [self.lock unlock];
+    return request;
+}
+- (NXRequest *)getRequestByIdentifier:(NSString *)identifier{
+
+    if (identifier.length <= 0 ) {
+        
+        return nil;
+    }
+    [self lock];
+    NSArray * tasks = nil;
+    if ([identifier hasPrefix:@"+"]) {
+        tasks = self.sessionManager.tasks;
+        
+    }else if ([identifier hasPrefix:@"-"]){
+        tasks = self.securitySessionManager.tasks;
+        
+    }
+    __block NXRequest *request = nil;
+    if (tasks.count > 0) {
+        for (NSURLSessionTask * task in tasks) {
+            if ([task.bindedRequest.identifier isEqualToString:identifier]) {
+                request = task.bindedRequest;
+                break;
+            }
+        }
+    }
+    [self.lock unlock];
+    return request;
+}
+
+
 @end

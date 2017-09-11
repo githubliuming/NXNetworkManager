@@ -10,6 +10,7 @@
 #import "NXConstant.h"
 
 @class NXConfig;
+@class NXUploadFormData;
 /**
  Http requset
  */
@@ -119,8 +120,12 @@
 
 
 /**
- 开始发起请求
+ 上传文件数组
+ */
+@property(nonatomic,strong)NSMutableArray <NXUploadFormData *> * uploadFileArray;
 
+/**
+ 开始发起请求
  @param progress 进度block
  @param succes 成功回调block
  @param failure 失败回调
@@ -172,5 +177,27 @@
  */
 - (void)addHeaders:(NXAddHeaderOrParamsBlock)headers;
 
+- (void)addFormDataWithName:(NSString *)name fileData:(NSData *)fileData;
+- (void)addFormDataWithName:(NSString *)name fileName:(NSString *)fileName mimeType:(NSString *)mimeType fileData:(NSData *)fileData;
+- (void)addFormDataWithName:(NSString *)name fileURL:(NSURL *)fileURL;
+- (void)addFormDataWithName:(NSString *)name fileName:(NSString *)fileName mimeType:(NSString *)mimeType fileURL:(NSURL *)fileURL;
 
+@end
+
+
+/**
+  上传时 填充表单的文件数据类
+ */
+@interface NXUploadFormData : NSObject
+
+@property(nonatomic,copy)   NSString * name;
+@property(nonatomic,copy)   NSString * fileName;
+@property(nonatomic,copy)   NSString * mimeType;
+@property(nonatomic,strong) NSData * fileData;
+@property(nonatomic,strong) NSURL * fileUrl;
+
++ (instancetype)formDataWithName:(NSString *)name fileData:(NSData *)fileData;
++ (instancetype)formDataWithName:(NSString *)name fileName:(NSString *)fileName mimeType:(NSString *)mimeType fileData:(NSData *)fileData;
++ (instancetype)formDataWithName:(NSString *)name fileURL:(NSURL *)fileURL;
++ (instancetype)formDataWithName:(NSString *)name fileName:(NSString *)fileName mimeType:(NSString *)mimeType fileURL:(NSURL *)fileURL;
 @end

@@ -89,7 +89,7 @@
         }];
     } else {
     
-        [downLoad resume];
+//        [downLoad resume];
     }
     return taskId;
 }
@@ -103,7 +103,7 @@
             NXDownLoad * download = self.downMapDic[taskId];
             if (download)
             {
-                [download cancel];
+//                [download cancel];
                 [self.downMapDic removeObjectForKey:taskId];
             }
         }
@@ -121,7 +121,7 @@
         NXDownLoad * download = self.downMapDic[taskId];
         if (download)
         {
-            [download cancel];
+//            [download cancel];
             [self.downMapDic removeObjectForKey:taskId];
         }
     }
@@ -136,7 +136,7 @@
             NXDownLoad * download = self.downMapDic[taskId];
             if (download)
             {
-                [download resume];
+//                [download resume];
             }
         }
         
@@ -151,7 +151,7 @@
         NXDownLoad * download = self.downMapDic[taskId];
         if (download)
         {
-            [download resume];
+//            [download resume];
         }
     }
 }
@@ -166,13 +166,12 @@
             NXDownLoad * download = self.downMapDic[taskId];
             if (download) {
                 
-                [download suspend];
+//                [download suspend];
             }
         }
         
     }
 }
-
 - (void)suspendWithTaskid:(NSString *)taskId{
 
     NSAssert(taskId !=nil, @"taskid is nil");
@@ -182,7 +181,7 @@
         NXDownLoad * download = self.downMapDic[taskId];
         if (download) {
             
-            [download suspend];
+//            [download suspend];
         }
         
     }

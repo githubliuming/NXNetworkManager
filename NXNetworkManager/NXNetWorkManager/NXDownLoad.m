@@ -20,10 +20,6 @@
 /** 文件句柄对象 */
 @property (nonatomic, strong) NSFileHandle *fileHandle;
 
-
-@property (nonatomic, strong) AFURLSessionManager *manager;
-@property (nonatomic, strong) NSURLSessionDataTask *downloadTask;
-
 @property(nonatomic,strong) NSString * fileUrl;
 
 @property(nonatomic,strong) NXRequest * request;
@@ -44,7 +40,7 @@
     return _manager;
 }
 
-- (void)downLoad:(NXRequest *) requset
+- (NSURLSessionDataTask *)downLoad:(NXRequest *) requset
                  progress:(NXProgressBlock) progress
         completionHandler:(NXCompletionHandlerBlock) completionBlock{
 
@@ -61,7 +57,7 @@
     __weak typeof(self) weakSelf = self;
     AFURLSessionManager * manager = [self AFSessionManager];
     
-   _downloadTask = [manager dataTaskWithRequest:downRequest uploadProgress:nil downloadProgress:^(NSProgress * _Nonnull downloadProgress) {
+   NSURLSessionDataTask *downloadTask = [manager dataTaskWithRequest:downRequest uploadProgress:nil downloadProgress:^(NSProgress * _Nonnull downloadProgress) {
        dispatch_async(dispatch_get_main_queue(), ^{
            
            if (progress) {
@@ -121,8 +117,8 @@
         [weakSelf.fileHandle writeData:data];
         
     }];
-
-    [self.downloadTask resume];
+ 
+    return downloadTask;
 }
 
 /**
@@ -140,28 +136,4 @@
     }
     return fileLength;
 }
-
-- (void)cancel{
-
-    if (self.downloadTask) {
-        
-        [self.downloadTask cancel];
-    }
-}
-
-- (void)suspend{
-
-    if (self.downloadTask.state == NSURLSessionTaskStateRunning)
-    {
-        [self.downloadTask suspend];
-    }
-}
-- (void)resume{
-
-    if (self.downloadTask.state == NSURLSessionTaskStateSuspended)
-    {
-        [self.downloadTask resume];
-    }
-}
-
 @end

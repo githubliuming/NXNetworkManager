@@ -8,17 +8,13 @@
 
 #import <Foundation/Foundation.h>
 #import "NXConstant.h"
-
+@class AFURLSessionManager;
 @interface NXDownLoad : NSObject
 
+@property (nonatomic, strong) AFURLSessionManager *manager;
 
-- (void)downLoad:(NXRequest *) requset
+- (NSURLSessionDataTask *)downLoad:(NXRequest *) requset
                  progress:(NXProgressBlock) progress
         completionHandler:(NXCompletionHandlerBlock) completionBlock;
 
-- (void)resume;
-
-- (void)suspend;
-
-- (void)cancel;
 @end

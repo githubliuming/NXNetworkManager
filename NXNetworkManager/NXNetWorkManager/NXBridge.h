@@ -13,11 +13,11 @@ typedef void(^NXCompleteBlcok)(id responseObject, NSError *error);
 @class NXRequest;
 @interface NXBridge : NSObject
 
-+ (instancetype)NXBrige;
++ (instancetype)brige;
 + (instancetype) shareInstaced;
 
-- (void)cancleRequst:(NSString *)identifier;
-- (NXRequest *)getRequestByIdentifier:(NSString *)identifier;
+-(void)sendWithRequst:(NXRequest *)request completionHandler:(NXCompleteBlcok)completionHandler;
 
--(void)sendWithRequst:(NXRequest *)requset completionHandler:(NXCompleteBlcok)completionHandler;
+- (NXRequest *)cancleRequst:(NSString *)identifier;
+- (NXRequest *)getRequestByIdentifier:(NSString *)identifier;
 @end

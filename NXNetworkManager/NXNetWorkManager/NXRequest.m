@@ -39,6 +39,15 @@
     return [self initWithUrl:@""];
 }
 
+- (NSMutableArray<NXUploadFormData *> *) uploadFileArray{
+
+    if (_uploadFileArray == nil) {
+        
+        _uploadFileArray = [[NSMutableArray alloc] init];
+    }
+    
+    return _uploadFileArray;
+}
 -(NSString *)fullPath{
 
     NSString * baseUrl = @"";
@@ -168,6 +177,65 @@
     self.progressHandlerBlock = nil;
     self.failureHandlerBlock = nil;
     self.succesHandlerBlock = nil;
+}
+
+- (void)addFormDataWithName:(NSString *)name fileData:(NSData *)fileData{
+
+    NXUploadFormData * formData =[NXUploadFormData formDataWithName:name fileData:fileData];
+    [self.uploadFileArray addObject:formData];
+}
+- (void)addFormDataWithName:(NSString *)name fileName:(NSString *)fileName mimeType:(NSString *)mimeType fileData:(NSData *)fileData{
+
+    NXUploadFormData * formData  = [NXUploadFormData formDataWithName:name fileName:fileName mimeType:mimeType fileData:fileData];
+    [self.uploadFileArray addObject:formData];
+}
+- (void)addFormDataWithName:(NSString *)name fileURL:(NSURL *)fileURL{
+
+    NXUploadFormData * formData = [NXUploadFormData formDataWithName:name fileURL:fileURL];
+    [self.uploadFileArray addObject:formData];
+}
+- (void)addFormDataWithName:(NSString *)name fileName:(NSString *)fileName mimeType:(NSString *)mimeType fileURL:(NSURL *)fileURL{
+
+    NXUploadFormData * formData = [NXUploadFormData formDataWithName:name fileName:fileName mimeType:mimeType fileURL:fileURL];
+    [self.uploadFileArray addObject:formData];
+}
+
+@end
+
+@implementation NXUploadFormData
+
+
++ (instancetype)formDataWithName:(NSString *)name fileData:(NSData *)fileData{
+
+    NXUploadFormData * formData = [[NXUploadFormData alloc] init];
+    formData.name = name;
+    formData.fileData = fileData;
+    return formData;
+}
++ (instancetype)formDataWithName:(NSString *)name fileURL:(NSURL *)fileURL{
+    
+    NXUploadFormData * formData = [[NXUploadFormData alloc] init];
+    formData.name = name;
+    formData.fileUrl = fileURL;
+    return formData;
+
+}
++ (instancetype)formDataWithName:(NSString *)name fileName:(NSString *)fileName mimeType:(NSString *)mimeType fileData:(NSData *)fileData{
+    NXUploadFormData * uploadFormData = [[NXUploadFormData alloc] init];
+    uploadFormData.name = name;
+    uploadFormData.fileName = fileName;
+    uploadFormData.mimeType = mimeType;
+    uploadFormData.fileData = fileData;
+    return uploadFormData;
+}
++ (instancetype)formDataWithName:(NSString *)name fileName:(NSString *)fileName mimeType:(NSString *)mimeType fileURL:(NSURL *)fileURL{
+    NXUploadFormData * uploadFormData = [[NXUploadFormData alloc] init];
+    
+    uploadFormData.name = name;
+    uploadFormData.fileName = fileName;
+    uploadFormData.mimeType = mimeType;
+    uploadFormData.fileUrl = fileURL;
+    return uploadFormData;
 }
 
 @end
