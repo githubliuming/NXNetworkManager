@@ -24,28 +24,9 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
-//    self.download = [NXDownLoadManager shareInstanced];
     self.progressUI.progress = 0.0f;
     
     double time = [[NSDate date] timeIntervalSince1970];
-    
-//    NXRequest * request = [[NXRequest alloc] initWithUrl:@"http://data.philm.cc/sticker/2017/v18/check_version.json"];
-    
-//    [request addParams:^(id<NXContainerProtol> container) {
-//        
-//        container.addDouble(time,@"time").addString(@"kkk",@"jjj");
-//        
-//    }];
-//    
-//    [[NXNetWorkSession shareInstanced] Get:request success:^(NSURLSessionDataTask *task, id responseObject, NXRequest *requset) {
-//        
-//        NSLog(@"responseObject = %@",responseObject);
-//        
-//    } failure:^(NSURLSessionDataTask *task, NSError *error, NXRequest *requset) {
-//        
-//        NSLog(@"error = %@",[error userInfo]);
-//    }];
-    
     NXRequest * request = [[NXRequest alloc] initWithUrl:@"http://data.philm.cc/sticker/2017/v18/check_version.json"];
     request.ingoreBaseUrl = YES;
     request.requstType = NXRequestTypeNormal;
