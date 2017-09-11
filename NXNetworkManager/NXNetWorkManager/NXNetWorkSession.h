@@ -29,7 +29,7 @@
  @param success 成功回调
  @param failureBlock 失败回调
  */
-- (void)Get:(NXRequset *)request
+- (void)Get:(NXRequest *)request
      success:(NXSuccesBlock) success
      failure:(NXFailureBlock)failureBlock;
 
@@ -41,7 +41,7 @@
  @param success 成功回调
  @param failureBlock 失败回调
  */
-- (void)post:(NXRequset *)request
+- (void)post:(NXRequest *)request
      success:(NXSuccesBlock) success
      failure:(NXFailureBlock)failureBlock;
 
@@ -57,7 +57,7 @@
  @param succces 成功回调
  @param failure 失败回调
  */
-- (void)post:(NXRequset *)requset
+- (void)post:(NXRequest *)requset
 formDataBlock:(NXFormDataBlock)formDatas
      progress:(NXProgressBlock)progress
       success:(NXSuccesBlock)succces
@@ -71,6 +71,6 @@ formDataBlock:(NXFormDataBlock)formDatas
  @param progress 进度回调
  @param completionHandler 结果回调
  */
-- (void)uplaod:(NXRequset *)requset  progress:(NXProgressBlock) progress complentBlock:(NXCompletionHandlerBlock)completionHandler;
+- (void)uplaod:(NXRequest *)requset  progress:(NXProgressBlock) progress complentBlock:(NXCompletionHandlerBlock)completionHandler;
 
 @end

@@ -8,7 +8,9 @@
 
 #import "NXBridge.h"
 #import "AFNetworking.h"
-#import "NXRequset.h"
+#import "NXRequest.h"
+
+
 @interface NXBridge()
 
 @property (nonatomic, strong) AFHTTPSessionManager *sessionManager;
@@ -66,13 +68,13 @@
     }
 }
 
-- (AFHTTPSessionManager * )sessionManagerWithRequset:(NXRequset *)request
+- (AFHTTPSessionManager * )sessionManagerWithRequset:(NXRequest *)request
 {
 
     return self.sessionManager;
 }
 
-- (AFHTTPResponseSerializer *) resposeSerializerWithRequset:(NXRequset *)request{
+- (AFHTTPResponseSerializer *) resposeSerializerWithRequset:(NXRequest *)request{
 
     AFHTTPResponseSerializer * responseSerializer = nil;
     switch (request.resopseSerializer) {
@@ -95,7 +97,7 @@
     }
     return responseSerializer;
 }
-- (AFHTTPRequestSerializer *) requestSerializerWithRequest:(NXRequset *)requset{
+- (AFHTTPRequestSerializer *) requestSerializerWithRequest:(NXRequest *)requset{
     
     AFHTTPRequestSerializer * requsetSirializer = nil;
     switch (requset.requstSerializer) {
@@ -194,7 +196,7 @@
     return _afPListResponseSerializer;
 }
 
--(void)processUrlRequest:(NSMutableURLRequest *) urlRequest withNXRequset:(NXRequset *)request{
+-(void)processUrlRequest:(NSMutableURLRequest *) urlRequest withNXRequest:(NXRequest *)request{
 
     NSDictionary * headerDic = [request.headers containerConfigDic];
     if (headerDic.count >0) {
@@ -207,19 +209,19 @@
     urlRequest.timeoutInterval = request.timeOutInterval;
 }
 
--(void)sendWithRequst:(NXRequset *)requset{
+-(void)sendWithRequst:(NXRequest *)requset completionHandler:(NXCompleteBlcok)completionHandler{
 
     switch (requset.requstType) {
         case NXRequestTypeNormal:{
         
-            [self nx_dataTaskWithRequest:requset];
+            [self nx_dataTaskWithRequest:requset completionHandler:completionHandler];
         }break;
         case NXRequestTypeUpload:{
         
-            [self nx_uploadTaskWithRequset:requset];
+            [self nx_uploadTaskWithRequset:requset completionHandler:completionHandler];
         }break;
         case kXMRequestDownload:{
-            [self nx_downloadTastWithRequset:requset];
+            [self nx_downloadTastWithRequset:requset completionHandler:completionHandler];
         }break;
         default:{
         
@@ -229,7 +231,7 @@
     }
 }
 
-- (void)nx_dataTaskWithRequest:(NXRequset *)requset
+-(void)nx_dataTaskWithRequest:(NXRequest *)requst completionHandler:(NXCompleteBlcok)completionHandler
 {
     static NSArray * httpMethodArray ;
     static dispatch_once_t onceToken;
@@ -237,52 +239,83 @@
         httpMethodArray = @[@"GET",@"POST",@"HEAD",@"DELETE",@"PUT",@"PATCH"];
     });
     NSString * httpMethod;
-    if (requset.httpMethod >= 0 && requset.httpMethod < httpMethodArray.count) {
+    if (requst.httpMethod >= 0 && requst.httpMethod < httpMethodArray.count) {
         
-        httpMethod = httpMethodArray[requset.httpMethod];
+        httpMethod = httpMethodArray[requst.httpMethod];
     }
     
-    NSAssert(!httpMethod, @"当前 http 请求的类型 requset.httpMethod = %ld",(long)requset.httpMethod);
-    AFHTTPSessionManager * sessionManager = [self sessionManagerWithRequset:requset];
-    AFHTTPRequestSerializer * requestSerializer = [self requestSerializerWithRequest:requset];
-    AFHTTPResponseSerializer * reposeSerializer = [self resposeSerializerWithRequset:requset];
+    NSAssert(!httpMethod, @"当前 http 请求的类型 requset.httpMethod = %ld",(long)requst.httpMethod);
+    AFHTTPSessionManager * sessionManager = [self sessionManagerWithRequset:requst];
+    AFHTTPRequestSerializer * requestSerializer = [self requestSerializerWithRequest:requst];
     	
     NSError * urlRequstError;
-    NSMutableURLRequest * urlRequst = [requestSerializer requestWithMethod:httpMethod URLString:requset.url parameters:requset.params.containerConfigDic error:&urlRequstError];
+    NSMutableURLRequest * urlRequst = [requestSerializer requestWithMethod:httpMethod URLString:requst.url parameters:requst.params.containerConfigDic error:&urlRequstError];
     if (urlRequstError) {
-        if (requset.failureHandlerBlock) {
+        if (requst.failureHandlerBlock) {
             dispatch_async(sessionManager.completionQueue, ^{
             
-                requset.failureHandlerBlock(nil, urlRequstError, requset);
+                requst.failureHandlerBlock(nil, urlRequstError, requst);
             });
             
         }
         return;
     }
     
-    [self processUrlRequest:urlRequst withNXRequset:requset];
+    [self processUrlRequest:urlRequst withNXRequest:requst];
     NSURLSessionDataTask *dataTask = nil;
     __weak __typeof(self)weakSelf = self;
-    dataTask = [sessionManager dataTaskWithRequest:urlRequst
-                                 completionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
-                                     __strong __typeof(weakSelf)strongSelf = weakSelf;
-//                                     [strongSelf xm_processResponse:response
-//                                                             object:responseObject
-//                                                              error:error
-//                                                            request:request
-//                                                  completionHandler:completionHandler];
-                                 }];
+    
+    dataTask = [sessionManager dataTaskWithRequest:urlRequst uploadProgress:nil downloadProgress:nil completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
+        
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        [strongSelf nx_parseResponse:response responseObj:responseObject error:error request:requst completionHandler:completionHandler];
+    }];
     
     [dataTask resume];
 }
 
--(void) nx_uploadTaskWithRequset:(NXRequset *)request{
+-(void) nx_uploadTaskWithRequset:(NXRequest *)request completionHandler:(NXCompleteBlcok)completionHandler{
 
+    AFHTTPSessionManager * sessionManager = [self sessionManagerWithRequset:request];
+    AFHTTPRequestSerializer * requestSerializer = [self requestSerializerWithRequest:request];
     
 }
 
--(void)nx_downloadTastWithRequset:(NXRequset *)requset{
+-(void)nx_downloadTastWithRequset:(NXRequest *)requset completionHandler:(NXCompleteBlcok)completionHandler{
 
     
+    
+}
+
+
+- (void)nx_parseResponse:(NSURLResponse *)response responseObj:(id)responseObj error:(NSError *)error
+                 request:(NXRequest *)request completionHandler:(NXCompleteBlcok) completeHandler{
+
+    NSError * resposeSerializerError ;
+    if(request.resopseSerializer != NXHTTPRrequstSerializerTypeRAW){
+        AFHTTPResponseSerializer * serializer = [self resposeSerializerWithRequset:request];
+        responseObj = [serializer responseObjectForResponse:response data:responseObj error:&resposeSerializerError];
+        
+        if (completeHandler) {
+            
+            if(resposeSerializerError){
+            
+                completeHandler(nil,resposeSerializerError);
+            } else {
+            
+                completeHandler(responseObj,nil);
+            }
+        }
+    }
+}
+- (void)nx_bindTask:(NXRequest *)requset dataTaskIdentifier:(NSUInteger)taskIdentifier sessionManager:(AFHTTPSessionManager *) sessionManager{
+
+    NSString *identifier = nil;
+    if ([sessionManager isEqual:self.sessionManager]) {
+        identifier = [NSString stringWithFormat:@"+%lu", (unsigned long)taskIdentifier];
+    } else if ([sessionManager isEqual:self.securitySessionManager]) {
+        identifier = [NSString stringWithFormat:@"-%lu", (unsigned long)taskIdentifier];
+    }
+    [requset setValue:identifier forKey:@"_identifier"];
 }
 @end

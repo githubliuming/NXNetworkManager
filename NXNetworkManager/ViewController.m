@@ -29,7 +29,7 @@
     
 //    double time = [[NSDate date] timeIntervalSince1970];
     
-//    NXRequset * request = [[NXRequset alloc] initWithUrl:@"http://data.philm.cc/sticker/2017/v18/check_version.json"];
+//    NXRequest * request = [[NXRequest alloc] initWithUrl:@"http://data.philm.cc/sticker/2017/v18/check_version.json"];
     
 //    [request addParams:^(id<NXContainerProtol> container) {
 //        
@@ -37,11 +37,11 @@
 //        
 //    }];
 //    
-//    [[NXNetWorkSession shareInstanced] Get:request success:^(NSURLSessionDataTask *task, id responseObject, NXRequset *requset) {
+//    [[NXNetWorkSession shareInstanced] Get:request success:^(NSURLSessionDataTask *task, id responseObject, NXRequest *requset) {
 //        
 //        NSLog(@"responseObject = %@",responseObject);
 //        
-//    } failure:^(NSURLSessionDataTask *task, NSError *error, NXRequset *requset) {
+//    } failure:^(NSURLSessionDataTask *task, NSError *error, NXRequest *requset) {
 //        
 //        NSLog(@"error = %@",[error userInfo]);
 //    }];
@@ -50,7 +50,7 @@
 
 - (IBAction)startDownLoader:(id)sender {
     
-//    NXRequset * request = [[NXRequset alloc] initWithUrl:@"http://dldir1.qq.com/qqfile/QQforMac/QQ_V5.4.0.dmg"];
+//    NXRequest * request = [[NXRequest alloc] initWithUrl:@"http://dldir1.qq.com/qqfile/QQforMac/QQ_V5.4.0.dmg"];
 //    NSString *path = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"QQ_V5.4.0.dmg"];
 //    request.fileUrl = path;
 //    
@@ -60,7 +60,7 @@
 //       
 //        weakSelf.progressUI.progress = progress;
 //      NSLog(@"progress ---> %f",progress);
-//    } completionHandler:^(NSURLResponse *responese, id responseObject, NSError *error, NXRequset *requset) {
+//    } completionHandler:^(NSURLResponse *responese, id responseObject, NSError *error, NXRequest *requset) {
 //        
 //        if (!error) {
 //         

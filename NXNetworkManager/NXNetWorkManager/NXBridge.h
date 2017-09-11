@@ -7,14 +7,17 @@
 //
 
 #import <Foundation/Foundation.h>
-@class NXRequset;
+
+typedef void(^NXCompleteBlcok)(id responseObject, NSError *error);
+
+@class NXRequest;
 @interface NXBridge : NSObject
 
 + (instancetype)NXBrige;
 + (instancetype) shareInstaced;
 
 - (void)cancleRequst:(NSString *)identifier;
-- (NXRequset *)getRequestByIdentifier:(NSString *)identifier;
+- (NXRequest *)getRequestByIdentifier:(NSString *)identifier;
 
--(void)sendWithRequst:(NXRequset *)requset;
+-(void)sendWithRequst:(NXRequest *)requset completionHandler:(NXCompleteBlcok)completionHandler;
 @end

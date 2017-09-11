@@ -63,7 +63,7 @@
     self.downloadQueue.maxConcurrentOperationCount = _maxDownloadCount;
 }
 
-- (NSString *)downLoad:(NXRequset *) requset
+- (NSString *)downLoad:(NXRequest *) requset
               progress:(NXProgressBlock) progress
      completionHandler:(NXCompletionHandlerBlock) completionBlock{
     NSString * url = requset.url;
@@ -78,7 +78,7 @@
         [self.downMapDic setObject:downLoad forKey:taskId];
         [self.downloadQueue addOperationWithBlock:^{
             
-            [downLoad downLoad:requset progress:progress completionHandler:^(NSURLResponse *responese, id responseObject, NSError *error, NXRequset *requset) {
+            [downLoad downLoad:requset progress:progress completionHandler:^(NSURLResponse *responese, id responseObject, NSError *error, NXRequest *requset) {
                 
                 if (completionBlock) {
                  

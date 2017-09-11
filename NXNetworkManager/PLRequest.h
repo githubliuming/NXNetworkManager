@@ -6,8 +6,8 @@
 //  Copyright © 2017年 yoyo. All rights reserved.
 //
 
-#import "NXRequset.h"
+#import "NXRequest.h"
 
-@interface PLRequest : NXRequset
+@interface PLRequest : NXRequest
 
 @end

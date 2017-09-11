@@ -1,5 +1,5 @@
 //
-//  NXRequset.h
+//  NXRequest.h
 //  NXNetworkManager
 //
 //  Created by yoyo on 2017/8/10.
@@ -13,7 +13,7 @@
 /**
  Http requset
  */
-@interface NXRequset : NSObject
+@interface NXRequest : NSObject
 
 - (instancetype) initWithUrl:(NSString * )url;
 - (instancetype) initWithAPIPath:(NSString *)apiPath;

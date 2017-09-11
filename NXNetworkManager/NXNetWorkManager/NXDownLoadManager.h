@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #import "NXDownLoad.h"
-#import "NXRequset.h"
+#import "NXRequest.h"
 /**
  下载管理类
  */
@@ -21,7 +21,7 @@
  */
 @property(nonatomic,assign) NSInteger maxDownloadCount;
 
-- (NSString *)downLoad:(NXRequset *) requset
+- (NSString *)downLoad:(NXRequest *) requset
               progress:(NXProgressBlock) progress
      completionHandler:(NXCompletionHandlerBlock) completionBlock;
 

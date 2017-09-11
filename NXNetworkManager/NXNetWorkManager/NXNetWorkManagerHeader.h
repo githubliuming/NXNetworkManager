@@ -9,7 +9,7 @@
 #ifndef NXNetWorkManagerHeader_h
 #define NXNetWorkManagerHeader_h
 
-#import "NXRequset.h"
+#import "NXRequest.h"
 #import "NXConfig.h"
 #import "NXNetWorkSession.h"
 

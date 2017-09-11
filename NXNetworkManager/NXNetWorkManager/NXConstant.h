@@ -9,21 +9,21 @@
 #ifndef NXConstant_h
 #define NXConstant_h
 
-@class NXRequset;
+@class NXRequest;
 @protocol AFMultipartFormData;
 @protocol NXContainerProtol;
 
 #pragma mark - block声明模块
-typedef void(^NXCompletionHandlerBlock)(NSURLResponse *responese,id responseObject,NSError * error, NXRequset * requset);
+typedef void(^NXCompletionHandlerBlock)(NSURLResponse *responese,id responseObject,NSError * error, NXRequest * requset);
 
-typedef void(^NXSuccesBlock)(NSURLSessionDataTask * task,id responseObject, NXRequset * requset);
+typedef void(^NXSuccesBlock)(NSURLSessionDataTask * task,id responseObject, NXRequest * requset);
 
-typedef void (^NXFailureBlock)(NSURLSessionDataTask * task, NSError *error,NXRequset * requset);
+typedef void (^NXFailureBlock)(NSURLSessionDataTask * task, NSError *error,NXRequest * requset);
 
 typedef void (^NXFormDataBlock)(id<AFMultipartFormData>  formData);
 
 typedef void (^NXProgressBlock)(double progress);
-typedef void (^NXCompletionBlock)(NSURLSessionDataTask * task ,NXRequset * requset,NSError * error);
+typedef void (^NXCompletionBlock)(NSURLSessionDataTask * task ,NXRequest * requset,NSError * error);
 
 typedef  id<NXContainerProtol>(^NXContainerAddIntegerBlock)(NSInteger value,NSString * key);
 typedef  id<NXContainerProtol>(^NXContainerAddDoubleBlock)(double value,NSString * key);

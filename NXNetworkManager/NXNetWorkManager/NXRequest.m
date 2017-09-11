@@ -1,15 +1,15 @@
 //
-//  NXRequset.m
+//  NXRequest.m
 //  NXNetworkManager
 //
 //  Created by yoyo on 2017/8/10.
 //  Copyright © 2017年 yoyo. All rights reserved.
 //
 
-#import "NXRequset.h"
+#import "NXRequest.h"
 #import "NXContainer.h"
 #import "NXConfig.h"
-@implementation NXRequset
+@implementation NXRequest
 
 - (instancetype) initWithUrl:(NSString * )url{
 

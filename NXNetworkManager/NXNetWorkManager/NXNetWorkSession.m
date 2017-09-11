@@ -8,7 +8,7 @@
 
 #import "NXNetWorkSession.h"
 #import "AFNetworking.h"
-#import "NXRequset.h"
+#import "NXRequest.h"
 @implementation NXNetWorkSession
 
 + (instancetype) shareInstanced{
@@ -74,7 +74,7 @@
     return manager;
     
 }
-- (void) Get:(NXRequset *)request success:(NXSuccesBlock) success failure:(NXFailureBlock)failureBlock {
+- (void) Get:(NXRequest *)request success:(NXSuccesBlock) success failure:(NXFailureBlock)failureBlock {
 
     AFHTTPSessionManager *manager = [self AFSessionManager:request.headers];
     manager.requestSerializer.cachePolicy = request.cachePolicy;
@@ -96,7 +96,7 @@
     
 }
 
-- (void)post:(NXRequset *)request success:(NXSuccesBlock) success failure:(NXFailureBlock)failureBlock {
+- (void)post:(NXRequest *)request success:(NXSuccesBlock) success failure:(NXFailureBlock)failureBlock {
     
     AFHTTPSessionManager *manager = [self AFSessionManager:request.headers];
     [manager POST:request.url parameters:request.params.containerConfigDic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
@@ -118,7 +118,7 @@
     
 }
 
-- (void) post:(NXRequset *)requset
+- (void) post:(NXRequest *)requset
 formDataBlock:(NXFormDataBlock)formDatas
      progress:(NXProgressBlock)progress
       success:(NXSuccesBlock)succces
@@ -149,7 +149,7 @@ formDataBlock:(NXFormDataBlock)formDatas
         }];
 }
 
-- (void) uplaod:(NXRequset *)requset  progress:(NXProgressBlock) progress complentBlock:(NXCompletionHandlerBlock)completionHandler{
+- (void) uplaod:(NXRequest *)requset  progress:(NXProgressBlock) progress complentBlock:(NXCompletionHandlerBlock)completionHandler{
 
     AFHTTPSessionManager * manager = [self AFSessionManager:nil];
     NSURLRequest * urlRequest = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:requset.url]];

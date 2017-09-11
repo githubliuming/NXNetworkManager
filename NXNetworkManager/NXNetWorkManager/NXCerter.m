@@ -7,21 +7,21 @@
 //
 
 #import "NXCerter.h"
-#import "NXRequset.h"
+#import "NXRequest.h"
 @implementation NXCerter
-- (NSString *) sendRequset:(NXRequset *)requset{
+- (NSString *) sendRequset:(NXRequest *)requset{
     
     return [self sendRequset:requset progress:requset.progressHandlerBlock];
 }
-- (NSString *) sendRequset:(NXRequset *)requset progress:(NXProgressBlock) progressBlock
+- (NSString *) sendRequset:(NXRequest *)requset progress:(NXProgressBlock) progressBlock
 {
     return [self sendRequset:requset progress:progressBlock succes:requset.succesHandlerBlock failure:requset.failureHandlerBlock];
 }
-- (NSString *) sendRequset:(NXRequset *)requset succes:(NXSuccesBlock)succes failure:(NXFailureBlock)failure{
+- (NSString *) sendRequset:(NXRequest *)requset succes:(NXSuccesBlock)succes failure:(NXFailureBlock)failure{
 
     return [self sendRequset:requset progress:requset.progressHandlerBlock succes:succes failure:failure];
 }
-- (NSString *)sendRequset:(NXRequset *)requset progress:(NXProgressBlock) progressBlock succes:(NXSuccesBlock) succes failure:(NXFailureBlock) failue{
+- (NSString *)sendRequset:(NXRequest *)requset progress:(NXProgressBlock) progressBlock succes:(NXSuccesBlock) succes failure:(NXFailureBlock) failue{
     
     [requset clearHandlerBlock];
     requset.progressHandlerBlock = progressBlock;

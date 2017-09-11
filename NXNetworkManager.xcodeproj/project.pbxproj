@@ -19,7 +19,7 @@
 		BEF28C2E1F3BFF7F004DEEE4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BEF28C2C1F3BFF7F004DEEE4 /* Main.storyboard */; };
 		BEF28C301F3BFF7F004DEEE4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BEF28C2F1F3BFF7F004DEEE4 /* Assets.xcassets */; };
 		BEF28C331F3BFF7F004DEEE4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BEF28C311F3BFF7F004DEEE4 /* LaunchScreen.storyboard */; };
-		BEF28C421F3C11B0004DEEE4 /* NXRequset.m in Sources */ = {isa = PBXBuildFile; fileRef = BEF28C411F3C11B0004DEEE4 /* NXRequset.m */; };
+		BEF28C421F3C11B0004DEEE4 /* NXRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = BEF28C411F3C11B0004DEEE4 /* NXRequest.m */; };
 		BEF28C4C1F3C1ED8004DEEE4 /* NXContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = BEF28C4B1F3C1ED8004DEEE4 /* NXContainer.m */; };
 		BEF28C5D1F3C2A55004DEEE4 /* AFHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BEF28C511F3C2A55004DEEE4 /* AFHTTPSessionManager.m */; };
 		BEF28C5E1F3C2A55004DEEE4 /* AFNetworkReachabilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BEF28C541F3C2A55004DEEE4 /* AFNetworkReachabilityManager.m */; };
@@ -64,8 +64,8 @@
 		BEF28C2F1F3BFF7F004DEEE4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BEF28C321F3BFF7F004DEEE4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BEF28C341F3BFF7F004DEEE4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		BEF28C401F3C11B0004DEEE4 /* NXRequset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NXRequset.h; sourceTree = "<group>"; };
-		BEF28C411F3C11B0004DEEE4 /* NXRequset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NXRequset.m; sourceTree = "<group>"; };
+		BEF28C401F3C11B0004DEEE4 /* NXRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NXRequest.h; sourceTree = "<group>"; };
+		BEF28C411F3C11B0004DEEE4 /* NXRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NXRequest.m; sourceTree = "<group>"; };
 		BEF28C4A1F3C1ED8004DEEE4 /* NXContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NXContainer.h; sourceTree = "<group>"; };
 		BEF28C4B1F3C1ED8004DEEE4 /* NXContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NXContainer.m; sourceTree = "<group>"; };
 		BEF28C4D1F3C25D9004DEEE4 /* NXNetWorkManagerHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NXNetWorkManagerHeader.h; sourceTree = "<group>"; };
@@ -179,8 +179,8 @@
 			isa = PBXGroup;
 			children = (
 				BE9ACF6E1F42DF9100720279 /* NXCacheManager */,
-				BEF28C401F3C11B0004DEEE4 /* NXRequset.h */,
-				BEF28C411F3C11B0004DEEE4 /* NXRequset.m */,
+				BEF28C401F3C11B0004DEEE4 /* NXRequest.h */,
+				BEF28C411F3C11B0004DEEE4 /* NXRequest.m */,
 				BE8169811F614D2A008C71B8 /* NXConfig.h */,
 				BE8169821F614D2A008C71B8 /* NXConfig.m */,
 				BEF28C4A1F3C1ED8004DEEE4 /* NXContainer.h */,
@@ -337,7 +337,7 @@
 				BEF28C7E1F3C2A64004DEEE4 /* UIProgressView+AFNetworking.m in Sources */,
 				BE9ACF711F42DFA800720279 /* NXCacheManager.m in Sources */,
 				BEB02C091F612E2E00BE4051 /* PLRequest.m in Sources */,
-				BEF28C421F3C11B0004DEEE4 /* NXRequset.m in Sources */,
+				BEF28C421F3C11B0004DEEE4 /* NXRequest.m in Sources */,
 				BEF28C7A1F3C2A64004DEEE4 /* AFNetworkActivityIndicatorManager.m in Sources */,
 				BEF28C881F3C537D004DEEE4 /* NXDownLoadManager.m in Sources */,
 				BEF28C7F1F3C2A64004DEEE4 /* UIRefreshControl+AFNetworking.m in Sources */,

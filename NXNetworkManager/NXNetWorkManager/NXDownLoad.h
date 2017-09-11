@@ -12,7 +12,7 @@
 @interface NXDownLoad : NSObject
 
 
-- (void)downLoad:(NXRequset *) requset
+- (void)downLoad:(NXRequest *) requset
                  progress:(NXProgressBlock) progress
         completionHandler:(NXCompletionHandlerBlock) completionBlock;
 

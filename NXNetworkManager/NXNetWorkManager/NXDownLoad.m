@@ -8,7 +8,7 @@
 
 #import "NXDownLoad.h"
 #import "AFNetworking.h"
-#import "NXRequset.h"
+#import "NXRequest.h"
 @interface NXDownLoad ()
 
 
@@ -26,7 +26,7 @@
 
 @property(nonatomic,strong) NSString * fileUrl;
 
-@property(nonatomic,strong) NXRequset * request;
+@property(nonatomic,strong) NXRequest * request;
 
 @end
 @implementation NXDownLoad
@@ -44,7 +44,7 @@
     return _manager;
 }
 
-- (void)downLoad:(NXRequset *) requset
+- (void)downLoad:(NXRequest *) requset
                  progress:(NXProgressBlock) progress
         completionHandler:(NXCompletionHandlerBlock) completionBlock{
 
