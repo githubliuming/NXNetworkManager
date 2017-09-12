@@ -119,6 +119,16 @@
 @property(nonatomic,copy) NXProgressBlock progressHandlerBlock;
 
 /**
+ 发起请求之前执行此回调
+ */
+@property(nonatomic,copy) NXRequestProcessBlock requestProcessHandler;
+
+/**
+ 接受到请求数据,调用succesHandlerBlock之前执行此回调
+ */
+@property(nonatomic,copy) NXResponseProcessBlcok responseProcessHandler;
+
+/**
  重试次数 默认不重试
  */
 @property(nonatomic,assign) NSInteger retryCount;

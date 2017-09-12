@@ -21,6 +21,18 @@
  */
 @property(nonatomic,strong)NSString * cerPath;
 
+
+/**
+ 是否输出调试log
+ */
+@property (nonatomic, assign) BOOL consoleLog;
+
+
+/**
+ 请求返回后的回调队列 默认主线程队列
+ */
+@property (nonatomic, strong) dispatch_queue_t callbackQueue;
+
 /**
  添加公共请求参数
  @param params 回调block

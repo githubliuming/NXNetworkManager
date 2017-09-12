@@ -242,7 +242,7 @@ static NSString * const NXRequestBindingKey = @"NXRequestBindingKey";
             
             [self nx_uploadTaskWithRequset:request completionHandler:completionHandler];
         }break;
-        case kXMRequestDownload:{
+        case NXRequestTypeDownload:{
             [self nx_downloadTastWithRequset:request completionHandler:completionHandler];
         }break;
         default:{

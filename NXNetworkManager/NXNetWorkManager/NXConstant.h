@@ -31,6 +31,8 @@ typedef  id<NXContainerProtol>(^NXContainerAddStringgerBlock)(NSString * value,N
 
 typedef void (^NXAddHeaderOrParamsBlock)(id<NXContainerProtol> container);
 
+typedef void (^NXResponseProcessBlcok)(NXRequest * request,id responseObj,NSError ** error);
+typedef void (^NXRequestProcessBlock)(NXRequest * request);
 
 #pragma mark - 协议声明模块
 /**
@@ -51,7 +53,7 @@ typedef NS_ENUM(NSInteger,NXRequestType) {
 
     NXRequestTypeNormal,   /// get post put delete...
     NXRequestTypeUpload,   /// 上传文件
-    kXMRequestDownload,    /// 下载文件
+    NXRequestTypeDownload,/// 下载文件
 };
 
 typedef NS_ENUM(NSInteger,NXHTTPMethodType) {

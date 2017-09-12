@@ -21,7 +21,7 @@
 - (NSString *) sendRequset:(NXRequest *)requset;
 - (NSString *) sendRequset:(NXRequest *)requset progress:(NXProgressBlock) progressBlock;
 - (NSString *) sendRequset:(NXRequest *)requset succes:(NXSuccesBlock)succes failure:(NXFailureBlock)failure;
-- (NSString *)sendRequset:(NXRequest *)requset progress:(NXProgressBlock) progressBlock
+- (NSString *) sendRequset:(NXRequest *)requset progress:(NXProgressBlock) progressBlock
                    succes:(NXSuccesBlock) succes failure:(NXFailureBlock) failure;
 
 

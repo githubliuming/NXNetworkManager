@@ -210,12 +210,13 @@
     [[NXCerter shareInstanced] sendRequset:self];
 }
 
-
-- (void)clearHandlerBlock{
-
+- (void)clearHandlerBlock
+{
     self.progressHandlerBlock = nil;
     self.failureHandlerBlock = nil;
     self.succesHandlerBlock = nil;
+    self.requestProcessHandler = nil;
+    self.responseProcessHandler = nil;
 }
 
 - (void)addFormDataWithName:(NSString *)name fileData:(NSData *)fileData{

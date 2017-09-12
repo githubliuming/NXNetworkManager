@@ -32,6 +32,7 @@
      
         self.globalParamsContainer = [[NXContainer alloc] init];
         self.globalHeadersContainer = [[NXContainer alloc] init];
+        self.callbackQueue = dispatch_get_main_queue();
     }
     return self;
 }

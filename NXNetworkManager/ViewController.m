@@ -52,7 +52,7 @@
     NXRequest * request = [[NXRequest alloc] initWithUrl:@"http://dldir1.qq.com/qqfile/QQforMac/QQ_V5.4.0.dmg"];
     NSString *path = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"QQ_V5.4.0.dmg"];
     request.fileUrl = path;
-    request.requstType = kXMRequestDownload;
+    request.requstType = NXRequestTypeDownload;
     
     __weak typeof(self) weakSelf = self;
     
