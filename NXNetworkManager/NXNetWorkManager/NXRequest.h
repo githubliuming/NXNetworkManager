@@ -30,7 +30,7 @@
 /**
  接口完整路径
  */
-@property(nonatomic,strong)NSString * fullPath;
+@property(nonatomic,strong)NSString * fullUrl;
 
 /**
  超时时间
@@ -118,6 +118,10 @@
  */
 @property(nonatomic,copy) NXProgressBlock progressHandlerBlock;
 
+/**
+ 重试次数 默认不重试
+ */
+@property(nonatomic,assign) NSInteger retryCount;
 
 /**
  上传文件数组
@@ -149,6 +153,8 @@
  取消当前请求
  */
 - (void)cancelRequset;
+- (void)supedReust;
+- (void)resumeRequst;
 
 /**
  清空 回调block避免循环引用

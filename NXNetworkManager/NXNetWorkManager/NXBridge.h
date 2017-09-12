@@ -20,4 +20,7 @@ typedef void(^NXCompleteBlcok)(id responseObject, NSError *error);
 
 - (NXRequest *)cancleRequst:(NSString *)identifier;
 - (NXRequest *)getRequestByIdentifier:(NSString *)identifier;
+
+- (void)pauseRequest:(NSString *)identifier;
+- (void)resumeRequest:(NSString *)identifier;
 @end

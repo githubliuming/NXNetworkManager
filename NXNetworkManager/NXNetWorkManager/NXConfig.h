@@ -48,3 +48,8 @@
  */
 - (NSDictionary *)globalHeaders;
 @end
+
+
+@interface NXContainer : NSObject<NXContainerProtol>
+
+@end

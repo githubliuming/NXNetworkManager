@@ -271,7 +271,7 @@ static NSString * const NXRequestBindingKey = @"NXRequestBindingKey";
     AFHTTPRequestSerializer * requestSerializer = [self requestSerializerWithRequest:requst];
     
     NSError * urlRequstError;
-    NSMutableURLRequest * urlRequst = [requestSerializer requestWithMethod:httpMethod URLString:requst.url parameters:requst.params.containerConfigDic error:&urlRequstError];
+    NSMutableURLRequest * urlRequst = [requestSerializer requestWithMethod:httpMethod URLString:requst.fullUrl parameters:requst.params.containerConfigDic error:&urlRequstError];
     if (urlRequstError) {
         if (requst.failureHandlerBlock) {
             dispatch_async(sessionManager.completionQueue, ^{
@@ -303,7 +303,7 @@ static NSString * const NXRequestBindingKey = @"NXRequestBindingKey";
     AFHTTPRequestSerializer * requestSerializer = [self requestSerializerWithRequest:request];
     __block NSError *serializationError = nil;
     NSMutableURLRequest * urlRequest = [requestSerializer multipartFormRequestWithMethod:@"POST"
-                                                                               URLString:request.url
+                                                                               URLString:request.fullUrl
                                                                               parameters:request.params.containerConfigDic
                                                                constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
                                                                    
@@ -457,7 +457,7 @@ static NSString * const NXRequestBindingKey = @"NXRequestBindingKey";
         tasks = self.securitySessionManager.tasks;
         
     }
-    __block NXRequest *request = nil;
+    NXRequest *request = nil;
     if (tasks.count > 0) {
         for (NSURLSessionTask * task in tasks) {
             if ([task.bindedRequest.identifier isEqualToString:identifier]) {
@@ -470,5 +470,61 @@ static NSString * const NXRequestBindingKey = @"NXRequestBindingKey";
     return request;
 }
 
+- (void)pauseRequest:(NSString *)identifier{
 
+    if (identifier.length <= 0 ) {
+        
+        return ;
+    }
+    NSArray * tasks = nil;
+    if ([identifier hasPrefix:@"+"]) {
+        tasks = self.sessionManager.tasks;
+        
+    }else if ([identifier hasPrefix:@"-"]){
+        tasks = self.securitySessionManager.tasks;
+    }
+    
+    NXRequest *request = nil;
+    if (tasks.count > 0) {
+        for (NSURLSessionTask * task in tasks) {
+            if ([task.bindedRequest.identifier isEqualToString:identifier]) {
+                request = task.bindedRequest;
+                if (task.state == NSURLSessionTaskStateRunning)
+                {
+                    [task suspend];
+                }
+                break;
+            }
+        }
+    }
+}
+- (void)resumeRequest:(NSString *)identifier{
+
+    if (identifier.length <= 0 ) {
+        
+        return ;
+    }
+    NSArray * tasks = nil;
+    if ([identifier hasPrefix:@"+"]) {
+        tasks = self.sessionManager.tasks;
+        
+    }else if ([identifier hasPrefix:@"-"]){
+        
+        tasks = self.securitySessionManager.tasks;
+    }
+    NXRequest *request = nil;
+    if (tasks.count > 0) {
+        for (NSURLSessionTask * task in tasks) {
+            if ([task.bindedRequest.identifier isEqualToString:identifier]) {
+                request = task.bindedRequest;
+                if (task.state == NSURLSessionTaskStateSuspended)
+                {
+                    [task resume];
+                }
+                break;
+            }
+        }
+    }
+
+}
 @end

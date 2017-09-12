@@ -7,7 +7,6 @@
 //
 
 #import "NXRequest.h"
-#import "NXContainer.h"
 #import "NXConfig.h"
 #import "NXCerter.h"
 @implementation NXRequest
@@ -49,15 +48,49 @@
     
     return _uploadFileArray;
 }
--(NSString *)fullPath{
 
-    NSString * baseUrl = @"";
+- (NSString *)url{
+
+    if (!self.ingoreBaseUrl) {
+        
+        _url = self.config.baseUrl;
+    }
+    return _url;
+}
+-(NSString *)fullUrl{
+
+    NSString * baseUrl = self.config.baseUrl;
     if (self.ingoreBaseUrl) {
         
         baseUrl = self.url;
     }
-    _fullPath = [NSString stringWithFormat:@"%@%@",baseUrl,self.apiPath];
-    return _fullPath;
+    if (self.apiPath.length > 0) {
+        
+        if ([baseUrl hasSuffix:@"/"])
+        {
+            if ([self.apiPath hasPrefix:@"/"]) {
+                NSString * tmpApi = [self.apiPath substringFromIndex:1];
+                _fullUrl = [NSString stringWithFormat:@"%@%@",baseUrl,tmpApi];
+            } else {
+            
+                _fullUrl = [NSString stringWithFormat:@"%@%@",baseUrl,self.apiPath];
+            }
+            
+        } else {
+            
+            if ([self.apiPath hasPrefix:@"/"]) {
+                _fullUrl = [NSString stringWithFormat:@"%@%@",baseUrl,self.apiPath];
+            } else {
+            _fullUrl = [NSString stringWithFormat:@"%@/%@",baseUrl,self.apiPath];
+            }
+        }
+    } else {
+    
+        _fullUrl = [NSString stringWithFormat:@"%@",baseUrl];
+    }
+
+    
+    return _fullUrl;
 }
 - (id<NXContainerProtol>) headers{
     
@@ -146,8 +179,16 @@
  */
 - (void)cancelRequset
 {
+    [[NXCerter shareInstanced] cancleRequest:self.identifier];
+    [self clearHandlerBlock];
+}
 
-    
+- (void)supedReust{
+//[[NXCerter shareInstanced] cancleRequest:self.identifier];
+}
+- (void)resumeRequst
+{
+    [[NXCerter shareInstanced] resumeRequest:self.identifier];
 }
 - (void)start
 {

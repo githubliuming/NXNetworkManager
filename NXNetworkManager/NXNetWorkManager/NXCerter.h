@@ -23,4 +23,11 @@
 - (NSString *) sendRequset:(NXRequest *)requset succes:(NXSuccesBlock)succes failure:(NXFailureBlock)failure;
 - (NSString *)sendRequset:(NXRequest *)requset progress:(NXProgressBlock) progressBlock
                    succes:(NXSuccesBlock) succes failure:(NXFailureBlock) failure;
+
+
+- (void)cancleRequest:(NSString *)identifier;
+- (void)resumeRequest:(NSString *)identifier;
+- (void)pasueRequest:(NSString *)identifier;
+- (id)getRequest:(NSString *)identifier;
+
 @end

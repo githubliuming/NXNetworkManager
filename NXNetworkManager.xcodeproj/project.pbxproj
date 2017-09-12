@@ -20,7 +20,6 @@
 		BEF28C301F3BFF7F004DEEE4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BEF28C2F1F3BFF7F004DEEE4 /* Assets.xcassets */; };
 		BEF28C331F3BFF7F004DEEE4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BEF28C311F3BFF7F004DEEE4 /* LaunchScreen.storyboard */; };
 		BEF28C421F3C11B0004DEEE4 /* NXRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = BEF28C411F3C11B0004DEEE4 /* NXRequest.m */; };
-		BEF28C4C1F3C1ED8004DEEE4 /* NXContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = BEF28C4B1F3C1ED8004DEEE4 /* NXContainer.m */; };
 		BEF28C5D1F3C2A55004DEEE4 /* AFHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BEF28C511F3C2A55004DEEE4 /* AFHTTPSessionManager.m */; };
 		BEF28C5E1F3C2A55004DEEE4 /* AFNetworkReachabilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BEF28C541F3C2A55004DEEE4 /* AFNetworkReachabilityManager.m */; };
 		BEF28C5F1F3C2A55004DEEE4 /* AFSecurityPolicy.m in Sources */ = {isa = PBXBuildFile; fileRef = BEF28C561F3C2A55004DEEE4 /* AFSecurityPolicy.m */; };
@@ -64,8 +63,6 @@
 		BEF28C341F3BFF7F004DEEE4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BEF28C401F3C11B0004DEEE4 /* NXRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NXRequest.h; sourceTree = "<group>"; };
 		BEF28C411F3C11B0004DEEE4 /* NXRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NXRequest.m; sourceTree = "<group>"; };
-		BEF28C4A1F3C1ED8004DEEE4 /* NXContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NXContainer.h; sourceTree = "<group>"; };
-		BEF28C4B1F3C1ED8004DEEE4 /* NXContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NXContainer.m; sourceTree = "<group>"; };
 		BEF28C4D1F3C25D9004DEEE4 /* NXNetWorkManagerHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NXNetWorkManagerHeader.h; sourceTree = "<group>"; };
 		BEF28C501F3C2A55004DEEE4 /* AFHTTPSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPSessionManager.h; sourceTree = "<group>"; };
 		BEF28C511F3C2A55004DEEE4 /* AFHTTPSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFHTTPSessionManager.m; sourceTree = "<group>"; };
@@ -177,8 +174,6 @@
 				BEF28C411F3C11B0004DEEE4 /* NXRequest.m */,
 				BE8169811F614D2A008C71B8 /* NXConfig.h */,
 				BE8169821F614D2A008C71B8 /* NXConfig.m */,
-				BEF28C4A1F3C1ED8004DEEE4 /* NXContainer.h */,
-				BEF28C4B1F3C1ED8004DEEE4 /* NXContainer.m */,
 				47A0DC401F63BE6A00E40A2E /* NXCerter.h */,
 				47A0DC411F63BE6A00E40A2E /* NXCerter.m */,
 				47FD0A4F1F652F4A009029EC /* NXBridge.h */,
@@ -338,7 +333,6 @@
 				BE8169831F614D2A008C71B8 /* NXConfig.m in Sources */,
 				BEF28C601F3C2A55004DEEE4 /* AFURLRequestSerialization.m in Sources */,
 				BEF28C8B1F3C541D004DEEE4 /* NXDownLoad.m in Sources */,
-				BEF28C4C1F3C1ED8004DEEE4 /* NXContainer.m in Sources */,
 				BEF28C801F3C2A64004DEEE4 /* UIWebView+AFNetworking.m in Sources */,
 				BEF28C7B1F3C2A64004DEEE4 /* UIActivityIndicatorView+AFNetworking.m in Sources */,
 				BEF28C251F3BFF7F004DEEE4 /* main.m in Sources */,

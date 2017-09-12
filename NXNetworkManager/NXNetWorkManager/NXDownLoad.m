@@ -47,7 +47,7 @@
     self.request = requset;
     
     self.fileUrl = requset.fileUrl;
-    NSMutableURLRequest *downRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:requset.url]];
+    NSMutableURLRequest *downRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:requset.fullUrl]];
     // 设置HTTP请求头中的Range
     self.currentLength = [self fileLengthForPath:self.fileUrl];
     NSString *range = [NSString stringWithFormat:@"bytes=%ld-", (long)self.currentLength];

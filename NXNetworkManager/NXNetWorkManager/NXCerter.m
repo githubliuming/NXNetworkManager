@@ -50,13 +50,43 @@
                 
                 requset.failureHandlerBlock(error, requset);
             }
+            [requset clearHandlerBlock];
         } else {
         
-            if (requset.succesHandlerBlock) {
-                requset.succesHandlerBlock(responseObject, requset);
+            if(requset.retryCount <= 0){
+            
+                if (requset.succesHandlerBlock) {
+                    requset.succesHandlerBlock(responseObject, requset);
+                }
+                [requset clearHandlerBlock];
+            } else {
+            
+                [requset start];
+                requset.retryCount -=1;
             }
         }
     }];
     return requset.identifier;
+}
+
+
+- (void)pasueRequest:(NSString *)identifier
+{
+    [[NXBridge shareInstaced] pauseRequest:identifier];
+}
+
+- (void)cancleRequest:(NSString *)identifier
+{
+    NXRequest * request = [[NXBridge shareInstaced] cancleRequst:identifier];
+    [request clearHandlerBlock];
+    
+}
+- (void)resumeRequest:(NSString *)identifier{
+
+    [[NXBridge shareInstaced] resumeRequest:identifier];
+}
+- (id)getRequest:(NSString *)identifier{
+
+    return [[NXBridge shareInstaced] getRequestByIdentifier:identifier];
 }
 @end
