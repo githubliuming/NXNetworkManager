@@ -208,7 +208,7 @@
 @interface NXUploadFormData : NSObject
 
 /**
- 上传文件 name
+ 上传文件 name (具体做什么的?)
  */
 @property(nonatomic,copy)   NSString * name;
 

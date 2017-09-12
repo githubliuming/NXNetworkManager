@@ -324,12 +324,12 @@ static NSString * const NXRequestBindingKey = @"NXRequestBindingKey";
     NSMutableURLRequest * urlRequst = [requestSerializer requestWithMethod:httpMethod URLString:requst.fullUrl parameters:requst.params.containerConfigDic error:&urlRequstError];
     urlRequst.cachePolicy = requst.cachePolicy;
     if (urlRequstError) {
-        if (requst.failureHandlerBlock) {
-            dispatch_async(sessionManager.completionQueue, ^{
-                
-                requst.failureHandlerBlock(urlRequstError, requst);
-            });
+        if (completionHandler) {
             
+            dispatch_async(sessionManager.completionQueue, ^{
+               
+                completionHandler(nil,urlRequstError);
+            });
         }
         return;
     }

@@ -22,5 +22,6 @@
 //7,支持网络层缓存,DNS,网络请求
 //8,block 回调在代码内部打破循环
 //9,url缓存与数据库的关系
+//10,断点下载
 
 #endif /* NXNetWorkManagerHeader_h */
