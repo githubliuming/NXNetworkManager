@@ -45,6 +45,7 @@
     requset.progressHandlerBlock = progressBlock;
     requset.succesHandlerBlock = succes;
     requset.failureHandlerBlock = failue;
+    //请求正式发起前的回调
     if (requset.requestProcessHandler) {
         
         requset.requestProcessHandler(requset);
@@ -182,5 +183,19 @@
 - (id)getRequest:(NSString *)identifier{
 
     return [[NXBridge shareInstaced] getRequestByIdentifier:identifier];
+}
+
+- (void)addSSLPinningURL:(NSString *)url{
+
+    [self.brdge addSSLPinningURL:url];
+    
+}
+- (void)addSSLPinningCert:(NSData *)cert{
+
+    [self.brdge addSSLPinningCert:cert];
+}
+- (void)addTwowayAuthenticationPKCS12:(NSData *)p12 keyPassword:(NSString *)password
+{
+    [self.brdge addTwowayAuthenticationPKCS12:p12 keyPassword:password];
 }
 @end

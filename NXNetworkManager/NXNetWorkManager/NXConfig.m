@@ -7,6 +7,7 @@
 //
 
 #import "NXConfig.h"
+#import "NXCerter.h"
 @interface NXConfig()
 @property(nonatomic,strong)NXContainer * globalParamsContainer;
 @property(nonatomic,strong)NXContainer * globalHeadersContainer;
@@ -57,6 +58,19 @@
 - (NSDictionary *)globalHeaders{
 
     return self.globalHeadersContainer.containerConfigDic;
+}
+
+- (void)addSSLPinningURL:(NSString *)url{
+
+    [[NXCerter shareInstanced] addSSLPinningURL:url];
+}
+- (void)addSSLPinningCert:(NSData *)cert{
+
+    [[NXCerter shareInstanced] addSSLPinningCert:cert];
+}
+- (void)addTwowayAuthenticationPKCS12:(NSData *)p12 keyPassword:(NSString *)password{
+
+    [[NXCerter shareInstanced] addTwowayAuthenticationPKCS12:p12 keyPassword:password];
 }
 @end
 

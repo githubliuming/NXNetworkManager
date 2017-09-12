@@ -25,11 +25,49 @@
 @property (nonatomic, strong) AFXMLParserResponseSerializer *afXMLResponseSerializer;
 @property (nonatomic, strong) AFPropertyListResponseSerializer *afPListResponseSerializer;
 
+@property (nonatomic, strong) NSMutableArray * sslPinningHosts;
 @property(nonatomic,strong)NSLock * lock;
 
 
 @end
 
+
+static OSStatus NXExtractIdentityAndTrustFromPKCS12(CFDataRef inPKCS12Data, CFStringRef keyPassword, SecIdentityRef *outIdentity, SecTrustRef *outTrust) {
+    OSStatus securityError = errSecSuccess;
+    
+    const void *keys[] = { kSecImportExportPassphrase };
+    const void *values[] = { keyPassword };
+    CFDictionaryRef optionsDictionary = NULL;
+    
+    /* Create a dictionary containing the passphrase if one was specified. Otherwise, create an empty dictionary. */
+    optionsDictionary = CFDictionaryCreate(NULL, keys, values, (keyPassword ? 1 : 0), NULL, NULL);
+    
+    CFArrayRef items = CFArrayCreate(NULL, 0, 0, NULL);
+    securityError = SecPKCS12Import(inPKCS12Data, optionsDictionary, &items);
+    
+    if (securityError == 0) {
+        CFDictionaryRef myIdentityAndTrust = CFArrayGetValueAtIndex(items, 0);
+        const void *tempIdentity = NULL;
+        tempIdentity = CFDictionaryGetValue(myIdentityAndTrust, kSecImportItemIdentity);
+        CFRetain(tempIdentity);
+        *outIdentity = (SecIdentityRef)tempIdentity;
+        
+        const void *tempTrust = NULL;
+        tempTrust = CFDictionaryGetValue (myIdentityAndTrust, kSecImportItemTrust);
+        CFRetain(tempTrust);
+        *outTrust = (SecTrustRef)tempTrust;
+    }
+    
+    if (optionsDictionary) {
+        CFRelease(optionsDictionary);
+    }
+    
+    if (items) {
+        CFRelease(items);
+    }
+    
+    return securityError;
+}
 
 #pragma mark - NXRequest Binding
 
@@ -92,8 +130,11 @@ static NSString * const NXRequestBindingKey = @"NXRequestBindingKey";
 
 - (AFHTTPSessionManager * )sessionManagerWithRequset:(NXRequest *)request
 {
-    
-    return self.sessionManager;
+    if ([self nx_shouldSSLPinningWithURL:request.url]) {
+        return self.securitySessionManager;
+    } else {
+        return self.sessionManager;
+    }
 }
 
 - (AFHTTPResponseSerializer *) resposeSerializerWithRequset:(NXRequest *)request{
@@ -217,7 +258,16 @@ static NSString * const NXRequestBindingKey = @"NXRequestBindingKey";
     }
     return _afPListResponseSerializer;
 }
+- (NSMutableArray *)sslPinningHosts{
 
+    if (_sslPinningHosts == nil) {
+        
+        _sslPinningHosts = [[NSMutableArray alloc] init];
+    }
+    
+    return _sslPinningHosts;
+}
+#pragma mark -
 -(void)processUrlRequest:(NSMutableURLRequest *) urlRequest withNXRequest:(NXRequest *)request{
     
     NSDictionary * headerDic = [request.headers containerConfigDic];
@@ -272,6 +322,7 @@ static NSString * const NXRequestBindingKey = @"NXRequestBindingKey";
     
     NSError * urlRequstError;
     NSMutableURLRequest * urlRequst = [requestSerializer requestWithMethod:httpMethod URLString:requst.fullUrl parameters:requst.params.containerConfigDic error:&urlRequstError];
+    urlRequst.cachePolicy = requst.cachePolicy;
     if (urlRequstError) {
         if (requst.failureHandlerBlock) {
             dispatch_async(sessionManager.completionQueue, ^{
@@ -527,4 +578,109 @@ static NSString * const NXRequestBindingKey = @"NXRequestBindingKey";
     }
 
 }
+
+- (void)addSSLPinningURL:(NSString *)url{
+
+    if([url hasPrefix:@"https"]){
+        NSString * rootDamainName = [self nx_rootDomainNameFromURL:url];
+        if (rootDamainName && ![self.sslPinningHosts containsObject:rootDamainName]){
+        
+            [self.sslPinningHosts addObject:rootDamainName];
+        }
+    }
+}
+
+- (void)addSSLPinningCert:(NSData *)cert
+{
+    NSAssert(cert, @"cert can not nil");
+    NSMutableSet *certSet;
+    if (self.securitySessionManager.securityPolicy.pinnedCertificates.count > 0) {
+        certSet = [NSMutableSet setWithSet:self.securitySessionManager.securityPolicy.pinnedCertificates];
+    } else {
+        certSet = [NSMutableSet set];
+    }
+    [certSet addObject:cert];
+    [self.securitySessionManager.securityPolicy setPinnedCertificates:certSet];
+    
+}
+
+- (void)addTwowayAuthenticationPKCS12:(NSData *)p12 keyPassword:(NSString *)password{
+   
+    NSParameterAssert(p12);
+    NSParameterAssert(password);
+    __weak __typeof(self)weakSelf = self;
+    [self.securitySessionManager setSessionDidReceiveAuthenticationChallengeBlock:^NSURLSessionAuthChallengeDisposition(NSURLSession * _Nonnull session, NSURLAuthenticationChallenge * _Nonnull challenge, NSURLCredential *__autoreleasing  _Nullable * _Nullable credential) {
+        __strong __typeof(weakSelf)strongSelf = weakSelf;
+        NSURLSessionAuthChallengeDisposition disposition = NSURLSessionAuthChallengePerformDefaultHandling;
+        if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
+            // Server Trust (SSL Pinning)
+            if ([strongSelf.securitySessionManager.securityPolicy evaluateServerTrust:challenge.protectionSpace.serverTrust forDomain:challenge.protectionSpace.host]) {
+                *credential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
+                if (*credential) {
+                    disposition = NSURLSessionAuthChallengeUseCredential;
+                } else {
+                    disposition = NSURLSessionAuthChallengePerformDefaultHandling;
+                }
+            } else {
+                disposition = NSURLSessionAuthChallengeCancelAuthenticationChallenge;
+            }
+        } else if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodClientCertificate]) {
+            // Client Certificate (Two-way Authentication)
+            SecIdentityRef identity = NULL;
+            SecTrustRef trust = NULL;
+            
+            if (NXExtractIdentityAndTrustFromPKCS12((__bridge CFDataRef)p12, (__bridge CFStringRef)password, &identity, &trust) == 0) {
+                SecCertificateRef certificate = NULL;
+                SecIdentityCopyCertificate(identity, &certificate);
+                
+                const void *certs[] = { certificate };
+                CFArrayRef certArray = CFArrayCreate(kCFAllocatorDefault, certs, 1, NULL);
+                *credential = [NSURLCredential credentialWithIdentity:identity certificates:(__bridge NSArray *)certArray persistence:NSURLCredentialPersistencePermanent];
+                if (*credential) {
+                    disposition = NSURLSessionAuthChallengeUseCredential;
+                } else {
+                    disposition = NSURLSessionAuthChallengePerformDefaultHandling;
+                }
+                
+                if (certificate) {
+                    CFRelease(certificate);
+                }
+                if (certArray) {
+                    CFRelease(certArray);
+                }
+            }
+            
+            if (identity) {
+                CFRelease(identity);
+            }
+            if (trust) {
+                CFRelease(trust);
+            }
+        } else {
+            disposition = NSURLSessionAuthChallengePerformDefaultHandling;
+        }
+        
+        return disposition;
+    }];
+    
+}
+
+- (NSString *)nx_rootDomainNameFromURL:(NSString *)urlString {
+    NSString *host = [[NSURL URLWithString:urlString] host];
+    NSArray * hostComponents = [host componentsSeparatedByString:@"."];
+    if ([hostComponents count] >= 2) {
+        host = [NSString stringWithFormat:@"%@.%@", [hostComponents objectAtIndex:(hostComponents.count - 2)], [hostComponents objectAtIndex:(hostComponents.count - 1)]];
+    }
+    return host;
+}
+- (BOOL)nx_shouldSSLPinningWithURL:(NSString *)urlString {
+    if (urlString && [urlString hasPrefix:@"https"]) {
+        NSString *rootDomainName = [self nx_rootDomainNameFromURL:urlString];
+        if ([self.sslPinningHosts containsObject:rootDomainName]) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
 @end

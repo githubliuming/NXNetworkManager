@@ -9,6 +9,14 @@
 #import "NXRequest.h"
 #import "NXConfig.h"
 #import "NXCerter.h"
+
+@interface NXRequest (){
+
+    NSString * _fullUrl;
+}
+
+@end
+
 @implementation NXRequest
 
 - (instancetype) initWithUrl:(NSString * )url{
@@ -19,6 +27,9 @@
         self.url = url;
         
         self.cachePolicy = NSURLRequestUseProtocolCachePolicy;
+        self.requstSerializer = NXHTTPRrequstSerializerTypeJSON;
+        self.resopseSerializer = NXHTTResposeSerializerTypeJSON;
+        
     }
     return self;
     
@@ -49,14 +60,26 @@
     return _uploadFileArray;
 }
 
-- (NSString *)url{
 
+/**
+ 获取最终生效的请求url, 当baseUrl 和 url同时设置时，根据 ingoreBaseUrl 字段返回url
+
+ @return 请求的url
+ */
+- (NSString *)url{
+    
     if (!self.ingoreBaseUrl) {
         
         _url = self.config.baseUrl;
     }
     return _url;
 }
+
+/**
+ 获取请求完整的url， url + APiUrl
+
+ @return 拼接的完整url
+ */
 -(NSString *)fullUrl{
 
     NSString * baseUrl = self.config.baseUrl;
@@ -88,10 +111,14 @@
     
         _fullUrl = [NSString stringWithFormat:@"%@",baseUrl];
     }
-
-    
     return _fullUrl;
 }
+
+/**
+ 完整的请求头。 返回的 header容器里面已经包含了公共请求头参数
+
+ @return 包含完整请求头信息的容器
+ */
 - (id<NXContainerProtol>) headers{
     
     if (!self.ingoreDefaultHttpHeaders) {
@@ -118,6 +145,11 @@
 
 }
 
+/**
+ 
+ 完整的请求参数。返回的params中已经包含设置的公共请求参数
+ @return 完整的请求参数容器
+ */
 - (id<NXContainerProtol>)params{
 
     if (!self.ingoreDefaultHttpParams) {
@@ -143,6 +175,12 @@
 }
 
 
+/**
+ 添加请求参数和请求头的方法
+
+ @param params 请求参数block
+ @param headers 请求头block
+ */
 - (void)addParams:(NXAddHeaderOrParamsBlock)params headers:(NXAddHeaderOrParamsBlock)headers{
 
     if (params) {
@@ -164,11 +202,22 @@
     }
     
 }
+
+/**
+ 向 requset添加请求参数
+ 
+ @param params 请求参数block
+ */
 - (void)addParams:(NXAddHeaderOrParamsBlock)params{
     
     [self addParams:params headers:nil];
 
 }
+/**
+ 
+ 向 request添加请求头
+ @param headers 请求头block
+ */
 - (void)addHeaders:(NXAddHeaderOrParamsBlock)headers{
 
     [self addParams:nil headers:headers];
@@ -183,23 +232,50 @@
     [self clearHandlerBlock];
 }
 
-- (void)supedReust{
-//[[NXCerter shareInstanced] cancleRequest:self.identifier];
+/**
+ 暂停请求
+ */
+- (void)pasuedRequest
+{
+    [[NXCerter shareInstanced] pasueRequest:self.identifier];
 }
+
+/**
+ 恢复请求
+ */
 - (void)resumeRequst
 {
     [[NXCerter shareInstanced] resumeRequest:self.identifier];
 }
+
+/**
+ 准备发送请求
+ */
 - (void)start
 {
 
     [self startWith:self.succesHandlerBlock failure:self.failureHandlerBlock];
 }
+
+/**
+ 准备发送请求
+
+ @param succes 成功回调
+ @param failure 失败回调
+ */
 - (void)startWith:(NXSuccesBlock) succes failure:(NXFailureBlock)failure{
 
     [self startWith:self.progressHandlerBlock success:succes failure:failure];
     
 }
+
+/**
+ 准备发送请求
+
+ @param progress 进度回调
+ @param succes 成功回调
+ @param failure 失败回调
+ */
 - (void)startWith:(NXProgressBlock)progress
           success:(NXSuccesBlock) succes
           failure:(NXFailureBlock)failure{
@@ -210,6 +286,10 @@
     [[NXCerter shareInstanced] sendRequset:self];
 }
 
+
+/**
+ 释放掉当前对象的block，防止循环引用。(该方法在请求成功、失败后会自动调用)
+ */
 - (void)clearHandlerBlock
 {
     self.progressHandlerBlock = nil;

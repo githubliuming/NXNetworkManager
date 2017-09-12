@@ -59,6 +59,11 @@
  @return 所有请求头
  */
 - (NSDictionary *)globalHeaders;
+
+
+- (void)addSSLPinningURL:(NSString *)url;
+- (void)addSSLPinningCert:(NSData *)cert;
+- (void)addTwowayAuthenticationPKCS12:(NSData *)p12 keyPassword:(NSString *)password;
 @end
 
 

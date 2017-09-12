@@ -30,12 +30,12 @@
 /**
  接口完整路径
  */
-@property(nonatomic,strong)NSString * fullUrl;
+@property(nonatomic,strong,readonly)NSString * fullUrl;
 
 /**
  超时时间
  */
-@property(nonatomic,assign) NSTimeInterval  timeOutInterval;
+@property(nonatomic,assign) NSTimeInterval timeOutInterval;
 
 /**
  是否忽略全局配置中的 baseUrl。默认NO 不忽略
@@ -95,12 +95,12 @@
 @property(nonatomic,assign) NXHTTPMethodType httpMethod;
 
 /**
- requst content-type
+ requst content-type, 默认 NXHTTPRrequstSerializerTypeJSON
  */
 @property(nonatomic,assign) NXRequstSerializerType  requstSerializer;
 
 /**
- resposObj 响应对象序列化样式 json、xml、plist、raw
+ resposObj 响应对象序列化样式 json、xml、plist、raw。 默认序列化成json
  */
 @property(nonatomic,assign) NXResposeSerializerType resopseSerializer;
 /**
@@ -167,7 +167,7 @@
 - (void)resumeRequst;
 
 /**
- 清空 回调block避免循环引用
+ 清空当前对象的所有回调 避免block循环引用
  */
 - (void)clearHandlerBlock;
 
@@ -193,23 +193,43 @@
  */
 - (void)addHeaders:(NXAddHeaderOrParamsBlock)headers;
 
+
+#pragma mark -上传文件
 - (void)addFormDataWithName:(NSString *)name fileData:(NSData *)fileData;
+
 - (void)addFormDataWithName:(NSString *)name fileName:(NSString *)fileName mimeType:(NSString *)mimeType fileData:(NSData *)fileData;
 - (void)addFormDataWithName:(NSString *)name fileURL:(NSURL *)fileURL;
 - (void)addFormDataWithName:(NSString *)name fileName:(NSString *)fileName mimeType:(NSString *)mimeType fileURL:(NSURL *)fileURL;
 
 @end
-
-
 /**
   上传时 填充表单的文件数据类
  */
 @interface NXUploadFormData : NSObject
 
+/**
+ 上传文件 name
+ */
 @property(nonatomic,copy)   NSString * name;
+
+/**
+ 上传文件的 filename 写入http header中 Content-Disposition字段
+ */
 @property(nonatomic,copy)   NSString * fileName;
+
+/**
+ 上传文件的 mimeType
+ */
 @property(nonatomic,copy)   NSString * mimeType;
+
+/**
+ 上传文件数据
+ */
 @property(nonatomic,strong) NSData * fileData;
+
+/**
+ 上传文件 url
+ */
 @property(nonatomic,strong) NSURL * fileUrl;
 
 + (instancetype)formDataWithName:(NSString *)name fileData:(NSData *)fileData;

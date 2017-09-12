@@ -11,8 +11,21 @@
 @class AFHTTPSessionManager;
 @interface NXDownLoad : NSObject
 
+
+/**
+ 下载的session
+ */
 @property (nonatomic, strong) AFHTTPSessionManager *manager;
 
+
+/**
+ 开始执行下载文件
+
+ @param requset 下载request
+ @param progress 下载进度
+ @param completionBlock 下载完成回调
+ @return 下载任务的 NSURLSessionDataTask
+ */
 - (NSURLSessionDataTask *)downLoad:(NXRequest *) requset
                  progress:(NXProgressBlock) progress
         completionHandler:(NXCompletionHandlerBlock) completionBlock;

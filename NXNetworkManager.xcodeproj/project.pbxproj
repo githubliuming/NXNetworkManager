@@ -10,7 +10,6 @@
 		47A0DC421F63BE6A00E40A2E /* NXCerter.m in Sources */ = {isa = PBXBuildFile; fileRef = 47A0DC411F63BE6A00E40A2E /* NXCerter.m */; };
 		47FD0A511F652F4A009029EC /* NXBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 47FD0A501F652F4A009029EC /* NXBridge.m */; };
 		BE8169831F614D2A008C71B8 /* NXConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = BE8169821F614D2A008C71B8 /* NXConfig.m */; };
-		BE9ACF711F42DFA800720279 /* NXCacheManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BE9ACF701F42DFA800720279 /* NXCacheManager.m */; };
 		BEAC0E001F5D5C46008F7693 /* https.cer in Resources */ = {isa = PBXBuildFile; fileRef = BEAC0DFF1F5D5C46008F7693 /* https.cer */; };
 		BEB02C091F612E2E00BE4051 /* PLRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = BEB02C081F612E2E00BE4051 /* PLRequest.m */; };
 		BEF28C251F3BFF7F004DEEE4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = BEF28C241F3BFF7F004DEEE4 /* main.m */; };
@@ -46,8 +45,6 @@
 		BE6306351F628AE000D1F073 /* NXConstant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NXConstant.h; sourceTree = "<group>"; };
 		BE8169811F614D2A008C71B8 /* NXConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NXConfig.h; sourceTree = "<group>"; };
 		BE8169821F614D2A008C71B8 /* NXConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NXConfig.m; sourceTree = "<group>"; };
-		BE9ACF6F1F42DFA800720279 /* NXCacheManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NXCacheManager.h; sourceTree = "<group>"; };
-		BE9ACF701F42DFA800720279 /* NXCacheManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NXCacheManager.m; sourceTree = "<group>"; };
 		BEAC0DFF1F5D5C46008F7693 /* https.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = https.cer; sourceTree = "<group>"; };
 		BEB02C071F612E2E00BE4051 /* PLRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLRequest.h; sourceTree = "<group>"; };
 		BEB02C081F612E2E00BE4051 /* PLRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLRequest.m; sourceTree = "<group>"; };
@@ -112,15 +109,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		BE9ACF6E1F42DF9100720279 /* NXCacheManager */ = {
-			isa = PBXGroup;
-			children = (
-				BE9ACF6F1F42DFA800720279 /* NXCacheManager.h */,
-				BE9ACF701F42DFA800720279 /* NXCacheManager.m */,
-			);
-			path = NXCacheManager;
-			sourceTree = "<group>";
-		};
 		BEF28C171F3BFF7F004DEEE4 = {
 			isa = PBXGroup;
 			children = (
@@ -169,7 +157,6 @@
 		BEF28C3A1F3BFFA9004DEEE4 /* NXNetWorkManager */ = {
 			isa = PBXGroup;
 			children = (
-				BE9ACF6E1F42DF9100720279 /* NXCacheManager */,
 				BEF28C401F3C11B0004DEEE4 /* NXRequest.h */,
 				BEF28C411F3C11B0004DEEE4 /* NXRequest.m */,
 				BE8169811F614D2A008C71B8 /* NXConfig.h */,
@@ -320,7 +307,6 @@
 				BEF28C791F3C2A64004DEEE4 /* AFImageDownloader.m in Sources */,
 				47FD0A511F652F4A009029EC /* NXBridge.m in Sources */,
 				BEF28C7E1F3C2A64004DEEE4 /* UIProgressView+AFNetworking.m in Sources */,
-				BE9ACF711F42DFA800720279 /* NXCacheManager.m in Sources */,
 				BEB02C091F612E2E00BE4051 /* PLRequest.m in Sources */,
 				BEF28C421F3C11B0004DEEE4 /* NXRequest.m in Sources */,
 				BEF28C7A1F3C2A64004DEEE4 /* AFNetworkActivityIndicatorManager.m in Sources */,

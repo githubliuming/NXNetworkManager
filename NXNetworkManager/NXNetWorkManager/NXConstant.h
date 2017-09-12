@@ -14,6 +14,7 @@
 @protocol NXContainerProtol;
 
 #pragma mark - block声明模块
+
 typedef void(^NXCompletionHandlerBlock)(id responseObject,NSError * error, NXRequest * requset);
 
 typedef void(^NXSuccesBlock)(id responseObject, NXRequest * requset);
