@@ -56,16 +56,18 @@
     
     __weak typeof(self) weakSelf = self;
     AFURLSessionManager * manager = self.manager;
-    
    NSURLSessionDataTask *downloadTask = [manager dataTaskWithRequest:downRequest uploadProgress:nil downloadProgress:^(NSProgress * _Nonnull downloadProgress) {
        dispatch_async(dispatch_get_main_queue(), ^{
            
+           double downProgress_ = (weakSelf.currentLength + downloadProgress.completedUnitCount * 1.0f)/weakSelf.fileLength;
            if (progress) {
-            
-               //weakSelf.currentLength +
-               double downProgress_ = (weakSelf.currentLength + downloadProgress.completedUnitCount * 1.0f)/weakSelf.fileLength;
+               
                progress(downProgress_);
+               
+               NSLog(@"----> proogress = %f",downProgress_);
            }
+           
+           NSLog(@"----> proogress = %f",downProgress_);
        });
         
     } completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
@@ -117,7 +119,6 @@
         [weakSelf.fileHandle writeData:data];
         
     }];
- 
     return downloadTask;
 }
 
@@ -135,5 +136,9 @@
         }
     }
     return fileLength;
+}
+- (void)resume{
+
+    
 }
 @end

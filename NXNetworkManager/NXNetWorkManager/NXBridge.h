@@ -55,7 +55,7 @@ typedef void(^NXCompleteBlcok)(id responseObject, NSError *error);
 
  @param identifier 恢复的请求目标的 identifier
  */
-- (void)resumeRequest:(NSString *)identifier;
+- (void)resumeRequest:(NSString *)identifier request:(NXRequest *)request;
 
 
 #pragma mark - 证书模块

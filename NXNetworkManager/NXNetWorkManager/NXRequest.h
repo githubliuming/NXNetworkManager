@@ -163,7 +163,11 @@
  取消当前请求
  */
 - (void)cancelRequset;
-- (void)supedReust;
+
+/**
+ 
+ */
+- (void)pauseRequest;
 - (void)resumeRequst;
 
 /**
@@ -171,27 +175,27 @@
  */
 - (void)clearHandlerBlock;
 
-/**
- 添加 请求参数和请求头
-
- @param params 添加请求参数block
- @param headers 添加请求头的block
- */
-- (void)addParams:(NXAddHeaderOrParamsBlock)params headers:(NXAddHeaderOrParamsBlock)headers;
-
-/**
- 向 requset添加请求参数
- 
- @param params 请求参数block
- */
-- (void)addParams:(NXAddHeaderOrParamsBlock)params;
-
-/**
- 
-向 request添加请求头
- @param headers 请求头block
- */
-- (void)addHeaders:(NXAddHeaderOrParamsBlock)headers;
+///**
+// 添加 请求参数和请求头
+//
+// @param params 添加请求参数block
+// @param headers 添加请求头的block
+// */
+//- (void)addParams:(NXAddHeaderOrParamsBlock)params headers:(NXAddHeaderOrParamsBlock)headers;
+//
+///**
+// 向 requset添加请求参数
+// 
+// @param params 请求参数block
+// */
+//- (void)addParams:(NXAddHeaderOrParamsBlock)params;
+//
+///**
+// 
+//向 request添加请求头
+// @param headers 请求头block
+// */
+//- (void)addHeaders:(NXAddHeaderOrParamsBlock)headers;
 
 
 #pragma mark -上传文件
@@ -202,6 +206,7 @@
 - (void)addFormDataWithName:(NSString *)name fileName:(NSString *)fileName mimeType:(NSString *)mimeType fileURL:(NSURL *)fileURL;
 
 @end
+
 /**
   上传时 填充表单的文件数据类
  */
@@ -236,4 +241,39 @@
 + (instancetype)formDataWithName:(NSString *)name fileName:(NSString *)fileName mimeType:(NSString *)mimeType fileData:(NSData *)fileData;
 + (instancetype)formDataWithName:(NSString *)name fileURL:(NSURL *)fileURL;
 + (instancetype)formDataWithName:(NSString *)name fileName:(NSString *)fileName mimeType:(NSString *)mimeType fileURL:(NSURL *)fileURL;
+@end
+
+@interface NXBatchRequest : NSObject
+
+/**
+ 本次批量请求的 identifier
+ */
+@property(nonatomic,strong)NSString * identifier;
+
+/**
+ request请求池
+ */
+@property(nonatomic,strong)NSMutableArray<NXRequest *> * requestPool;
+
+/**
+ 响应数据池子
+ */
+@property(nonatomic,strong)NSMutableArray * responsePool;
+
+/**
+ 失败回调 ---> 一个请求失败了 整组就视为失败
+ */
+@property(nonatomic,copy)NXBatchFailureBlock  failureBlock;
+
+/**
+ 成功回调
+ */
+@property(nonatomic,copy)NXBatchSuccessBlock  successBlock;
+
+- (BOOL)onFinish:(NXRequest *)request reposeObject:(id)reposeObject error:(NSError * )error;
+
+-(void)start:(NXBatchSuccessBlock) success failure:(NXBatchFailureBlock)failure;
+- (void)addRequests:(NXAddBatchRequestBlock)bactchRequestBlock;
+
+- (void)cleanCalbackHandler;
 @end

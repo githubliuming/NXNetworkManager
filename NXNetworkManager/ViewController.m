@@ -14,6 +14,7 @@
 @property (weak, nonatomic) IBOutlet UIProgressView *progressUI;
 
 //@property(nonatomic,strong)NXDownLoadManager * download;
+@property(nonatomic,strong)NXRequest * request;
 
 @property(nonatomic,strong) NSString * taskId;
 @end
@@ -32,27 +33,22 @@
     request.requstType = NXRequestTypeNormal;
     request.requstSerializer = NXHTTPRrequstSerializerTypeJSON;
     request.resopseSerializer = NXHTTResposeSerializerTypeJSON;
-    [request addParams:^(id<NXContainerProtol> container) {
-       
-        container.addDouble(time,@"time");
-    }];
     
-    [request startWith:^(id responseObject, NXRequest *requset) {
+    request.params.addDouble(time,@"time");
+    
+    [request startWith:^(id responseObject, NXRequest *rq) {
         
         NSLog(@"responseObject = %@",responseObject);
-    } failure:^(NSError *error, NXRequest *requset) {
+    } failure:^(NSError *error, NXRequest *rq) {
         
         NSLog(@"error = %@",[error userInfo]);
     }];
-    
-    
-    
-    
 }
 
 - (IBAction)startDownLoader:(id)sender {
     
     NXRequest * request = [[NXRequest alloc] initWithUrl:@"http://dldir1.qq.com/qqfile/QQforMac/QQ_V5.4.0.dmg"];
+    request.ingoreBaseUrl  =YES;
     NSString *path = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"QQ_V5.4.0.dmg"];
     request.fileUrl = path;
     request.requstType = NXRequestTypeDownload;
@@ -61,27 +57,25 @@
     
     [request startWith:^(double progress) {
         
-        NSLog(@"----> proogress = %f",progress);
         weakSelf.progressUI.progress = progress;
-    } success:^(id responseObject, NXRequest *requset) {
+    } success:^(id responseObject, NXRequest *rq) {
         
         NSLog(@"下载成功");
-    } failure:^(NSError *error, NXRequest *requset) {
+    } failure:^(NSError *error, NXRequest *rq) {
         
         NSLog(@"error = %@",error);
     }];
+     self.request = request;
 }
-
-
 - (IBAction)pauseDownLoad:(id)sender {
     
-//    [self.download suspendWithTaskid:self.taskId];
+    [self.request pauseRequest];
 }
 
 - (IBAction)continueDownLoad:(id)sender
 {
     
-//    [self.download resumeWithTaskId:self.taskId];
+    [self.request resumeRequst];
 }
 
 - (void)didReceiveMemoryWarning {

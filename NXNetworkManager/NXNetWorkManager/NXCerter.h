@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "NXConstant.h"
 @class NXRequest;
+@class NXBatchRequest;
 @class NXBridge;
 @interface NXCerter : NSObject
 
@@ -58,6 +59,27 @@
                    succes:(NXSuccesBlock) succes failure:(NXFailureBlock) failure;
 
 
+
+#pragma mark -Batch 处理模块
+
+/**
+ 发起批量请求
+
+ @param bRequest 请求request
+ */
+- (NSString *)sendBatchRequest:(NXBatchRequest *)bRequest;
+
+
+/**
+ 发起批量请求
+ @param bRequest 请求request
+ @param success 成功回调
+ @param failure 失败回调
+ */
+- (NSString *)sendBatchRequest:(NXBatchRequest *)bRequest success:(NXBatchSuccessBlock)success failure:(NXBatchFailureBlock)failure;
+
+
+
 /**
  取消请求
  @param identifier 取消的请求目标的 identifier
@@ -69,7 +91,7 @@
 
  @param identifier 恢复的请求目标的 identifier
  */
-- (void)resumeRequest:(NSString *)identifier;
+- (void)resumeRequest:(NSString *)identifier request:(NXRequest *)request;
 
 /**
  暂停请求
@@ -90,5 +112,7 @@
 - (void)addSSLPinningURL:(NSString *)url;
 - (void)addSSLPinningCert:(NSData *)cert;
 - (void)addTwowayAuthenticationPKCS12:(NSData *)p12 keyPassword:(NSString *)password;
+
+
 
 @end

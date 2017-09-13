@@ -15,11 +15,11 @@
 
 #pragma mark - block声明模块
 
-typedef void(^NXCompletionHandlerBlock)(id responseObject,NSError * error, NXRequest * requset);
+typedef void(^NXCompletionHandlerBlock)(id responseObject,NSError * error, NXRequest * rq);
 
-typedef void(^NXSuccesBlock)(id responseObject, NXRequest * requset);
+typedef void(^NXSuccesBlock)(id responseObject, NXRequest * rq);
 
-typedef void (^NXFailureBlock) (NSError *error,NXRequest * requset);
+typedef void (^NXFailureBlock) (NSError *error,NXRequest * rq);
 
 typedef void (^NXFormDataBlock)(id<AFMultipartFormData>  formData);
 
@@ -31,9 +31,13 @@ typedef  id<NXContainerProtol>(^NXContainerAddDoubleBlock)(double value,NSString
 typedef  id<NXContainerProtol>(^NXContainerAddStringgerBlock)(NSString * value,NSString * key);
 
 typedef void (^NXAddHeaderOrParamsBlock)(id<NXContainerProtol> container);
+typedef void (^NXAddBatchRequestBlock)(NSMutableArray * requestPool);
 
-typedef void (^NXResponseProcessBlcok)(NXRequest * request,id responseObj,NSError ** error);
-typedef void (^NXRequestProcessBlock)(NXRequest * request);
+typedef void (^NXResponseProcessBlcok)(NXRequest * rq,id responseObj,NSError ** error);
+typedef void (^NXRequestProcessBlock)(NXRequest * rq);
+
+typedef void (^NXBatchSuccessBlock)(NSArray* resposeObjs);
+typedef void (^NXBatchFailureBlock)(NSArray* errors);
 
 #pragma mark - 协议声明模块
 /**

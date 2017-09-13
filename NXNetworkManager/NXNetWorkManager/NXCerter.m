@@ -10,6 +10,11 @@
 #import "NXRequest.h"
 #import "NXBridge.h"
 #import "NXConfig.h"
+
+@interface NXCerter ()
+@property(nonatomic,strong)NSMutableDictionary<NSString *,NXBatchRequest *> * batchRequestPool;
+@property(nonatomic,strong) NSLock * lock;
+@end
 @implementation NXCerter
 
 - (NXBridge *)brdge
@@ -27,6 +32,17 @@
     
     return nx_center;
 }
+
+- (NSMutableDictionary<NSString *,NXBatchRequest *> * )batchRequestPool{
+
+    if (_batchRequestPool == nil) {
+        
+        _batchRequestPool = [[NSMutableDictionary alloc] init];
+    }
+    
+    return _batchRequestPool;
+}
+#pragma mark -
 - (NSString *) sendRequset:(NXRequest *)requset{
     
     return [self sendRequset:requset progress:requset.progressHandlerBlock];
@@ -50,7 +66,55 @@
         
         requset.requestProcessHandler(requset);
     }
+    //合并公共请求参数
+    [self nx_processParams:requset];
+    //合并公共请求头
+    [self nx_processHeaders:requset];
+    
     return  [self nx_sendRequest:requset];
+}
+
+-(void)nx_processParams:(NXRequest *)request{
+
+    if (!request.ingoreDefaultHttpParams){
+        //不忽略 合并请求参数
+        NXContainer * paramContainer = [[NXContainer alloc] init];
+        NSDictionary * httpParams = [request.headers containerConfigDic];
+        NSDictionary * defaultDic = [request.config globalParams];
+        [defaultDic enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+            
+            paramContainer.addString(obj,key);
+        }];
+        
+        [httpParams enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+            
+            paramContainer.addString(obj,key);
+        }];
+        
+        request.params = paramContainer;
+    }
+}
+
+- (void)nx_processHeaders:(NXRequest *)request{
+
+    if (!request.ingoreDefaultHttpHeaders) {
+        //不忽略 合并请求头
+        NXContainer * headers = [[NXContainer alloc] init];
+        NSDictionary * httpHeadDic = [request.headers containerConfigDic];
+        NSDictionary * defaultDic  = [request.config globalHeaders];
+        
+        [defaultDic enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+            
+            headers.addString(obj,key);
+        }];
+        
+        [httpHeadDic enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+            
+            headers.addString(obj,key);
+        }];
+     
+        request.headers = headers;
+    }
 }
 
 - (NSString *)nx_sendRequest:(NXRequest *)request{
@@ -166,6 +230,76 @@
     [request clearHandlerBlock];
 }
 
+
+#pragma mark - 批量处理模块
+/**
+ 发起批量请求
+ 
+ @param bRequest 请求request
+ */
+- (NSString * )sendBatchRequest:(NXBatchRequest *)bRequest{
+
+    return [self sendBatchRequest:bRequest success:bRequest.successBlock failure:bRequest.failureBlock];
+}
+
+
+/**
+ 发起批量请求
+ @param bRequest 请求request
+ @param success 成功回调
+ @param failure 失败回调
+ */
+- (NSString *)sendBatchRequest:(NXBatchRequest *)bRequest success:(NXBatchSuccessBlock)success failure:(NXBatchFailureBlock)failure{
+
+    if(bRequest.requestPool.count > 0){
+        [bRequest cleanCalbackHandler];
+        bRequest.successBlock = success;
+        bRequest.failureBlock = failure;
+        [bRequest.requestPool removeAllObjects];
+        
+        for (NXRequest * requst in bRequest.requestPool) {
+            
+            __weak typeof(self) weakSelf = self;
+            [requst startWith:^(id responseObject, NXRequest *rq) {
+                __strong typeof(self) strongSelf = weakSelf;
+                [strongSelf nx_processBatch:requst batchRequest:bRequest responseObj:nil error:nil];
+                
+            } failure:^(NSError *error, NXRequest *rq) {
+                __strong typeof(self) strongSelf = weakSelf;
+                [strongSelf nx_processBatch:requst batchRequest:bRequest responseObj:nil error:error];
+            }];
+        }
+        [self.lock lock];
+        NSString * identifier = [self nx_identifierForBatchAndChainRequest];
+        bRequest.identifier = identifier;
+        [self.batchRequestPool setObject:bRequest forKey:identifier];
+        [self.lock unlock];
+        return identifier;
+    } else {
+    
+        return nil;
+    }
+    
+}
+
+- (void)nx_processBatch:(NXRequest*)request batchRequest:(NXBatchRequest *)bRequest responseObj:(id)response error:(NSError *)error{
+
+    [self.lock lock];
+    if ([bRequest onFinish:request reposeObject:response error:error]) {
+        
+        [self.batchRequestPool removeObjectForKey:bRequest.identifier];
+    }
+    [self.lock unlock];
+    
+}
+
+- (NSString *)nx_identifierForBatchAndChainRequest{
+
+    long long time = [[NSDate date] timeIntervalSince1970] * 1000;
+    return [NSString stringWithFormat:@"BC%lld",time];
+}
+
+#pragma mark -
 - (void)pasueRequest:(NSString *)identifier
 {
     [[NXBridge shareInstaced] pauseRequest:identifier];
@@ -176,9 +310,9 @@
     [request clearHandlerBlock];
     
 }
-- (void)resumeRequest:(NSString *)identifier{
+- (void)resumeRequest:(NSString *)identifier request:(NXRequest *)request{
 
-    [[NXBridge shareInstaced] resumeRequest:identifier];
+    [[NXBridge shareInstaced] resumeRequest:identifier request:request];
 }
 - (id)getRequest:(NSString *)identifier{
 

@@ -30,4 +30,5 @@
                  progress:(NXProgressBlock) progress
         completionHandler:(NXCompletionHandlerBlock) completionBlock;
 
+- (void)resume;
 @end

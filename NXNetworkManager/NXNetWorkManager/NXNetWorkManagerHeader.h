@@ -23,5 +23,6 @@
 //8,block 回调在代码内部打破循环
 //9,url缓存与数据库的关系
 //10,断点下载
+//11,NSURLProtocol 功能
 
 #endif /* NXNetWorkManagerHeader_h */
