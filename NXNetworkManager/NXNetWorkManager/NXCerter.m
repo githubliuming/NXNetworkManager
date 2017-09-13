@@ -258,7 +258,7 @@
         [bRequest.requestPool removeAllObjects];
         
         for (NXRequest * requst in bRequest.requestPool) {
-            
+            [bRequest.responsePool addObject:[NSNull null]];
             __weak typeof(self) weakSelf = self;
             [requst startWith:^(id responseObject, NXRequest *rq) {
                 __strong typeof(self) strongSelf = weakSelf;

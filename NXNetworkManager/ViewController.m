@@ -13,7 +13,6 @@
 @interface ViewController ()
 @property (weak, nonatomic) IBOutlet UIProgressView *progressUI;
 
-//@property(nonatomic,strong)NXDownLoadManager * download;
 @property(nonatomic,strong)NXRequest * request;
 
 @property(nonatomic,strong) NSString * taskId;
