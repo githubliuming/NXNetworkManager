@@ -10,6 +10,7 @@
 #import "NXConstant.h"
 @class NXRequest;
 @class NXBatchRequest;
+@class NXChainRequest;
 @class NXBridge;
 @interface NXCerter : NSObject
 
@@ -80,6 +81,25 @@
 
 
 
+#pragma mark -Chain 处理模块
+
+/**
+ 发起链式请求
+
+ @param chainRequet 请求 request
+ @return 本次request请求的 identifier
+ */
+- (NSString *)sendChainRequst:(NXChainRequest *)chainRequet;
+
+/**
+ 发起链式请求
+
+ @param chainRequet 请求 request
+ @param success 成功回调
+ @param failure 失败回调
+ @return 本次request请求的 identifier
+ */
+- (NSString *) sendChainRequest:(NXChainRequest *)chainRequet success:(NXChainSuccessBlock) success failure:(NXChainFailureBlock)failure;
 /**
  取消请求
  @param identifier 取消的请求目标的 identifier

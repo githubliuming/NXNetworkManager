@@ -10,6 +10,7 @@
 #define NXConstant_h
 
 @class NXRequest;
+@class NSProgress;
 @protocol AFMultipartFormData;
 @protocol NXContainerProtol;
 
@@ -23,8 +24,8 @@ typedef void (^NXFailureBlock) (NSError *error,NXRequest * rq);
 
 typedef void (^NXFormDataBlock)(id<AFMultipartFormData>  formData);
 
-typedef void (^NXProgressBlock)(double progress);
-typedef void (^NXCompletionBlock)(NXRequest * requset,NSError * error);
+typedef void (^NXProgressBlock)(NSProgress *progress);
+typedef void (^NXCompletionBlock)(NXRequest * rq,NSError * error);
 
 typedef  id<NXContainerProtol>(^NXContainerAddIntegerBlock)(NSInteger value,NSString * key);
 typedef  id<NXContainerProtol>(^NXContainerAddDoubleBlock)(double value,NSString * key);
@@ -38,6 +39,11 @@ typedef void (^NXRequestProcessBlock)(NXRequest * rq);
 
 typedef void (^NXBatchSuccessBlock)(NSArray* resposeObjs);
 typedef void (^NXBatchFailureBlock)(NSArray* errors);
+
+typedef void (^NXChainSuccessBlock)(NSArray * resposeObjs);
+typedef void (^NXChainFailureBlock)(NSArray * errors);
+typedef void (^NXChainNodeBuildBlock)(NXRequest * rq,NSInteger index,BOOL * stop,id preResponseObj);
+
 
 #pragma mark - 协议声明模块
 /**

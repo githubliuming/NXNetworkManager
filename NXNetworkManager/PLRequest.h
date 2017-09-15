@@ -10,4 +10,5 @@
 
 @interface PLRequest : NXRequest
 
+- (instancetype) initWithUrl:(NSString *)url;
 @end

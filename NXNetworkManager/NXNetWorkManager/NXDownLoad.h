@@ -11,6 +11,8 @@
 @class AFHTTPSessionManager;
 @interface NXDownLoad : NSObject
 
+typedef void(^MISDownloadManagerCompletion)(NSURLResponse *response, NSURL *filePath, NSError *error);
+
 
 /**
  下载的session
@@ -19,16 +21,22 @@
 
 
 /**
- 开始执行下载文件
-
- @param requset 下载request
- @param progress 下载进度
- @param completionBlock 下载完成回调
- @return 下载任务的 NSURLSessionDataTask
+  是否支持断点下载 默认值为YES支持
  */
-- (NSURLSessionDataTask *)downLoad:(NXRequest *) requset
-                 progress:(NXProgressBlock) progress
-        completionHandler:(NXCompletionHandlerBlock) completionBlock;
+@property (nonatomic,assign) BOOL isBreakpoint;
 
-- (void)resume;
+- (NSURLSessionDownloadTask *)downloadWithRequest:(NXRequest *)request
+                                         progress:(void (^)(NSProgress *))progressHandler
+                                         complete:(NXCompletionHandlerBlock)completionHandler;
+
+
+// 开始
+- (void)startDownloadTask:(NSURLSessionDownloadTask *)task;
+
+// 暂停
+- (void)suspendDownloadTask:(NSURLSessionDownloadTask *)task;
+
+// 取消
+- (void)cancleDownloadTask:(NSURLSessionDownloadTask *)task;
+
 @end

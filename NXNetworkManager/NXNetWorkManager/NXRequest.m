@@ -27,8 +27,10 @@
         self.url = url;
         
         self.cachePolicy = NSURLRequestUseProtocolCachePolicy;
-        self.requstSerializer = NXHTTPRrequstSerializerTypeJSON;
+        self.requstSerializer = NXHTTPRrequstSerializerTypeRAW;
         self.resopseSerializer = NXHTTResposeSerializerTypeJSON;
+        self.requstType = NXRequestTypeNormal;
+        self.config = [NXConfig shareInstanced];
         
     }
     return self;
@@ -60,6 +62,14 @@
     return _uploadFileArray;
 }
 
+- (void)setRequstType:(NXRequestType)requstType{
+
+    _requstType = requstType;
+    if (requstType == NXRequestTypeDownload)
+    {
+        _isBreakpoint = YES;
+    }
+}
 
 /**
  获取最终生效的请求url, 当baseUrl 和 url同时设置时，根据 ingoreBaseUrl 字段返回url
@@ -140,58 +150,8 @@
         
         _params = [[NXContainer alloc] init];
     }
-    
     return _params;
 }
-
-
-///**
-// 添加请求参数和请求头的方法
-//
-// @param params 请求参数block
-// @param headers 请求头block
-// */
-//- (void)addParams:(NXAddHeaderOrParamsBlock)params headers:(NXAddHeaderOrParamsBlock)headers{
-//
-//    if (params) {
-//        
-//        if (_params == nil) {
-//            
-//            _params = [[NXContainer alloc] init];
-//        }
-//        params(_params);
-//    }
-//    if (headers) {
-//        
-//        if (_headers ==nil) {
-//            
-//            _headers = [[NXContainer alloc] init];
-//        }
-//        
-//        headers(_headers);
-//    }
-//    
-//}
-//
-///**
-// 向 requset添加请求参数
-// 
-// @param params 请求参数block
-// */
-//- (void)addParams:(NXAddHeaderOrParamsBlock)params{
-//    
-//    [self addParams:params headers:nil];
-//
-//}
-///**
-// 
-// 向 request添加请求头
-// @param headers 请求头block
-// */
-//- (void)addHeaders:(NXAddHeaderOrParamsBlock)headers{
-//
-//    [self addParams:nil headers:headers];
-//}
 
 /**
  取消当前请求
@@ -199,7 +159,7 @@
 - (void)cancelRequset
 {
     [[NXCerter shareInstanced] cancleRequest:self.identifier];
-    [self clearHandlerBlock];
+    [self cleanHandlerBlock];
 }
 
 /**
@@ -223,8 +183,7 @@
  */
 - (void)start
 {
-
-    [self startWith:self.succesHandlerBlock failure:self.failureHandlerBlock];
+    [self startWithSucces:self.succesHandlerBlock failure:self.failureHandlerBlock];
 }
 
 /**
@@ -233,9 +192,9 @@
  @param succes 成功回调
  @param failure 失败回调
  */
-- (void)startWith:(NXSuccesBlock) succes failure:(NXFailureBlock)failure{
+- (void)startWithSucces:(NXSuccesBlock) succes failure:(NXFailureBlock)failure{
 
-    [self startWith:self.progressHandlerBlock success:succes failure:failure];
+    [self startWithProgress:self.progressHandlerBlock success:succes failure:failure];
     
 }
 
@@ -246,7 +205,7 @@
  @param succes 成功回调
  @param failure 失败回调
  */
-- (void)startWith:(NXProgressBlock)progress
+- (void)startWithProgress:(NXProgressBlock)progress
           success:(NXSuccesBlock) succes
           failure:(NXFailureBlock)failure{
 
@@ -260,7 +219,7 @@
 /**
  释放掉当前对象的block，防止循环引用。(该方法在请求成功、失败后会自动调用)
  */
-- (void)clearHandlerBlock
+- (void)cleanHandlerBlock
 {
     self.progressHandlerBlock = nil;
     self.failureHandlerBlock = nil;
@@ -372,7 +331,7 @@
 }
 
 - (BOOL)onFinish:(NXRequest *)request reposeObject:(id)reposeObject error:(NSError * )error{
-
+    
     [self.lock lock];
     BOOL isFinish = NO;
     NSInteger index = [self.requestPool indexOfObject:request];
@@ -388,7 +347,6 @@
         }
     }
     self.finishCount +=1;
-    
     if (self.finishCount == self.requestPool.count) {
         
         if (self.isFailure) {
@@ -402,7 +360,7 @@
                 self.successBlock(self.responsePool);
             }
         }
-        [self cleanCalbackHandler];
+        [self cleanHandlerBlock];
         isFinish = YES;
     }
     [self.lock unlock];
@@ -410,22 +368,143 @@
     return isFinish;
 }
 
-- (void)cleanCalbackHandler
+- (void)cleanHandlerBlock
 {
-
     self.failureBlock = nil;
     self.successBlock = nil;
+    self.bactchRequestBlock =  nil;
 }
 
--(void)start:(NXBatchSuccessBlock) success failure:(NXBatchFailureBlock)failure{
+- (void)startRequset{
 
+    [self startWithSuccess:self.successBlock failure:self.failureBlock];
+}
 
+- (void)startWithSuccess:(NXBatchSuccessBlock)success failure:(NXBatchFailureBlock)failure
+{
+    [self startWithRequest:self.bactchRequestBlock success:success failure:failure];
+}
+- (void)startWithRequest:(NXAddBatchRequestBlock)bactchRequestBlock success:(NXBatchSuccessBlock) success failure:(NXBatchFailureBlock)failure{
+
+    [self addRequests:bactchRequestBlock];
+    [[NXCerter shareInstanced] sendBatchRequest:self success:success failure:failure];
 }
 - (void)addRequests:(NXAddBatchRequestBlock)bactchRequestBlock{
 
+    self.bactchRequestBlock = bactchRequestBlock;
     if (bactchRequestBlock)
     {
         bactchRequestBlock(self.requestPool);
     }
 }
+@end
+
+@interface NXChainRequest ()
+
+@property(nonatomic,strong) id preReposeObj;
+@property(nonatomic,assign) BOOL isFirstNode;
+@property(nonatomic,assign) BOOL stop;
+
+@property(nonatomic,strong) NSMutableArray * requestPool;
+@property(nonatomic,strong) NSMutableArray * responsePool;
+@property(nonatomic,assign) NSInteger currenIndex;
+
+@end
+@implementation NXChainRequest
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        self.isFirstNode = YES;
+        self.stop = NO;
+    }
+    return self;
+}
+- (void)buildNodes:(NXChainNodeBuildBlock)buildBlock{
+
+    NSAssert(buildBlock, @"构建链式请求的 buildBlock 不能为空！！！");
+    self.buildBlock = nil;
+    self.buildBlock = buildBlock;
+    if (self.buildBlock) {
+        NXRequest * request = [[NXRequest alloc] initWithUrl:nil];
+        self.buildBlock(request, _currenIndex, &_stop, _preReposeObj);
+        if (!_stop) {
+            [self.requestPool addObject:request];
+            [self.responsePool addObject:[NSNull null]];
+        }
+    }
+}
+
+- (BOOL)oneRequestFinish:(NXRequest *)request responseObj:(id)responseObj error:(NSError *) error {
+
+    NSAssert((responseObj != nil || error != nil), @"responseObj 和 error 不能同时为空!!!");
+    self.isFirstNode = NO;
+    BOOL isFinish = NO;
+    NSInteger index = [self.requestPool indexOfObject:request];
+    if (error) {
+        //本次请求失败。直接视为整个请求链表都失败
+        isFinish = YES;
+        [self.requestPool replaceObjectAtIndex:index withObject:error];
+        
+        if (self.failureBlock) {
+            
+            self.failureBlock(self.responsePool);
+        }
+        [self cleanHandlerBlock];
+    } else {
+        
+        if (responseObj) {
+         
+            [self.responsePool replaceObjectAtIndex:index withObject:responseObj];
+            
+        }
+        _preReposeObj = responseObj;
+        [self buildNodes:self.buildBlock];
+        if (self.stop) {
+            //整条链标志请求完成
+            isFinish = YES;
+            if (self.succesBlock) {
+                
+                self.succesBlock(responseObj);
+            }
+            [self cleanHandlerBlock];
+        }
+    }
+    return isFinish;
+}
+
+- (void)cleanHandlerBlock
+{
+    self.succesBlock = nil;
+    self.failureBlock = nil;
+    self.buildBlock = nil;
+}
+
+- (NXRequest *)nextRequst
+{
+    if (self.currenIndex < 0 && self.currenIndex >= self.requestPool.count ){
+        
+        return nil;
+    }
+    NSInteger index = self.currenIndex ;
+    _currenIndex ++;
+    return self.requestPool[index];
+}
+
+- (void)startRequest
+{
+    [self startWithSucces:self.succesBlock failure:self.failureBlock];
+}
+- (void)startWithSucces:(NXChainSuccessBlock)success failure:(NXChainFailureBlock) failure{
+    
+    [self startWithNodeBuild:self.buildBlock success:success failure:failure];
+}
+- (void)startWithNodeBuild:(NXChainNodeBuildBlock)nodeBuildBlock success:(NXChainSuccessBlock)success failure:(NXChainFailureBlock) failure{
+
+    [self buildNodes:nodeBuildBlock];
+    [[NXCerter shareInstanced] sendChainRequst:self];
+}
+
+
 @end

@@ -10,7 +10,7 @@
 #import "NXConstant.h"
 @interface NXConfig : NSObject
 
-- (instancetype)shareInstanced;
++ (instancetype)shareInstanced;
 /**
  请求的baseUrl
  */
@@ -34,31 +34,15 @@
 @property (nonatomic, strong) dispatch_queue_t callbackQueue;
 
 /**
- 添加公共请求参数
- @param params 回调block
+ 公共请求参数容器
  */
-- (void)addParams:(NXAddHeaderOrParamsBlock)params;
+@property(nonatomic,strong)id<NXContainerProtol>globalParams;
 
 /**
- 
- 添加公共请求头
- @param headers 回调block
+ 公共请求头容器
  */
-- (void)addHeaders:(NXAddHeaderOrParamsBlock)headers;
+@property(nonatomic,strong)id<NXContainerProtol>globalHeaders;
 
-/**
- 
- 取出所有公共请参数
- @return 所有公共请参数
- */
-- (NSDictionary *)globalParams;
-
-/**
- 
- 取出所有的请求头
- @return 所有请求头
- */
-- (NSDictionary *)globalHeaders;
 
 
 - (void)addSSLPinningURL:(NSString *)url;

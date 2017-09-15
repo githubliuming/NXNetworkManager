@@ -9,13 +9,12 @@
 #import "NXConfig.h"
 #import "NXCerter.h"
 @interface NXConfig()
-@property(nonatomic,strong)NXContainer * globalParamsContainer;
-@property(nonatomic,strong)NXContainer * globalHeadersContainer;
+
 @end
 
 @implementation NXConfig
 
-- (instancetype)shareInstanced
++ (instancetype)shareInstanced
 {
     static NXConfig *nx_config = nil;
     static dispatch_once_t onceToken;
@@ -30,36 +29,31 @@
 
     self = [super init];
     if (self) {
-     
-        self.globalParamsContainer = [[NXContainer alloc] init];
-        self.globalHeadersContainer = [[NXContainer alloc] init];
+    
         self.callbackQueue = dispatch_get_main_queue();
     }
     return self;
 }
-- (void)addParams:(NXAddHeaderOrParamsBlock)params
-{
-    if (params) {
+
+- (id<NXContainerProtol> )globalParams{
+
+    if (_globalParams == nil) {
         
-        params(_globalParamsContainer);
+        _globalParams = [[NXContainer alloc] init];
     }
+    
+    return _globalParams;
+
 }
-- (void)addHeaders:(NXAddHeaderOrParamsBlock)headers
-{
-    if (headers) {
+
+- (id<NXContainerProtol>)globalHeaders{
+
+    if (_globalHeaders == nil) {
         
-        headers(_globalHeadersContainer);
+        _globalHeaders = [[NXContainer alloc] init];
     }
+    return _globalHeaders;
 }
-- (NSDictionary *)globalParams{
-
-    return self.globalParamsContainer.containerConfigDic;
-}
-- (NSDictionary *)globalHeaders{
-
-    return self.globalHeadersContainer.containerConfigDic;
-}
-
 - (void)addSSLPinningURL:(NSString *)url{
 
     [[NXCerter shareInstanced] addSSLPinningURL:url];
@@ -93,7 +87,7 @@
 #pragma mark - NXContainerProtol
 
 - (NSDictionary *)containerConfigDic{
-    
+   
     return [[NSDictionary alloc] initWithDictionary:self.containerDic];
 }
 

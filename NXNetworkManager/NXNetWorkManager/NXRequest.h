@@ -88,6 +88,10 @@
  */
 @property(nonatomic,assign)NXRequestType  requstType;
 
+/**
+ 是否支持断点下载 默认值为YES支持
+ */
+@property (nonatomic,assign) BOOL isBreakpoint;
 
 /**
  请求方法 GET POST
@@ -144,7 +148,7 @@
  @param succes 成功回调block
  @param failure 失败回调
  */
-- (void)startWith:(NXProgressBlock)progress success:(NXSuccesBlock) succes failure:(NXFailureBlock)failure;
+- (void)startWithProgress:(NXProgressBlock)progress success:(NXSuccesBlock) succes failure:(NXFailureBlock)failure;
 
 
 /**
@@ -153,7 +157,7 @@
  @param succes 成功回调
  @param failure 失败回调
  */
-- (void)startWith:(NXSuccesBlock) succes failure:(NXFailureBlock)failure;
+- (void)startWithSucces:(NXSuccesBlock) succes failure:(NXFailureBlock)failure;
 /**
  开始发起请求
  */
@@ -173,30 +177,7 @@
 /**
  清空当前对象的所有回调 避免block循环引用
  */
-- (void)clearHandlerBlock;
-
-///**
-// 添加 请求参数和请求头
-//
-// @param params 添加请求参数block
-// @param headers 添加请求头的block
-// */
-//- (void)addParams:(NXAddHeaderOrParamsBlock)params headers:(NXAddHeaderOrParamsBlock)headers;
-//
-///**
-// 向 requset添加请求参数
-// 
-// @param params 请求参数block
-// */
-//- (void)addParams:(NXAddHeaderOrParamsBlock)params;
-//
-///**
-// 
-//向 request添加请求头
-// @param headers 请求头block
-// */
-//- (void)addHeaders:(NXAddHeaderOrParamsBlock)headers;
-
+- (void)cleanHandlerBlock;
 
 #pragma mark -上传文件
 - (void)addFormDataWithName:(NSString *)name fileData:(NSData *)fileData;
@@ -270,10 +251,80 @@
  */
 @property(nonatomic,copy)NXBatchSuccessBlock  successBlock;
 
+@property(nonatomic,copy)NXAddBatchRequestBlock bactchRequestBlock;
+
 - (BOOL)onFinish:(NXRequest *)request reposeObject:(id)reposeObject error:(NSError * )error;
 
--(void)start:(NXBatchSuccessBlock) success failure:(NXBatchFailureBlock)failure;
-- (void)addRequests:(NXAddBatchRequestBlock)bactchRequestBlock;
+- (void)startRequset;
+- (void)startWithSuccess:(NXBatchSuccessBlock) success failure:(NXBatchFailureBlock)failure;
+- (void)startWithRequest:(NXAddBatchRequestBlock)bactchRequestBlock success:(NXBatchSuccessBlock) success failure:(NXBatchFailureBlock)failure;
 
-- (void)cleanCalbackHandler;
+- (void)addRequests:(NXAddBatchRequestBlock)bactchRequestBlock;
+/**
+ 清空当前对象的所有回调 避免block循环引用
+ */
+- (void)cleanHandlerBlock;
+@end
+
+@interface NXChainRequest : NSObject
+
+/**
+ 本次链接请求的 identifier 唯一标识
+ */
+@property(nonatomic,strong)NSString * identifier;
+
+/**
+ 请求失败回调 ---> 链式请求中有一个失败则视为整体失败
+ */
+@property(nonatomic,copy)NXChainFailureBlock failureBlock;
+
+/**
+ 请求成功回调
+ */
+@property(nonatomic,copy)NXChainSuccessBlock succesBlock;
+
+/**
+ 构建链式请求节点回调
+ */
+@property(nonatomic,copy)NXChainNodeBuildBlock buildBlock;
+
+/**
+ 清空当前对象的所有回调 避免block循环引用
+ */
+- (void)cleanHandlerBlock;
+
+- (BOOL)oneRequestFinish:(NXRequest *)request responseObj:(id)responseObj error:(NSError *) error;
+
+/**
+ 获取链表下一个request
+
+ @return  下一个request
+ */
+- (NXRequest *)nextRequst;
+
+/**
+ 发起链式请求
+ */
+- (void)startRequest;
+
+/**
+ 
+ 发起链式请求
+ @param success 全部成功之后的回调
+ @param failure 失败回调。 (一个请求失败则视为整条链失败)
+ */
+- (void)startWithSucces:(NXChainSuccessBlock)success failure:(NXChainFailureBlock) failure;
+
+/**
+ 发起链式请求
+
+ @param nodeBuildBlock 构建链式request block
+ @param success 全部成功之后的回调
+ @param failure 失败回调。 (一个请求失败则视为整条链失败)
+ */
+- (void)startWithNodeBuild:(NXChainNodeBuildBlock)nodeBuildBlock success:(NXChainSuccessBlock)success failure:(NXChainFailureBlock) failure;
+
+
+
+
 @end

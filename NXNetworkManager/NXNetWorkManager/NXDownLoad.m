@@ -9,136 +9,248 @@
 #import "NXDownLoad.h"
 #import "AFNetworking.h"
 #import "NXRequest.h"
+#import <objc/runtime.h>
+
 @interface NXDownLoad ()
-
-
-/** AFNetworking断点下载（支持离线）需用到的属性 **********/
-/** 文件的总长度 */
-@property (nonatomic, assign) NSInteger fileLength;
-/** 当前下载长度 */
-@property (nonatomic, assign) NSInteger currentLength;
-/** 文件句柄对象 */
-@property (nonatomic, strong) NSFileHandle *fileHandle;
-
-@property(nonatomic,strong) NSString * fileUrl;
-
-@property(nonatomic,strong) NXRequest * request;
 
 @end
 @implementation NXDownLoad
 
-///**
-// * manager的懒加载
-// */
-//- (AFURLSessionManager *)AFSessionManager{
-//    if (!_manager) {
-//        NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-//        // 1. 创建会话管理者
-//        _manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:configuration];
-//        _manager.responseSerializer = [[AFHTTPResponseSerializer alloc] init];
-//    }
-//    return _manager;
-//}
-
-- (NSURLSessionDataTask *)downLoad:(NXRequest *) requset
-                 progress:(NXProgressBlock) progress
-        completionHandler:(NXCompletionHandlerBlock) completionBlock{
-
-    self.request = requset;
-    
-    self.fileUrl = requset.fileUrl;
-    NSMutableURLRequest *downRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:requset.fullUrl]];
-    // 设置HTTP请求头中的Range
-    self.currentLength = [self fileLengthForPath:self.fileUrl];
-    NSString *range = [NSString stringWithFormat:@"bytes=%ld-", (long)self.currentLength];
-    [downRequest setValue:range forHTTPHeaderField:@"Range"];
-    [downRequest setValue:@"application/octet-stream" forHTTPHeaderField:@"content-type"];
-    
-    __weak typeof(self) weakSelf = self;
-    AFURLSessionManager * manager = self.manager;
-   NSURLSessionDataTask *downloadTask = [manager dataTaskWithRequest:downRequest uploadProgress:nil downloadProgress:^(NSProgress * _Nonnull downloadProgress) {
-       dispatch_async(dispatch_get_main_queue(), ^{
-           
-           double downProgress_ = (weakSelf.currentLength + downloadProgress.completedUnitCount * 1.0f)/weakSelf.fileLength;
-           if (progress) {
-               
-               progress(downProgress_);
-               
-               NSLog(@"----> proogress = %f",downProgress_);
-           }
-           
-           NSLog(@"----> proogress = %f",downProgress_);
-       });
-        
-    } completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
-        
-        // 清空长度
-        weakSelf.currentLength = 0;
-        weakSelf.fileLength = 0;
-        // 关闭fileHandle
-        [weakSelf.fileHandle closeFile];
-        weakSelf.fileHandle = nil;
-        if (completionBlock) {
-            
-            completionBlock(responseObject,error,requset);
+- (NSURLSessionDownloadTask *)downloadWithRequest:(NXRequest *)request
+                                         progress:(void (^)(NSProgress *))progressHandler
+                                         complete:(NXCompletionHandlerBlock)completionHandler
+{
+    if (request.url.length == 0)
+    {
+        NSError *error = [NSError errorWithDomain:@"参数不全" code:-1000 userInfo:nil];
+        if (completionHandler)
+        {
+            completionHandler(self, error, request);
         }
-    }];
-    
-    [self.manager setDataTaskDidReceiveResponseBlock:^NSURLSessionResponseDisposition(NSURLSession * _Nonnull session, NSURLSessionDataTask * _Nonnull dataTask, NSURLResponse * _Nonnull response) {
-        NSLog(@"NSURLSessionResponseDisposition");
-        
-        // 获得下载文件的总长度：请求下载的文件长度 + 当前已经下载的文件长度
-        weakSelf.fileLength = response.expectedContentLength + self.currentLength;
-        
-        // 沙盒文件路径
-        NSString *path = weakSelf.fileUrl;
-        
-        NSLog(@"File downloaded to: %@  fileLength = %ld",path,(long)weakSelf.fileLength);
-        
-        // 创建一个空的文件到沙盒中
-        NSFileManager *manager = [NSFileManager defaultManager];
-        
-        if (![manager fileExistsAtPath:path]) {
-            // 如果没有下载文件的话，就创建一个文件。如果有下载文件的话，则不用重新创建(不然会覆盖掉之前的文件)
-            [manager createFileAtPath:path contents:nil attributes:nil];
+
+        return nil;
+    }
+
+    // 参数
+    NSURLRequest *requestUrl = [NSURLRequest requestWithURL:[NSURL URLWithString:request.url]];
+    // 目标path
+    NSURL * (^destination)(NSURL *, NSURLResponse *) =
+        ^NSURL *_Nonnull(NSURL *_Nonnull targetPath, NSURLResponse *_Nonnull response)
+    {
+        return [NSURL fileURLWithPath:request.fileUrl];
+    };
+    // 1.3 下载完成处理
+    MISDownloadManagerCompletion completeBlock = ^(NSURLResponse *response, NSURL *filePath, NSError *error) {
+
+        if (error)
+        {
+            NSLog(@"下载文件出错:%@", error);
+            // 部分网络出错，会返回resumeData
+            NSData *resumeData = error.userInfo[NSURLSessionDownloadTaskResumeData];
+            //            [self saveResumeData:resumeData withUrl:response.URL.absoluteString];
         }
-        
-        // 创建文件句柄
-        weakSelf.fileHandle = [NSFileHandle fileHandleForWritingAtPath:path];
-        
-        // 允许处理服务器的响应，才会继续接收服务器返回的数据
-        return NSURLSessionResponseAllow;
-    }];
-    
-    [self.manager setDataTaskDidReceiveDataBlock:^(NSURLSession * _Nonnull session, NSURLSessionDataTask * _Nonnull dataTask, NSData * _Nonnull data) {
-        
-        // 指定数据的写入位置 -- 文件内容的最后面
-        [weakSelf.fileHandle seekToEndOfFile];
-        
-        // 向沙盒写入数据
-        [weakSelf.fileHandle writeData:data];
-        
-    }];
+        else
+        {
+            [self clearDataWithURL:request.url];
+        }
+
+        if (completionHandler)
+        {
+            completionHandler(response, error, request);
+        }
+
+    };
+
+    // 1. 生成任务
+    NSData *resumeData = [self getResumeDataWithUrl:request.url];
+    NSURLSessionDownloadTask *downloadTask = nil;
+    if (resumeData)
+    {
+        // 1.1 有断点信息，走断点下载
+        downloadTask = [self.manager downloadTaskWithResumeData:resumeData
+                                                  progress:progressHandler
+                                               destination:destination
+                                         completionHandler:completeBlock];
+    }
+    else
+    {
+        // 1.2 普通下载
+        downloadTask = [self.manager downloadTaskWithRequest:requestUrl
+                                               progress:progressHandler
+                                            destination:destination
+                                      completionHandler:completeBlock];
+    }
     return downloadTask;
 }
 
-/**
- * 获取已下载的文件大小
- */
-- (NSInteger)fileLengthForPath:(NSString *)path {
-    NSInteger fileLength = 0;
-    NSFileManager *fileManager = [[NSFileManager alloc] init]; // default is not thread safe
-    if ([fileManager fileExistsAtPath:path]) {
-        NSError *error = nil;
-        NSDictionary *fileDict = [fileManager attributesOfItemAtPath:path error:&error];
-        if (!error && fileDict) {
-            fileLength = [fileDict fileSize];
+// 开始
+- (void)startDownloadTask:(NSURLSessionDownloadTask *)task {
+
+        [task resume];
+}
+// 暂停
+- (void)suspendDownloadTask:(NSURLSessionDownloadTask *)task {
+
+      [task suspend];
+}
+// 取消
+- (void)cancleDownloadTask:(NSURLSessionDownloadTask *)task
+{
+    __weak typeof(task) weakTask = task;
+    [task cancelByProducingResumeData:^(NSData *_Nullable resumeData) {
+        if (self.isBreakpoint)
+        {
+            [self saveResumeData:resumeData withUrl:weakTask.currentRequest.URL.absoluteString downloadTask:task];
+        }
+
+    }];
+}
+
+/// 获取临时文件名
+- (NSString *)getTempFileNameWithDownloadTask:(NSURLSessionDownloadTask *)downloadTask
+{
+    // NSURLSessionDownloadTask --> 属性downloadFile：__NSCFLocalDownloadFile --> 属性path
+    NSString *tempFileName = nil;
+
+    // downloadTask的属性(NSURLSessionDownloadTask) dt
+    unsigned int dtpCount;
+    objc_property_t *dtps = class_copyPropertyList([downloadTask class], &dtpCount);
+    for (int i = 0; i < dtpCount; i++)
+    {
+        objc_property_t dtp = dtps[i];
+        const char *dtpc = property_getName(dtp);
+        NSString *dtpName = [NSString stringWithUTF8String:dtpc];
+
+        // downloadFile的属性(__NSCFLocalDownloadFile) df
+        if ([dtpName isEqualToString:@"downloadFile"])
+        {
+            id downloadFile = [downloadTask valueForKey:dtpName];
+            unsigned int dfpCount;
+            objc_property_t *dfps = class_copyPropertyList([downloadFile class], &dfpCount);
+            for (int i = 0; i < dfpCount; i++)
+            {
+                objc_property_t dfp = dfps[i];
+                const char *dfpc = property_getName(dfp);
+                NSString *dfpName = [NSString stringWithUTF8String:dfpc];
+                // 下载文件的临时地址
+                if ([dfpName isEqualToString:@"path"])
+                {
+                    id pathValue = [downloadFile valueForKey:dfpName];
+                    NSString *tempPath = [NSString stringWithFormat:@"%@", pathValue];
+                    tempFileName = tempPath.lastPathComponent;
+                    break;
+                }
+            }
+            free(dfps);
+            break;
         }
     }
-    return fileLength;
-}
-- (void)resume{
+    free(dtps);
 
+    return tempFileName;
+}
+
+- (NSString *)saveResumeData:(NSData *)resumeData
+                     withUrl:(NSString *)url
+                downloadTask:(NSURLSessionDownloadTask *)downloadTask
+{
+    if (resumeData.length < 1 || url.length < 1)
+    {
+        return nil;
+    }
+
+    // 1.取到 CF 保存的文件名,也可以自己用时间戳创建一个文件名, 用 CF生成的名好查数据对比
+    NSString *resumeDataName = [self getTempFileNameWithDownloadTask:downloadTask];
+    NSMutableDictionary *map = [NSMutableDictionary dictionaryWithContentsOfFile:[self resumeDataMapPath]];
+    if (!map)
+    {
+        map = [NSMutableDictionary dictionary];
+    }
+    // 删除旧的resumeData
+    if (map[url])
+    {
+        [[NSFileManager defaultManager]
+            removeItemAtPath:[[self downloadTempFilePath] stringByAppendingPathComponent:map[url]]
+                       error:nil];
+    }
+    // 更新resumeInfo
+    map[url] = resumeDataName;
+    [map writeToFile:[self resumeDataMapPath] atomically:YES];
+
+    // 2. 存储resumeData
+    NSString *resumeDataPath = [[self downloadTempFilePath] stringByAppendingPathComponent:resumeDataName];
+
+    [resumeData writeToFile:resumeDataPath atomically:YES];
+
+    return resumeDataName;
+}
+
+- (NSData *)getResumeDataWithUrl:(NSString *)url
+{
+    if (url.length < 1)
+    {
+        return nil;
+    }
+
+    // 1. 从map文件中获取resumeData的name
+    NSMutableDictionary *resumeMap = [NSMutableDictionary dictionaryWithContentsOfFile:[self resumeDataMapPath]];
+    NSString *resumeDataName = resumeMap[url];
+
+    // 2. 获取data
+    NSData *resumeData = nil;
+    NSString *resumeDataPath = [[self downloadTempFilePath] stringByAppendingPathComponent:resumeDataName];
+    if (resumeDataName.length > 0)
+    {
+        resumeData = [NSData dataWithContentsOfFile:resumeDataPath];
+    }
+    NSLog(@"%@: %@", resumeData.length > 0 ? @"查到缓存数据" : @"没有查到缓存数据", url);
+
+    return resumeData;
+}
+
+- (void)clearDataWithURL:(NSString*)url
+{
+    if (url.length < 1) {
+        return;
+    }
+    
+    NSString *mapPath = [self resumeDataMapPath];
+    
+  
+    
+    NSMutableDictionary *tempFileMap = [NSMutableDictionary dictionaryWithContentsOfFile:mapPath];
+    
+    
+    if([tempFileMap[url] length] > 0)
+    {
+        [[NSFileManager defaultManager] removeItemAtPath: [[self downloadTempFilePath] stringByAppendingPathComponent:tempFileMap[url]] error:nil];
+        
+        [tempFileMap removeObjectForKey:url];
+        
+        [tempFileMap writeToFile:mapPath atomically:YES];
+    }
     
 }
+/// 记录resumeData位置的map文件
+- (NSString *)resumeDataMapPath
+{
+    // key: url  value: resumeDataName
+    return [[self downloadTempFilePath] stringByAppendingPathComponent:@"ResumeDataMap.plist"];
+}
+
+- (NSString *)downloadTempFilePath
+{
+    NSString *path = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).firstObject;
+    path = [path stringByAppendingPathComponent:@"DownloadTempFile"];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:path])
+    {
+        [[NSFileManager defaultManager] createDirectoryAtPath:path
+                                  withIntermediateDirectories:YES
+                                                   attributes:nil
+                                                        error:nil];
+    }
+    return path;
+}
+
 @end
+

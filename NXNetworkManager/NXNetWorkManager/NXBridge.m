@@ -260,7 +260,7 @@ static NSString * const NXRequestBindingKey = @"NXRequestBindingKey";
     return _afPListResponseSerializer;
 }
 - (NSMutableArray *)sslPinningHosts{
-
+    
     if (_sslPinningHosts == nil) {
         
         _sslPinningHosts = [[NSMutableArray alloc] init];
@@ -270,9 +270,9 @@ static NSString * const NXRequestBindingKey = @"NXRequestBindingKey";
 }
 
 - (NSMutableDictionary *)dowloadMapDic{
-
+    
     if (_dowloadMapDic == nil) {
-     
+        
         _dowloadMapDic = [[NSMutableDictionary alloc] init];
     }
     return _dowloadMapDic ;
@@ -337,7 +337,7 @@ static NSString * const NXRequestBindingKey = @"NXRequestBindingKey";
         if (completionHandler) {
             
             dispatch_async(sessionManager.completionQueue, ^{
-               
+                
                 completionHandler(nil,urlRequstError);
             });
         }
@@ -388,13 +388,7 @@ static NSString * const NXRequestBindingKey = @"NXRequestBindingKey";
     
     NSURLSessionUploadTask *uploadTask = nil;
     __weak __typeof(self)weakSelf = self;
-    uploadTask = [sessionManager uploadTaskWithStreamedRequest:urlRequest progress:^(NSProgress * _Nonnull uploadProgress) {
-        double downProgress_ = (uploadProgress.completedUnitCount * 1.0f)/uploadProgress.totalUnitCount;
-        if (request.progressHandlerBlock) {
-            request.progressHandlerBlock(downProgress_);
-        }
-        
-    } completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
+    uploadTask = [sessionManager uploadTaskWithStreamedRequest:urlRequest progress:request.progressHandlerBlock completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
         
         __strong typeof(weakSelf) strongSelf = weakSelf;
         [strongSelf nx_parseResponse:response responseObj:responseObject error:error request:request completionHandler:completionHandler];
@@ -409,19 +403,22 @@ static NSString * const NXRequestBindingKey = @"NXRequestBindingKey";
     AFHTTPSessionManager * sessionManager = [self sessionManagerWithRequset:request];
     NXDownLoad * downLoad = [[NXDownLoad alloc] init];
     downLoad.manager = sessionManager;
-   NSURLSessionDataTask * downLoadTask = [downLoad downLoad:request progress:request.progressHandlerBlock completionHandler:^(id responseObject, NSError *error, NXRequest *rq) {
-       
-       if (completionHandler) {
-           completionHandler(responseObject,error);
-       }
+    downLoad.isBreakpoint  = request.isBreakpoint;
+    __weak typeof(self) weakSelf = self;
+    NSURLSessionDownloadTask * downLoadTask = [downLoad downloadWithRequest:request
+                                                               progress:request.progressHandlerBlock
+                                                               complete:^(id responseObject, NSError *error, NXRequest *rq) {
+                                                                   if (completionHandler) {
+                                                                       completionHandler(responseObject,error);
+                                                                   }
+                                                                   [weakSelf.dowloadMapDic removeObjectForKey:rq.identifier];
+        
     }];
     
-    [self nx_bindTask:request dataTaskIdentifier:downLoadTask sessionManager:sessionManager];
+    [self nx_bindTask:request dataTaskIdentifier:(NSURLSessionDataTask *)downLoadTask sessionManager:sessionManager];
     [self.dowloadMapDic setObject:downLoad forKey:request.identifier];
     [downLoadTask resume];
 }
-
-
 - (void)nx_parseResponse:(NSURLResponse *)response responseObj:(id)responseObj error:(NSError *)error
                  request:(NXRequest *)request completionHandler:(NXCompleteBlcok) completeHandler{
     
@@ -438,7 +435,7 @@ static NSString * const NXRequestBindingKey = @"NXRequestBindingKey";
             completeHandler(nil,resposeSerializerError);
         } else {
             
-            completeHandler(responseObj,nil);
+            completeHandler(responseObj,error);
         }
     }
 }
@@ -481,124 +478,120 @@ static NSString * const NXRequestBindingKey = @"NXRequestBindingKey";
 }
 
 - (NXRequest *)cancleRequst:(NSString *)identifier{
-
-    [self.lock lock];
-    NSArray * tasks = nil;
-    if ([identifier hasPrefix:@"+"]) {
-         tasks = self.sessionManager.tasks;
+   
+    NSURLSessionTask * task = [self getSessionTaskByIdentifer:identifier];
+    NXRequest *request = nil;
+    if(task){
         
-    }else if ([identifier hasPrefix:@"-"]){
-        tasks = self.securitySessionManager.tasks;
-        
-    }
-    __block NXRequest *request = nil;
-    if (tasks.count > 0) {
-        for (NSURLSessionTask * task in tasks) {
-            if ([task.bindedRequest.identifier isEqualToString:identifier]) {
-                request = task.bindedRequest;
-                [task cancel];
-                break;
+        request = [task bindedRequest];
+        if (request.requstType == NXRequestTypeDownload)
+        {
+            NXDownLoad * downLoad = [self.dowloadMapDic objectForKey:request.identifier];
+            if (downLoad){
+                
+                [downLoad cancleDownloadTask:(NSURLSessionDownloadTask *)task];
             }
+            
+        } else {
+            
+            if (task.state == NSURLSessionTaskStateSuspended)
+            {
+                [task cancel];
+            }
+            
         }
+        
     }
-    [self.lock unlock];
+    
     return request;
 }
-- (NXRequest *)getRequestByIdentifier:(NSString *)identifier{
+
+- (NSURLSessionTask *)getSessionTaskByIdentifer:(NSString *)identifier{
 
     if (identifier.length <= 0 ) {
         
         return nil;
     }
-    [self lock];
+    [self.lock lock];
+    
     NSArray * tasks = nil;
     if ([identifier hasPrefix:@"+"]) {
         tasks = self.sessionManager.tasks;
         
     }else if ([identifier hasPrefix:@"-"]){
         tasks = self.securitySessionManager.tasks;
-        
     }
-    NXRequest *request = nil;
+    NSURLSessionTask * sessionTask = nil;
     if (tasks.count > 0) {
         for (NSURLSessionTask * task in tasks) {
             if ([task.bindedRequest.identifier isEqualToString:identifier]) {
-                request = task.bindedRequest;
+                sessionTask = task;
                 break;
             }
         }
     }
     [self.lock unlock];
+    
+    return sessionTask;
+}
+- (NXRequest *)getRequestByIdentifier:(NSString *)identifier{
+    
+    NSURLSessionTask * task = [self getSessionTaskByIdentifer:identifier];
+    NXRequest * request = nil;
+    if(task){
+    
+        request =  [task bindedRequest];
+    }
+    
     return request;
 }
 
 - (void)pauseRequest:(NSString *)identifier{
-
-    if (identifier.length <= 0 ) {
-        
-        return ;
-    }
-    NSArray * tasks = nil;
-    if ([identifier hasPrefix:@"+"]) {
-        tasks = self.sessionManager.tasks;
-        
-    }else if ([identifier hasPrefix:@"-"]){
-        tasks = self.securitySessionManager.tasks;
-    }
     
-    NXRequest *request = nil;
-    if (tasks.count > 0) {
-        for (NSURLSessionTask * task in tasks) {
-            if ([task.bindedRequest.identifier isEqualToString:identifier]) {
-                request = task.bindedRequest;
-                if (task.state == NSURLSessionTaskStateRunning){
-                    
-                    [task suspend];
-                }
-                break;
+    NSURLSessionTask * task = [self getSessionTaskByIdentifer:identifier];
+    if(task){
+        
+        NXRequest * request = [task bindedRequest];
+        if (request.requstType == NXRequestTypeDownload){
+            NXDownLoad * downLoad = [self.dowloadMapDic objectForKey:request.identifier];
+            if (downLoad){
+                
+                [downLoad suspendDownloadTask:(NSURLSessionDownloadTask *)task];
             }
+        } else {
+        
+            [task suspend];
         }
     }
+    
 }
-- (void)resumeRequest:(NSString *)identifier request:(NXRequest *)request{
-
-    if (identifier.length <= 0 ) {
+- (void)resumeRequest:(NSString *)identifier{
+  
+    NSURLSessionTask * task = [self getSessionTaskByIdentifer:identifier];
+    if (task) {
         
-        return ;
-    }
-    NSArray * tasks = nil;
-    if ([identifier hasPrefix:@"+"]) {
-        tasks = self.sessionManager.tasks;
-        
-    }else if ([identifier hasPrefix:@"-"]){
-        
-        tasks = self.securitySessionManager.tasks;
-    }
-    NXRequest *request_ = nil;
-    if (tasks.count > 0) {
-        for (NSURLSessionTask * task in tasks) {
-            if ([task.bindedRequest.identifier isEqualToString:identifier]) {
-                request_ = task.bindedRequest;
-                if (task.state == NSURLSessionTaskStateSuspended)
-                {
-                    [task resume];
-                }
-                break;
+        NXRequest * request = [task bindedRequest];
+        if (request.requstType == NXRequestTypeDownload) {
+            
+            NXDownLoad * downLoad = [self.dowloadMapDic objectForKey:request.identifier];
+            if (downLoad){
+                
+                [downLoad startDownloadTask:(NSURLSessionDownloadTask *)task];
             }
+            
+        } else {
+        
+            [task resume];
         }
-    } else {
-    
-        [request start];
     }
-
 }
 
 - (void)addSSLPinningURL:(NSString *)url{
-
+    
     if([url hasPrefix:@"https"]){
         NSString * rootDamainName = [self nx_rootDomainNameFromURL:url];
         if (rootDamainName && ![self.sslPinningHosts containsObject:rootDamainName]){
-        
+            
             [self.sslPinningHosts addObject:rootDamainName];
         }
     }
@@ -619,7 +612,7 @@ static NSString * const NXRequestBindingKey = @"NXRequestBindingKey";
 }
 
 - (void)addTwowayAuthenticationPKCS12:(NSData *)p12 keyPassword:(NSString *)password{
-   
+    
     NSParameterAssert(p12);
     NSParameterAssert(password);
     __weak __typeof(self)weakSelf = self;
@@ -676,7 +669,6 @@ static NSString * const NXRequestBindingKey = @"NXRequestBindingKey";
         
         return disposition;
     }];
-    
 }
 
 - (NSString *)nx_rootDomainNameFromURL:(NSString *)urlString {
